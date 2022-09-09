@@ -6,7 +6,7 @@ import java.util.List;
 /*
 * must ensure that there is one and only one argument (args). If there are none or more than 1,
 *  it must print an appropriate error message and exit. That one argument will be considered as a filename. Your main must then use File.ReadAllLines
-* to read all of the lines from the file denoted by filename.  Your main must instantiate one instance of your Lexer class (to be defined below). You must
+* to read all the lines from the file denoted by filename.  Your main must instantiate one instance of your Lexer class (to be defined below). You must
 *  parse all lines using the lex method of the Lexer class. If lex throws an exception, you must catch the exception, print that there was an exception. You must
 *  then print each token out (this is a temporary step to show that it works) once the lexing is complete.
 */
@@ -21,11 +21,15 @@ public class Shank {
                    Lexer lexer = new Lexer();
                    List<String> text = Files.readAllLines(Paths.get(args[0]));
                    for (String line : text) {
-                       System.out.println(line);
-                       tokens = lexer.Lex(line);
-                       System.out.println(tokens);
+                       // System.out.println(line); // FOR DEBUG OF INPUTS
+                       tokens = (lexer.Lex(line));
                    }
-               } catch (Exception e) {
+                     for (Token token : tokens) {
+                             if( token != null) {
+                              System.out.println(token);
+                     }
+               }}
+               catch (Exception e) {
                    System.out.println("Error: " + e);
                }
         }

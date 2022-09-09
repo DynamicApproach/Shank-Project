@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 
 public class Lexer {
+    private ArrayList<Token> tokens = new ArrayList<>();
     /**
      * Lex method
       The Lexer class must contain a lex method that accepts a single string and returns a collection (array or list) of Tokens.
@@ -12,7 +13,7 @@ public class Lexer {
 
     private int state =0;
     private String buffer="";
-    private ArrayList<Token> tokens = new ArrayList<Token>();
+
     public ArrayList<Token> Lex(String input) {
     try{
         for (char c  : input.toCharArray())
@@ -25,9 +26,7 @@ public class Lexer {
                         buffer += c;
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> { state = 2; buffer += c;}
-                    case ' ' -> {
-                        buffer += c;
-                    }
+                    case ' ' -> buffer += c;
                     case '+', '-' -> {
                         state = 1;
                         buffer += c;
@@ -46,9 +45,7 @@ public class Lexer {
                 break;
             case 1:
                 switch (c) {
-                    case ' ' -> {
-                        buffer += c;
-                    }
+                    case ' ' -> buffer += c;
                     case '.' -> {
                         state = 5;
                         buffer += c;
@@ -85,9 +82,7 @@ public class Lexer {
                         state = 0;
 
                     }
-                    case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-                        buffer += c;
-                    }
+                    case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
                     default -> {
                         System.out.println("Error: Invalid character2 " + c);
                         buffer = "";
@@ -103,9 +98,7 @@ public class Lexer {
                         state = 2;
                         buffer += c;
                     }
-                    case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-                        buffer += c;
-                    }
+                    case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
                     case ' ' -> {
                         state = 4;
                         buffer += c;
@@ -128,9 +121,7 @@ public class Lexer {
                 break;
             case 4:
                 switch (c) {
-                    case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-                        buffer += c;
-                    }
+                    case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
                     case '+', '-', '*', '/' -> {
                         tokens.add(new Token(Symbol.NUMBER, buffer));
                         buffer = String.valueOf(c);
@@ -152,9 +143,7 @@ public class Lexer {
                         state = 3;
                         buffer += c;
                     }
-                    case ' '-> {
-                        buffer += c;
-                    }
+                    case ' '-> buffer += c;
                     default -> {
                         System.out.println("Error: Invalid character5 " + c);
                         buffer = "";
@@ -168,6 +157,7 @@ public class Lexer {
         if (state == 2 || state == 3 || state == 4) {
             tokens.add(new Token(Symbol.NUMBER, buffer));
             buffer = "";
+            state =0;
         }
         else {
             System.out.println("Error: Invalid character6 " + buffer);
@@ -179,9 +169,10 @@ public class Lexer {
     }
     catch(Exception e){
         System.out.println("Error: Invalid character: " + e +" CAUGHT AT  " + buffer);
-        System.out.println("WILL BE NULL");
         }
-        return null;
+        state = 0;
+        buffer = "";
+        return tokens;
     }
 
 
