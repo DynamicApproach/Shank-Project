@@ -13,9 +13,11 @@ enum Type { // Keeps track of current state
 }
 enum Symbol{ // Token symbol types
     OP, //+-/*
-    NEGPOS, //-+
+    PLUS, //+
+    MINUS, //-
     MULT, //*
     DIV, // /
+    NEGPOS, //-+
     MOD, // %
     DECIMAL, // =
     SPACE,
@@ -34,12 +36,15 @@ public class Token {
         type =a;
         this.value = value;
     }
-    public String getValue() {
-        return value;
-    }
+
     public Symbol getSymbol() {
         return this.type;
     }
+
+    public String getValue() {
+        return value;
+    }
+
     public String toString() {
         if(value == null){
             return "Type: " + type;
