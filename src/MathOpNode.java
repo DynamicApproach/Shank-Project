@@ -23,5 +23,5 @@ public class MathOpNode extends Node {
     public String toString() {
         return "(" + left.toString() + " " + op.toString() + " " + right.toString() + ")";
     }
-enum Operation {ADD, SUB, MUL, DIV}
+    enum Operation {ADD, SUB, MUL, DIV}
 }
