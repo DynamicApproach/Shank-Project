@@ -29,8 +29,9 @@
 
 - [ ] 3 - Add Function Declarations
   -Attached Files:
-  File 3 - Add Function Declarations.docx 3 - Add Function Declarations.docx - Alternative Formats (
-  27.405 KB)
+    - File 3 - Add Function Declarations.docx 3 - Add Function Declarations.docx - Alternative
+      Formats (
+      27.405 KB)
 
 ----------------------------------------------------------------
 
