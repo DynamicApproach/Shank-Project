@@ -9,7 +9,7 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    // match and remove searchs for a token in the arraylist and removes it if it is found?
+    // match and remove searches for a token in the arraylist and removes it if it is found?
 
     // best way remove token from list? iterate? use remove? most efficient?
 
@@ -25,7 +25,7 @@ public class Parser {
     }
 
     @SuppressWarnings("unused")
-    public Token itermatchAndRemove(Type search) {
+    public Token iterativeMatchAndRemove(Type search) {
         Token token = null;
         for (int i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).getType() == search) {
@@ -71,7 +71,7 @@ public class Parser {
     }
 
     public Node factor() {
-        // TODO: Attempt to turn into a int or float or return null
+        // TODO: Attempt to turn into an int or float or return null
         Token numberToken = new Token(Type.NUMBER);
         if (matchAndRemove(numberToken) == null) return null; // no return means there is no match
         if (isInteger(tokens.get(0))) {

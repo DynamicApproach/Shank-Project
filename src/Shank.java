@@ -32,6 +32,10 @@ public class Shank {
                         System.out.println(token);
                     }
                 }
+                Parser parsing = new Parser(tokens);
+                System.out.println("Parsing: ");
+                Node tree = parsing.expression();
+                System.out.println("Parsing complete");
             } catch (Exception e) {
                 System.out.println("Error: " + e);
             }
