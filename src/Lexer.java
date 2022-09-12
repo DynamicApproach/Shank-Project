@@ -17,6 +17,14 @@ public class Lexer {
     public ArrayList<Token> Lex(String input) {
         try {
             for (char c : input.toCharArray()) {
+                //TODO: check if the character is a number or letter
+                // if a letter, start in the 'letter' state machine
+                //  if it's a spcae, end the word and check it against the map
+                // if it's a number, start in the 'number' state machine
+                // TODO: Add a hashmap to check if the word is a keyword
+// hashmap words:
+// identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal, comma, variables, constants, integer, real, begin, end, variables, constants
+                // TODO: move this to it's own file
                 switch (state) {
                     case 0:
                         switch (c) {

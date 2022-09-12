@@ -1,4 +1,5 @@
 enum Type { // Token symbol types
+    identifier, define, integer, real, begin, end, semicolon, colon, comma, variables, constants,
     MULTIPLY {//*
 
         public String toString() {

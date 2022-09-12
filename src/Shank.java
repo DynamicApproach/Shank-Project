@@ -18,12 +18,18 @@ public class Shank {
         if (args.length == 1) {
             try {
                 Lexer lexer = new Lexer();
-                // TODO: Implement Parser in Shank.java
                 /*String strings = Files.readAllLines(Paths.get(args[0])).toString();
                 strings = strings.substring(1, strings.length() - 1);*/
                 // Currently used option of list
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
+                // TODO: implement 'VariableNode' - is constant class, enum for int, real and ast node for the init value of real/intnode
+                // TODO: create int node
+                // TODO: create real node
+                // TODO: FunctionDefinition function + tostring to print local variables and paramaters
+                //   It looks for “define”. If it find that token, it starts building a functionAST node.
+                // TODO: Constant, Variables and body function
+                // TODO: process constants function
 
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
