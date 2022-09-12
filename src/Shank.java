@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Shank {
     public static void main(String[] args) {
+        // start time stamp
+        long startTime = System.currentTimeMillis();
         ArrayList<Token> tokens = new ArrayList<>(1000);
         if (args.length == 1) {
             try {
@@ -50,5 +52,9 @@ public class Shank {
             System.out.println("Usage: java Shank <filename>");
             System.exit(1);
         }
+        // end time stamp
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+        System.out.println("Time: " + duration + " milliseconds");
     }
 }
