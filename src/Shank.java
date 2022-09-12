@@ -16,12 +16,13 @@ public class Shank {
         if (args.length == 1) {
             try {
                 Lexer lexer = new Lexer();
-                // An option of a single string without the brackets from list
-                // TODO: Figure out the best way to read strings in. Do we NEED new lines?
-                String strings = Files.readAllLines(Paths.get(args[0])).toString();
-                strings = strings.substring(1, strings.length() - 1);
+                // TODO: Implement Parser in Shank.java
+                /*String strings = Files.readAllLines(Paths.get(args[0])).toString();
+                strings = strings.substring(1, strings.length() - 1);*/
                 // Currently used option of list
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
+                text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
+
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));

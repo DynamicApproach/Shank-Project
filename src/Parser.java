@@ -1,80 +1,113 @@
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class Parser {
     private ArrayList<Token> tokens;
 
-
+    @SuppressWarnings("unused")
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
+
     // match and remove searchs for a token in the arraylist and removes it if it is found?
-    // how else to parse if not passing in list? - we are to constructor
+
     // best way remove token from list? iterate? use remove? most efficient?
 
     public Token matchAndRemove(Token token) {
-        if (tokens.get(0).getType() == token.getType()) {
+        Token temp = tokens.get(0);
+        if (temp.getType() == token.getType()) {
             tokens.remove(0);
-            return token;
+            return temp;
         } else {
             return null;
         }
 
     }
 
+    @SuppressWarnings("unused")
+    public Token itermatchAndRemove(Type search) {
+        Token token = null;
+        for (int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).getType() == search) {
+                token = tokens.get(i);
+                tokens.remove(i);
+                break;
+            }
+        }
+        return token;
+    }
+
     // expression, term, factor methods
-    // expression -> term { (+|-) term }
-    // term -> factor { (*|/) factor }
-    // factor -> number | ( expression )
     public Node expression() {
-        // expression -> term { (+|-) term }
+        Node node = term();
+        // TODO: Decide if while loop is right here?
+        while (true) {
+            Token token = tokens.get(0);
+            if (token.getType() == Type.ADD) {
+                matchAndRemove(token);
+                node = new MathOpNode(node, term(), Type.ADD);
+            } else if (token.getType() == Type.MINUS) {
+                matchAndRemove(token);
+                node = new MathOpNode(node, term(), Type.MINUS);
+            } else {
+                break;
+            }
+        }
 
         return term();
     }
 
     public Node term() {
-        // term -> factor { (*|/) factor }
         Node node = factor();
-
+        Token token = tokens.get(0);
+        if (token.getType() == Type.MULTIPLY) {
+            matchAndRemove(token);
+            node = new MathOpNode(node, term(), Type.MULTIPLY);
+        } else if (token.getType() == Type.DIVIDE) {
+            matchAndRemove(token);
+            node = new MathOpNode(node, term(), Type.DIVIDE);
+        }
         return node;
     }
 
     public Node factor() {
-        // TODO: Figure out Factor properly, what should it return?
-        // TODO: Does this just check if there is paren? Or check for int?
-        // factor -> number | ( expression )
-        //        if (matchAndRemove(Symbol.LPAREN)){
-        //            Node node = expression();
-        //            matchAndRemove(Symbol.RPAREN);
-        //            return node;
-        //        }
-        //        else if (matchAndRemove(Symbol.NUMBER)){
-        //            return new NumberNode();
-        //        }
-        //        else{
-        //            System.out.println("Error: Invalid character");
-        //            return null;
-        //        }
+        // TODO: Attempt to turn into a int or float or return null
         Token numberToken = new Token(Type.NUMBER);
-        if (matchAndRemove(numberToken) == null) return null;
-        //                else {
-        //                    if(isInteger(token.get(0).getString())) {// this for Integer
-        //                        IntegerNode intNode= new IntegerNode(Integer.parseInt(token.get(0).getString()));
-        //                        token.remove(0);
-        //                        return intNode;
-        //                    }
-        //                    if(isFloat(token.get(0).getString())) {
-        //                        FloatNode floatNode= new FloatNode(Float.parseFloat(token.get(0).getString()));
-        //                        token.remove(0);
-        //                        return floatNode;
-        //                    }
+        if (matchAndRemove(numberToken) == null) return null; // no return means there is no match
+        if (isInteger(tokens.get(0))) {
+            IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
+            tokens.remove(0);
+            return intNode;
+        }
+        if (isFloat(tokens.get(0))) {
+            FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
+            tokens.remove(0);
+            return floatNode;
+        }
         return null;
     }
-    // What should this output? 1+2*3? Should it just be looking for a number or 'if', ect.? Include things btw paren?
 
+    private boolean isFloat(Token token) {
+        try {
+            Float.parseFloat(token.getValue());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isInteger(Token token) {
+        try {
+            Integer.parseInt(token.getValue());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unused")
 
     public Node parse() {
-        // returns empty node???
-        // what should the tostring be? Just node value?
         Node node = expression();       // matchAndRemove(Symbol.NEWLINE);
         if (node == null) {
             System.out.println("Node cannot be made.");

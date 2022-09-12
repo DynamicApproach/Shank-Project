@@ -4,9 +4,9 @@
  *  inside Token must be private. We will add to this enum in the next several assignments.  You will find it helpful to create an appropriate “ToString” overload. */
 
 enum Type { // Token symbol types
-    MULTI, //*
-    DIV, // /
-    PLUS, //+
+    MULTIPLY, //*
+    DIVIDE, // /
+    ADD, //+
     MINUS, //-
     POSNEG, //-+ TODO: Should this be a separate type? Or with the number? - With num will be less parsing total
     MOD, // %
@@ -34,6 +34,7 @@ public class Token {
         this.value = value;
     }
 
+    @SuppressWarnings("unused")
     public boolean sameType(Token a) {
         return type == a.type;
     }

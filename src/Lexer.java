@@ -12,8 +12,8 @@ public class Lexer {
      */
 
     private int state = 0;
-    private String buffer = "";
-    // TODO: Change buffer to StringBuilder
+    private StringBuilder builder = new StringBuilder();
+
     public ArrayList<Token> Lex(String input) {
         try {
             for (char c : input.toCharArray()) {
@@ -22,43 +22,43 @@ public class Lexer {
                         switch (c) {
                             case '(' -> {
                                 tokens.add(new Token(Type.LPAREN, "("));
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 2;
-                                buffer += c;
+                                builder.append(c);
                             }
-                            case ' ' -> buffer += c;
+                            case ' ' -> builder.append(c);
                             case '+', '-' -> {
                                 state = 1;
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '.' -> {
                                 state = 5;
-                                buffer += c;
+                                builder.append(c);
                             }
                             default -> {
                                 System.out.println("Error: Invalid character0: " + c);
                                 state = 0;
-                                buffer = "";
+                                builder.replace(0, builder.length(), "");
                                 throw new Exception("Invalid character0");
                             }
                         }
                         break;
                     case 1:
                         switch (c) {
-                            case ' ' -> buffer += c;
+                            case ' ' -> builder.append(c);
                             case '.' -> {
                                 state = 5;
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 2;
-                                buffer += c;
+                                builder.append(c);
                             }
                             default -> {
                                 System.out.println("Error: Invalid character1 " + c);
-                                buffer = "";
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character1");
                             }
@@ -69,52 +69,61 @@ public class Lexer {
                             // case '\n' -> { tokens.add(new Token(Symbol.ENDL, buffer)); buffer= ""; state = 0; buffer += "ENDL"; }
                             case ' ' -> {
                                 state = 4;
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '.' -> {
                                 state = 3;
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '+' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = "";
-                                buffer += c;
-                                tokens.add(new Token(Type.PLUS, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.ADD, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
 
                             }
                             case '/' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = "";
-                                buffer += c;
-                                tokens.add(new Token(Type.DIV, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.DIVIDE, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
 
                             }
                             case '*' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = "";
-                                buffer += c;
-                                tokens.add(new Token(Type.MULTI, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MULTIPLY, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
 
                             }
                             case '-' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = "";
-                                buffer += c;
-                                tokens.add(new Token(Type.MINUS, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MINUS, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
 
                             }
-                            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
+                            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
+                                    builder.append(c);
                             default -> {
                                 System.out.println("Error: Invalid character2 " + c);
-                                buffer = "";
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character2");
                             }
@@ -125,48 +134,62 @@ public class Lexer {
                             //  case '\n' -> {tokens.add(new Token(Symbol.ENDL, buffer)); buffer= ""; state = 0; buffer += "ENDL"; }
                             case '.' -> {
                                 state = 2;
-                                buffer += c;
+                                builder.append(c);
                             }
-                            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
+                            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
+                                    builder.append(c);
                             case ' ' -> {
                                 state = 4;
-                                buffer += c;
+                                builder.append(c);
                             }
                             case '+' -> {
-                                System.out.println("Buffer:     " + buffer);
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.PLUS, buffer));
-                                buffer = "";
+                                System.out.println("Buffer:     " + builder.toString());
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.ADD, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '/' -> {
-                                System.out.println("Buffer:     " + buffer);
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.DIV, buffer));
-                                buffer = "";
+                                System.out.println("Buffer:     " + builder.toString());
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.DIVIDE, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '*' -> {
-                                System.out.println("Buffer:     " + buffer);
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.MULTI, buffer));
-                                buffer = "";
+                                System.out.println("Buffer:     " + builder.toString());
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MULTIPLY, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '-' -> {
-                                System.out.println("Buffer:     " + buffer);
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.MINUS, buffer));
-                                buffer = "";
+                                System.out.println("Buffer:     " + builder.toString());
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MINUS, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             default -> {
                                 System.out.println("Error: Invalid character3 " + c);
-                                buffer = "";
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character3");
                             }
@@ -174,39 +197,48 @@ public class Lexer {
                         break;
                     case 4:
                         switch (c) {
-                            case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> buffer += c;
+                            case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
+                                    builder.append(c);
                             case '-' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.MINUS, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MINUS, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '/' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.DIV, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.DIVIDE, builder.toString()));
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '*' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.MULTI, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.MULTIPLY, builder.toString()));
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
                             case '+' -> {
-                                tokens.add(new Token(Type.NUMBER, buffer));
-                                buffer = String.valueOf(c);
-                                tokens.add(new Token(Type.PLUS, buffer));
-                                buffer = "";
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.ADD, builder.toString()));
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                             }
 
                             default -> {
                                 System.out.println("Error: Invalid character4 " + c);
-                                buffer = "";
+
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character4");
                             }
@@ -216,12 +248,12 @@ public class Lexer {
                         switch (c) {
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 3;
-                                buffer += c;
+                                builder.append(c);
                             }
-                            case ' ' -> buffer += c;
+                            case ' ' -> builder.append(c);
                             default -> {
                                 System.out.println("Error: Invalid character5 " + c);
-                                buffer = "";
+                                builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character5");
                             }
@@ -230,21 +262,21 @@ public class Lexer {
             }
             // add final token
             if (state == 2 || state == 3 || state == 4) {
-                tokens.add(new Token(Type.NUMBER, buffer));
-                buffer = "";
+                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                builder.replace(0, builder.length(), "");
                 state = 0;
             } else {
-                System.out.println("Error: Invalid character6 " + buffer);
-                buffer = "";
+                System.out.println("Error: Invalid character6 " + builder.toString());
+                builder.replace(0, builder.length(), "");
                 state = 0;
                 throw new Exception("Invalid character6");
             }
             return tokens;
         } catch (Exception e) {
-            System.out.println("Error: Invalid character: " + e + " CAUGHT AT  " + buffer);
+            System.out.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder.toString());
         }
         state = 0;
-        buffer = "";
+        builder.replace(0, builder.length(), "");
         return tokens;
     }
 
