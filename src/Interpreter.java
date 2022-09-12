@@ -11,6 +11,9 @@ Finally, we will build (the beginning of) our interpreter.
 public class Interpreter {
     @SuppressWarnings("unused")
     public float Resolve(Node node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
         if (node instanceof IntegerNode) {
             return ((IntegerNode) node).getValue();
         } else if (node instanceof FloatNode) {

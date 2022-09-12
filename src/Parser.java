@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public class Parser {
     private ArrayList<Token> tokens;
 
-    @SuppressWarnings("unused")
+
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
@@ -23,7 +24,7 @@ public class Parser {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public Token iterativeMatchAndRemove(Type search) {
         Token token = null;
         for (int i = 0; i < tokens.size(); i++) {
@@ -37,6 +38,8 @@ public class Parser {
     }
 
     // expression, term, factor methods
+    // Expression is the highest level of the grammar
+    // Expression is a list of terms separated by + or -
     public Node expression() {
         Node node = term();
         // TODO: Decide if while loop is right here?
@@ -53,12 +56,15 @@ public class Parser {
             }
         }
 
-        return term();
+        return node;
     }
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
+        if (factor() == null) {
+            return null;
+        }
         Token token = tokens.get(0);
         if (token.getType() == Type.MULTIPLY) {
             matchAndRemove(token);
@@ -72,9 +78,6 @@ public class Parser {
 
     // Factor is a number or a parenthesized expression.
     public Node factor() {
-        // TODO: Attempt to turn into an int or float or return null
-        Token numberToken = new Token(Type.NUMBER);
-        if (matchAndRemove(numberToken) == null) return null; // no return means there is no match
         if (isInteger(tokens.get(0))) {
             IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
             tokens.remove(0);
@@ -85,7 +88,12 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
-        return null;
+        return new Node() {
+            @Override
+            public String toString() {
+                return null;
+            }
+        };
     }
 
     private boolean isFloat(Token token) {

@@ -33,12 +33,16 @@ public class Shank {
                     }
                 }
                 Parser parsing = new Parser(tokens);
+
                 System.out.println("Parsing: ");
                 Node tree = parsing.expression();
                 System.out.println("Parsing complete");
+                System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter();
-                @SuppressWarnings("unused")
                 float fintree = interpreter.Resolve(tree);
+                System.out.println("Interpreting complete");
+                System.out.println("Result: " + fintree);
+
             } catch (Exception e) {
                 System.out.println("Error: " + e);
             }

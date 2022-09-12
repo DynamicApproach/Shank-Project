@@ -25,6 +25,6 @@ public class MathOpNode extends Node {
     }
 
     public String toString() {
-        return "(" + left.toString() + " " + op.toString() + " " + right.toString() + ")";
+        return op.toString();
     }
 }
