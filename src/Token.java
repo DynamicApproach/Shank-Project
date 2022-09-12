@@ -5,6 +5,7 @@
 
 enum Type { // Token symbol types
     MULTIPLY, //*
+    NEWLINE, // \n
     DIVIDE, // /
     ADD, //+
     MINUS, //-

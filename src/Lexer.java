@@ -21,8 +21,14 @@ public class Lexer {
                     case 0:
                         switch (c) {
                             case '(' -> {
-                                tokens.add(new Token(Type.LPAREN, "("));
                                 builder.append(c);
+                                tokens.add(new Token(Type.LPAREN, "("));
+                                builder.replace(0, builder.length(), "");
+                            }
+                            case ')' -> {
+                                builder.append(c);
+                                tokens.add(new Token(Type.RPAREN, ")"));
+                                builder.replace(0, builder.length(), "");
                             }
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 2;
@@ -237,7 +243,6 @@ public class Lexer {
 
                             default -> {
                                 System.out.println("Error: Invalid character4 " + c);
-
                                 builder.replace(0, builder.length(), "");
                                 state = 0;
                                 throw new Exception("Invalid character4");

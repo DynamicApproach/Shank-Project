@@ -21,7 +21,6 @@ public class Parser {
         } else {
             return null;
         }
-
     }
 
     @SuppressWarnings("unused")
@@ -57,19 +56,21 @@ public class Parser {
         return term();
     }
 
+    // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
         Token token = tokens.get(0);
         if (token.getType() == Type.MULTIPLY) {
             matchAndRemove(token);
-            node = new MathOpNode(node, term(), Type.MULTIPLY);
+            node = new MathOpNode(node, factor(), Type.MULTIPLY);
         } else if (token.getType() == Type.DIVIDE) {
             matchAndRemove(token);
-            node = new MathOpNode(node, term(), Type.DIVIDE);
+            node = new MathOpNode(node, factor(), Type.DIVIDE);
         }
         return node;
     }
 
+    // Factor is a number or a parenthesized expression.
     public Node factor() {
         // TODO: Attempt to turn into an int or float or return null
         Token numberToken = new Token(Type.NUMBER);
@@ -108,7 +109,7 @@ public class Parser {
     @SuppressWarnings("unused")
 
     public Node parse() {
-        Node node = expression();       // matchAndRemove(Symbol.NEWLINE);
+        Node node = expression();
         if (node == null) {
             System.out.println("Node cannot be made.");
             return null;
