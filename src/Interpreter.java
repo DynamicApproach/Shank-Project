@@ -7,8 +7,9 @@ Finally, we will build (the beginning of) our interpreter.
         The parser handles the order of operations, so this function is very simple.
         It should check to see what type the Node is
 */
-
+@SuppressWarnings("unused")
 public class Interpreter {
+    @SuppressWarnings("unused")
     public float Resolve(Node node) {
         if (node instanceof IntegerNode) {
             return ((IntegerNode) node).getValue();

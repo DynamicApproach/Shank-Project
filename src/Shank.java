@@ -36,6 +36,9 @@ public class Shank {
                 System.out.println("Parsing: ");
                 Node tree = parsing.expression();
                 System.out.println("Parsing complete");
+                Interpreter interpreter = new Interpreter();
+                @SuppressWarnings("unused")
+                float fintree = interpreter.Resolve(tree);
             } catch (Exception e) {
                 System.out.println("Error: " + e);
             }
