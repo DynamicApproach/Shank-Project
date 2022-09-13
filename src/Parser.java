@@ -24,6 +24,16 @@ public class Parser {
         }
     }
 
+    public Token matchAndRemove(Type token) {
+        Token temp = tokens.get(0);
+        if (temp.getType() == token) {
+            tokens.remove(0);
+            return temp;
+        } else {
+            return null;
+        }
+    }
+
 
     public Token iterativeMatchAndRemove(Type search) {
         Token token = null;
