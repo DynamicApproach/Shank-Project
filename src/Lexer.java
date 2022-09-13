@@ -80,7 +80,14 @@ public class Lexer {
                         break;
                     case 2:
                         switch (c) {
-                            // case '\n' -> { tokens.add(new Token(Symbol.ENDL, buffer)); buffer= ""; state = 0; buffer += "ENDL"; }
+                            case '\n' -> {
+                                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                builder.append(c);
+                                tokens.add(new Token(Type.END, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
+                            }
                             case ' ' -> {
                                 state = 4;
                                 builder.append(c);
@@ -274,7 +281,7 @@ public class Lexer {
                 }
             }
             // add final token
-            if (state == 2 || state == 3 || state == 4) {
+            if (state == 0 || state == 2 || state == 3 || state == 4) {
                 tokens.add(new Token(Type.NUMBER, builder.toString()));
                 builder.replace(0, builder.length(), "");
                 state = 0;

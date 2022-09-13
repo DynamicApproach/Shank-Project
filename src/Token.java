@@ -1,5 +1,5 @@
 enum Type { // Token symbol types
-    identifier, define, integer, real, begin, end, semicolon, colon, comma, variables, constants,
+    IDENTIFIER, DEFINE, INTEGER, REAL, BEGIN, END, SEMICOLON, COLON, COMMA, VARIABLES, CONSTANTS,
     MULTIPLY {//*
 
         public String toString() {
@@ -125,7 +125,7 @@ public class Token {
         if (value == null) {
             return "Type: " + type;
         } else {
-            return "Type: " + type + " Value: " + value + "\n";
+            return "Type:   " + type + " Value:   " + value;
         }
     }
 }

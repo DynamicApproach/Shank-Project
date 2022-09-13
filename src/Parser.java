@@ -62,9 +62,6 @@ public class Parser {
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
-        if (factor() == null) {
-            return null;
-        }
         Token token = tokens.get(0);
         if (token.getType() == Type.MULTIPLY) {
             matchAndRemove(token);
@@ -88,12 +85,7 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
-        return new Node() {
-            @Override
-            public String toString() {
-                return null;
-            }
-        };
+        return null;
     }
 
     private boolean isFloat(Token token) {
