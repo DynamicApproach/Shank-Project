@@ -31,6 +31,7 @@ enum Type { // Token symbol types
         }
     },
     POSNEG,
+    ENDL,
     MOD {// %
 
         public String toString() {
