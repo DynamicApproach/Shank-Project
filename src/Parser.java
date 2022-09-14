@@ -52,8 +52,9 @@ public class Parser {
     // Expression is a list of terms separated by + or -
     public Node expression() {
         Node node = term();
+        int a = 0;
         // TODO: Decide if while loop is right here?
-        while (true) {
+        while (a < tokens.size()) {
             Token token = tokens.get(0);
             if (token.getType() == Type.ADD) {
                 matchAndRemove(token);
@@ -64,6 +65,7 @@ public class Parser {
             } else {
                 break;
             }
+            a++;
         }
 
         return node;
