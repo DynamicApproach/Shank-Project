@@ -32,4 +32,23 @@ public class Interpreter {
             throw new RuntimeException("Unknown node type: " + node.getClass().getName());
         }
     }
+
+    public void printTree(Node tre) {
+        if (tre.toString() == null) {
+            return;
+        }
+        // if int or float print
+        if (tre instanceof IntegerNode || tre instanceof FloatNode) {
+            System.out.println(tre);
+        } else if (tre instanceof MathOpNode mathOpNode) {
+            // if mathopnode print
+            System.out.println(mathOpNode);
+            // print left
+            printTree(mathOpNode.getLeft());
+            // print right
+            printTree(mathOpNode.getRight());
+        } else {
+            throw new RuntimeException("Unknown node type: " + tre.getClass().getName());
+        }
+    }
 }

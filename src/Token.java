@@ -1,62 +1,50 @@
 enum Type { // Token symbol types
-    IDENTIFIER, DEFINE, INTEGER, REAL, BEGIN, END, SEMICOLON, COLON, COMMA, VARIABLES, CONSTANTS,
-    MULTIPLY {//*
+    IDENTIFIER, DEFINE, INTEGER, REAL, BEGIN, END, SEMICOLON, COLON, COMMA, VARIABLES, CONSTANTS, MULTIPLY {//*
 
         public String toString() {
             return "*";
         }
-    },
-    NEWLINE {// \n
+    }, NEWLINE {// \n
 
         public String toString() {
             return "\n";
         }
-    },
-    DIVIDE {// /
+    }, DIVIDE {// /
 
         public String toString() {
             return "/";
         }
-    },
-    ADD {// +
+    }, ADD {// +
 
         public String toString() {
             return "+";
         }
-    },
-    MINUS {// -
+    }, MINUS {// -
 
         public String toString() {
             return "-";
         }
-    },
-    POSNEG,
-    ENDL,
-    MOD {// %
+    }, POSNEG, MOD {// %
 
         public String toString() {
             return "%";
         }
-    },
-    DECIMAL {// .
+    }, DECIMAL {// .
 
         public String toString() {
             return ".";
         }
-    },
-    EQUAL {// =
+    }, EQUAL {// =
 
         public String toString() {
             return "=";
         }
-    },
-    SPACE {//
+    }, SPACE {//
 
         public String toString() {
             return " ";
         }
-    },
-    NUMBER {// 0-9
+    }, NUMBER {// 0-9
 
         public String toString() {
             return "NUMBER";
@@ -66,8 +54,7 @@ enum Type { // Token symbol types
         public String toString() {
             return "(";
         }
-    },
-    RPAREN {// )
+    }, RPAREN {// )
 
         public String toString() {
             return ")";
@@ -79,8 +66,7 @@ enum Type { // Token symbol types
         public String toString() {
             return "[";
         }
-    },
-    RBRACKET {// ]
+    }, RBRACKET {// ]
 
         public String toString() {
             return "]";

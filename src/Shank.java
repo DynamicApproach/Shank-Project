@@ -23,11 +23,10 @@ public class Shank {
                 // Currently used option of list
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
-                // TODO: implement 'VariableNode' - is constant class, enum for int, real and ast node for the init value of real/intnode
-                // TODO: create int node
+                // TODO: create int node??
                 // TODO: create real node
-                // TODO: FunctionDefinition function + tostring to print local variables and paramaters
-                //   It looks for “define”. If it find that token, it starts building a functionAST node.
+
+
                 // TODO: Constant, Variables and body function
                 // TODO: process constants function
 
@@ -45,10 +44,16 @@ public class Shank {
                 System.out.println("Parsing: ");
                 Node tree = parsing.expression();
                 System.out.println("Parsing complete");
+
+
                 System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter();
+                interpreter.printTree(tree);
+
+
                 float fintree = interpreter.Resolve(tree);
                 System.out.println("Interpreting complete");
+
                 System.out.println("Result: " + fintree);
 
             } catch (Exception e) {

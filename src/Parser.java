@@ -5,25 +5,12 @@ import java.util.ArrayList;
 public class Parser {
     private ArrayList<Token> tokens;
 
-
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
 
     // match and remove searches for a token in the arraylist and removes it if it is found?
-
     // best way remove token from list? iterate? use remove? most efficient?
-
-    public Token matchAndRemove(Token token) {
-        Token temp = tokens.get(0);
-        if (temp.getType() == token.getType()) {
-            tokens.remove(0);
-            return temp;
-        } else {
-            return null;
-        }
-    }
-
     public Token matchAndRemove(Type token) {
         Token temp = tokens.get(0);
         if (temp.getType() == token) {
@@ -34,32 +21,18 @@ public class Parser {
         }
     }
 
-
-    public Token iterativeMatchAndRemove(Type search) {
-        Token token = null;
-        for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getType() == search) {
-                token = tokens.get(i);
-                tokens.remove(i);
-                break;
-            }
-        }
-        return token;
-    }
-
     // expression, term, factor methods
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
     public Node expression() {
         Node node = term();
         int a = 0;
-        // TODO: Decide if while loop is right here?
         while (a < tokens.size()) {
-            Token token = tokens.get(0);
-            if (token.getType() == Type.ADD) {
+            Type token = tokens.get(0).getType();
+            if (token == Type.ADD) {
                 matchAndRemove(token);
                 node = new MathOpNode(node, term(), Type.ADD);
-            } else if (token.getType() == Type.MINUS) {
+            } else if (token == Type.MINUS) {
                 matchAndRemove(token);
                 node = new MathOpNode(node, term(), Type.MINUS);
             } else {
@@ -67,18 +40,17 @@ public class Parser {
             }
             a++;
         }
-
         return node;
     }
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
-        Token token = tokens.get(0);
-        if (token.getType() == Type.MULTIPLY) {
+        Type token = tokens.get(0).getType();
+        if (token == Type.MULTIPLY) {
             matchAndRemove(token);
             node = new MathOpNode(node, factor(), Type.MULTIPLY);
-        } else if (token.getType() == Type.DIVIDE) {
+        } else if (token == Type.DIVIDE) {
             matchAndRemove(token);
             node = new MathOpNode(node, factor(), Type.DIVIDE);
         }
@@ -119,7 +91,6 @@ public class Parser {
     }
 
     @SuppressWarnings("unused")
-
     public Node parse() {
         Node node = expression();
         if (node == null) {
