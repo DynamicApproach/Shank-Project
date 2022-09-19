@@ -24,11 +24,10 @@ public class Lexer {
         try {
             for (char c : input.toCharArray()) {
                 //TODO: check if the character is a number or letter
-                // if a letter, start in the 'letter' state machine
-                //  if it's a space, end the word and check it against the map
-                // if it's a number, start in the 'number' state machine
-                // TODO: Add a hashmap to check if the word is a keyword
-                // TODO: move this to it's own file
+                //      if a letter, start in the 'letter' state machine
+                //      if it's a space, end the word and check it against the map
+                //      if it's a number, start in the 'number' state machine
+                //      if entering a state, reset the builder for the other state
 
                 numState(c);
             }

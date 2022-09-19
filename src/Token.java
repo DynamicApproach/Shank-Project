@@ -128,22 +128,10 @@ public class Token {
     private Type type;
     private String value;
 
-    @SuppressWarnings("unused")
-    public Token(Type a) {
-        type = a;
-        value = null;
-    }
-
     public Token(Type a, String value) {
         type = a;
         this.value = value;
     }
-
-    @SuppressWarnings("unused")
-    public boolean sameType(Token a) {
-        return type == a.type;
-    }
-
 
     public Type getType() {
         return this.type;
