@@ -33,7 +33,7 @@ public class Lexer {
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                tokens.add(new Token(Type.NUMBER, builder.toString()));
+                // tokens.add(new Token(Type.NUMBER, builder.toString()));
                 builder.replace(0, builder.length(), "");
                 state = 0;
             } else {
@@ -113,7 +113,7 @@ public class Lexer {
                             builder.replace(0, builder.length(), "");
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.END, builder.toString()));
+                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
                         builder.replace(0, builder.length(), "");
                         state = 0;
                     }
@@ -185,6 +185,16 @@ public class Lexer {
                 break;
             case 3:
                 switch (c) {
+                    case '\n' -> {
+                        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                            tokens.add(new Token(Type.NUMBER, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                        }
+                        builder.append(c);
+                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
+                        builder.replace(0, builder.length(), "");
+                        state = 0;
+                    }
                     case '.' -> {
                         state = 2;
                         builder.append(c);
@@ -251,6 +261,7 @@ public class Lexer {
                 break;
             case 4:
                 switch (c) {
+
                     case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -258,7 +269,7 @@ public class Lexer {
                             builder.replace(0, builder.length(), "");
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.END, builder.toString()));
+                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
                         builder.replace(0, builder.length(), "");
                         state = 0;
                     }
@@ -309,6 +320,16 @@ public class Lexer {
                 break;
             case 5:
                 switch (c) {
+                    case '\n' -> {
+                        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                            tokens.add(new Token(Type.NUMBER, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                        }
+                        builder.append(c);
+                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
+                        builder.replace(0, builder.length(), "");
+                        state = 0;
+                    }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 3;
                         builder.append(c);

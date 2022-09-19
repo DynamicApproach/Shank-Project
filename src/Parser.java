@@ -100,4 +100,16 @@ public class Parser {
             return node;
         }
     }
+
+    @SuppressWarnings("unused")
+    public ArrayList<Node> parseList() {
+        // parse a whole list of tokens. Add each node head to an arraylist
+        ArrayList<Node> nodes = new ArrayList<>();
+        for (Token token : tokens) {
+            Node node = expression();
+            // add node to arraylist
+            nodes.add(node);
+        }
+        return nodes;
+    }
 }

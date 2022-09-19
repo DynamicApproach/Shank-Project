@@ -23,10 +23,9 @@ public class Shank {
                 // Currently used option of list
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
+
                 // TODO: create int node??
                 // TODO: create real node
-
-
                 // TODO: Constant, Variables and body function
                 // TODO: process constants function
 

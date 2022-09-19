@@ -4,7 +4,8 @@ enum Type { // Token symbol types
             return "+";
         }
     } // +
-    , BEGIN {
+    ,
+    BEGIN {
         public String toString() {
             return "BEGIN";
         }
@@ -25,7 +26,8 @@ enum Type { // Token symbol types
             return ".";
         }
     } // .
-    , DEFINE {
+    ,
+    DEFINE {
         public String toString() {
             return "DEFINE";
         }
@@ -34,11 +36,18 @@ enum Type { // Token symbol types
             return "/";
         }
     } // /
-    , END {
+    ,
+    END {
         public String toString() {
             return "END";
         }
-    }, EQUAL {
+    }, ENDLINE {
+        public String toString() {
+            return "\n";
+        }
+    } // \n
+    ,
+    EQUAL {
         public String toString() {
             return "=";
         }
@@ -51,47 +60,50 @@ enum Type { // Token symbol types
         public String toString() {
             return "INT";
         }
-    }, LBRACKET {
+    },
+    LBRACKET {
         public String toString() {
             return "[";
         }
     } // [
-    , LPAREN {
+    ,
+    LPAREN {
         public String toString() {
             return "(";
         }
     } // (
-    , MINUS {
+    ,
+    MINUS {
         public String toString() {
             return "-";
         }
     } // -
-    , MOD {
+    ,
+    MOD {
         public String toString() {
             return "%";
         }
     } // %
-    , MULTIPLY {
+    ,
+    MULTIPLY {
         public String toString() {
             return "*";
         }
     } //*
-    , NEWLINE {
-        public String toString() {
-            return "\n";
-        }
-    } // \n
-    , NUMBER {
+    ,
+    NUMBER {
         public String toString() {
             return "NUMBER";
         }
     } // 0-9
-    , RBRACKET {
+    ,
+    RBRACKET {
         public String toString() {
             return "]";
         }
     } // ]
-    , REAL {
+    ,
+    REAL {
         public String toString() {
             return "REAL";
         }
@@ -100,7 +112,8 @@ enum Type { // Token symbol types
             return ")";
         }
     } // )
-    , SEMICOLON {
+    ,
+    SEMICOLON {
         public String toString() {
             return "SEMICOLON";
         }
@@ -111,11 +124,13 @@ enum Type { // Token symbol types
             return " ";
         }
     } //
-    , VARIABLES {
+    ,
+    VARIABLES {
         public String toString() {
             return "CONST";
         }
     }
+
 
 }
 
