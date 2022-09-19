@@ -1,77 +1,122 @@
 enum Type { // Token symbol types
-    IDENTIFIER, DEFINE, INTEGER, REAL, BEGIN, END, SEMICOLON, COLON, COMMA, VARIABLES, CONSTANTS, MULTIPLY {//*
-
-        public String toString() {
-            return "*";
-        }
-    }, NEWLINE {// \n
-
-        public String toString() {
-            return "\n";
-        }
-    }, DIVIDE {// /
-
-        public String toString() {
-            return "/";
-        }
-    }, ADD {// +
-
+    ADD {
         public String toString() {
             return "+";
         }
-    }, MINUS {// -
-
+    } // +
+    , BEGIN {
         public String toString() {
-            return "-";
+            return "BEGIN";
         }
-    }, POSNEG, MOD {// %
-
+    }, COLON {
         public String toString() {
-            return "%";
+            return "COLON";
         }
-    }, DECIMAL {// .
-
+    }, COMMA {
+        public String toString() {
+            return "COMMA";
+        }
+    }, CONSTANT {
+        public String toString() {
+            return "CONST";
+        }
+    }, DECIMAL {
         public String toString() {
             return ".";
         }
-    }, EQUAL {// =
-
+    } // .
+    , DEFINE {
+        public String toString() {
+            return "DEFINE";
+        }
+    }, DIVIDE {
+        public String toString() {
+            return "/";
+        }
+    } // /
+    , END {
+        public String toString() {
+            return "END";
+        }
+    }, EQUAL {
         public String toString() {
             return "=";
         }
-    }, SPACE {//
-
+    } // =
+    , IDENTIFIER {
         public String toString() {
-            return " ";
+            return "IDENTIFIER";
         }
-    }, NUMBER {// 0-9
-
+    }, INTEGER {
         public String toString() {
-            return "NUMBER";
+            return "INT";
         }
-    }, LPAREN {// (
-
-        public String toString() {
-            return "(";
-        }
-    }, RPAREN {// )
-
-        public String toString() {
-            return ")";
-        }
-    },
-
-    LBRACKET {// [
-
+    }, LBRACKET {
         public String toString() {
             return "[";
         }
-    }, RBRACKET {// ]
-
+    } // [
+    , LPAREN {
+        public String toString() {
+            return "(";
+        }
+    } // (
+    , MINUS {
+        public String toString() {
+            return "-";
+        }
+    } // -
+    , MOD {
+        public String toString() {
+            return "%";
+        }
+    } // %
+    , MULTIPLY {
+        public String toString() {
+            return "*";
+        }
+    } //*
+    , NEWLINE {
+        public String toString() {
+            return "\n";
+        }
+    } // \n
+    , NUMBER {
+        public String toString() {
+            return "NUMBER";
+        }
+    } // 0-9
+    , RBRACKET {
         public String toString() {
             return "]";
         }
+    } // ]
+    , REAL {
+        public String toString() {
+            return "REAL";
+        }
+    }, RPAREN {
+        public String toString() {
+            return ")";
+        }
+    } // )
+    , SEMICOLON {
+        public String toString() {
+            return "SEMICOLON";
+        }
+    },
+
+    SPACE {
+        public String toString() {
+            return " ";
+        }
+    } //
+    , VARIABLES {
+        public String toString() {
+            return "CONST";
+        }
     }
+
 }
 
 /* This file must contain a Token class. The token class is made up of an instance of an enum and a value string. There must be a public accessor
