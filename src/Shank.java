@@ -34,8 +34,14 @@ public class Shank {
                     tokens = (lexer.Lex(line));
                 }
                 for (Token token : tokens) {
-                    if (token != null) {
-                        System.out.println(token);
+                    if (token == null) {
+
+                    } else {
+                        System.out.print(token);
+                        if (token.getType() == Type.ENDLINE) {
+                            System.out.println("\n");
+                        }
+
                     }
                 }
                 Parser parsing = new Parser(tokens);

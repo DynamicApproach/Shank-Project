@@ -1,7 +1,7 @@
 enum Type { // Token symbol types
     ADD {
         public String toString() {
-            return "+";
+            return "ADD";
         }
     } // +
     ,
@@ -23,7 +23,7 @@ enum Type { // Token symbol types
         }
     }, DECIMAL {
         public String toString() {
-            return ".";
+            return "DECIMAL";
         }
     } // .
     ,
@@ -33,7 +33,7 @@ enum Type { // Token symbol types
         }
     }, DIVIDE {
         public String toString() {
-            return "/";
+            return "DIVIDE";
         }
     } // /
     ,
@@ -43,13 +43,13 @@ enum Type { // Token symbol types
         }
     }, ENDLINE {
         public String toString() {
-            return "\n";
+            return "ENDLINE";
         }
     } // \n
     ,
     EQUAL {
         public String toString() {
-            return "=";
+            return "EQUAL";
         }
     } // =
     , IDENTIFIER {
@@ -63,31 +63,31 @@ enum Type { // Token symbol types
     },
     LBRACKET {
         public String toString() {
-            return "[";
+            return "LBRACKET";
         }
     } // [
     ,
     LPAREN {
         public String toString() {
-            return "(";
+            return "LPAREN";
         }
     } // (
     ,
     MINUS {
         public String toString() {
-            return "-";
+            return "MINUS";
         }
     } // -
     ,
     MOD {
         public String toString() {
-            return "%";
+            return "MOD";
         }
     } // %
     ,
     MULTIPLY {
         public String toString() {
-            return "*";
+            return "MULTIPLY";
         }
     } //*
     ,
@@ -99,7 +99,7 @@ enum Type { // Token symbol types
     ,
     RBRACKET {
         public String toString() {
-            return "]";
+            return "RBRACKET";
         }
     } // ]
     ,
@@ -109,7 +109,7 @@ enum Type { // Token symbol types
         }
     }, RPAREN {
         public String toString() {
-            return ")";
+            return "RPAREN";
         }
     } // )
     ,
@@ -121,7 +121,7 @@ enum Type { // Token symbol types
 
     SPACE {
         public String toString() {
-            return " ";
+            return "SPACE";
         }
     } //
     ,
@@ -157,10 +157,13 @@ public class Token {
     }
 
     public String toString() {
+        if (type == null) {
+            return "";
+        }
         if (value == null) {
             return "Type: " + type;
         } else {
-            return "Type:   " + type + " Value:   " + value;
+            return type + "(" + value + ")";
         }
     }
 }
