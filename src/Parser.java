@@ -25,6 +25,9 @@ public class Parser {
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
     public Node expression() {
+        // what should happen at newline?
+        // should it be removed from the list?
+        // should it be ignored? -> current -> Causes error of only parsing one line
         Node node = term();
         int a = 0;
         while (a < tokens.size()) {
@@ -101,15 +104,4 @@ public class Parser {
         }
     }
 
-    @SuppressWarnings("unused")
-    public ArrayList<Node> parseList() {
-        // parse a whole list of tokens. Add each node head to an arraylist
-        ArrayList<Node> nodes = new ArrayList<>();
-        for (Token token : tokens) {
-            Node node = expression();
-            // add node to arraylist
-            nodes.add(node);
-        }
-        return nodes;
-    }
 }

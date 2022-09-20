@@ -161,7 +161,9 @@ public class Token {
             return "";
         }
         if (value == null) {
-            return "Type: " + type;
+            return type + "(" + ")";
+        } else if (type == Type.ENDLINE) {
+            return type + "(" + value.replace("\n", "\\n") + ")";
         } else {
             return type + "(" + value + ")";
         }

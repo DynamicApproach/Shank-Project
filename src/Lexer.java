@@ -15,12 +15,11 @@ public class Lexer {
     HashMap<String, Type> reservedWords = new HashMap<String, Type>();
 
     private ArrayList<Token> tokens = new ArrayList<>();
-
     private int state = 0;
     private StringBuilder builder = new StringBuilder();
 
     public ArrayList<Token> Lex(String input) {
-
+        setupReservedWords();
         try {
             for (char c : input.toCharArray()) {
                 //TODO: check if the character is a number or letter
@@ -28,8 +27,17 @@ public class Lexer {
                 //      if it's a space, end the word and check it against the map
                 //      if it's a number, start in the 'number' state machine
                 //      if entering a state, reset the builder for the other state
+                if (reservedWords.containsKey(builder.toString())) {
+                    tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
+                    builder.replace(0, builder.length(), "");
+                    state = 0;
+                } else {
+                    // swap to check if its a character or not?
+                    numState(c);
 
-                numState(c);
+                }
+                // if is digit or operator of +-, go to numState else word state
+
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -49,6 +57,48 @@ public class Lexer {
         state = 0;
         builder.replace(0, builder.length(), "");
         return tokens;
+    }
+
+    private void setupReservedWords() {
+        // Identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal, comma, variables, constants
+        // integer, real, begin, end, variables, constants
+        reservedWords.put("IDENTIFIER", Type.IDENTIFIER);
+        reservedWords.put("DEFINE", Type.DEFINE);
+        reservedWords.put("LEFTPAREN", Type.LPAREN);
+        reservedWords.put("RIGHTPAREN", Type.RPAREN);
+        reservedWords.put("INTEGER", Type.INTEGER);
+        reservedWords.put("REAL", Type.REAL);
+        reservedWords.put("BEGIN", Type.BEGIN);
+        reservedWords.put("END", Type.END);
+        reservedWords.put("SEMICOLON", Type.SEMICOLON);
+        reservedWords.put("COLON", Type.COLON);
+        reservedWords.put("EQUAL", Type.EQUAL);
+        reservedWords.put("COMMA", Type.COMMA);
+        reservedWords.put("VARIABLES", Type.VARIABLES);
+        reservedWords.put("CONSTANTS", Type.CONSTANT);
+        reservedWords.put("PLUS", Type.BEGIN);
+        reservedWords.put("MINUS", Type.END);
+    }
+
+    private void wordState(char c) {
+        state = 0;
+        builder.replace(0, builder.length(), "");
+        if (Character.isLetter(c)) {
+            builder.append(c);
+        } else if (Character.isDigit(c)) {
+            builder.append(c);
+        } else if (c == ' ') {
+            if (reservedWords.containsKey(builder.toString())) {
+                tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
+                builder.replace(0, builder.length(), "");
+            } else {
+                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                builder.replace(0, builder.length(), "");
+            }
+        } else {
+            System.out.println("Error: Invalid character2 " + c);
+            throw new RuntimeException("Invalid character2");
+        }
     }
 
     private void numState(char c) throws Exception {
@@ -262,7 +312,7 @@ public class Lexer {
             case 4:
                 switch (c) {
 
-                    case ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
+                    case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
                             tokens.add(new Token(Type.NUMBER, builder.toString()));
