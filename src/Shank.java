@@ -47,7 +47,8 @@ public class Shank {
                 Parser parsing = new Parser(tokens);
 
                 System.out.println("Parsing: ");
-                Node tree = parsing.expression();
+                // pass each set of nodes into the parser?
+                Node tree = parsing.parse();
                 System.out.println("Parsing complete");
 
 
