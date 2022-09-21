@@ -102,4 +102,163 @@ public class Parser {
         }
     }
 
+    public Node FunctionDefinition() {
+        /*
+            It looks for “define”.
+            If it finds that token, it starts building a functionAST node .
+            It populates the name from the identifier, then looks for the left parenthesis.
+            It then looks for variable declarations (see below).
+            We then call the Constants, then Variables, then Body function from below.
+        */
+
+        try {
+            if (matchAndRemove(Type.DEFINE) != null) {
+                String iden = "";
+                Node idenval = null;
+                Type identype = Type.DEFINE;
+                boolean isConst = false;
+                Node var = new VariableNode(iden, idenval, identype, isConst);
+                if (matchAndRemove(Type.LPAREN) != null) {
+                    Constants();
+                    if (matchAndRemove(Type.RPAREN) != null) {
+/*                        if (matchAndRemove(Type.LBRACE) != null) {
+                            Node body = expression();
+                            if (matchAndRemove(Type.RBRACE) != null) {
+                                return new FunctionDefinitionNode(var, body);
+                            }
+                        }*/ // ?? TODO: Should func def be a class?
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("Error in FunctionDefinition - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private VariableNode Constants() {
+        //looks for the constants token. If it finds it, it calls a “processConstants” function that looks for tokens
+        try {
+            if (matchAndRemove(Type.CONSTANT) != null) {
+                processConstants();
+
+            }
+        } catch (Exception e) {
+            System.out.println("Error in Constants - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private VariableNode processConstants() {
+       /*
+        processConstants function that looks for tokens in the format:
+        Identifier equals number endOfLine
+        It should make a VariableNode for each of these – this
+        should be a loop until it doesn’t find an identifier anymore.
+        */
+
+        Token x;
+        try {
+            while ((x = matchAndRemove(Type.IDENTIFIER)) != null) {
+                Token y = matchAndRemove(Type.EQUAL);
+                Token z = matchAndRemove(Type.NUMBER);
+                Token a = matchAndRemove(Type.ENDLINE);
+                if ((y != null)) {
+                    if (isInteger(tokens.get(0))) {
+                        IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
+                        tokens.remove(0);
+                        if (a != null) {
+                            // make a VariableNode
+                            VariableNode var = new VariableNode(x.getValue(), intNode, Type.CONSTANT, true);
+                        }
+                    }
+                    if (isFloat(tokens.get(0))) {
+                        FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
+                        tokens.remove(0);
+                        if (a != null) {
+                            // make a VariableNode
+                            VariableNode var = new VariableNode(x.getValue(), floatNode, Type.CONSTANT, true);
+                        }
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error in processConstants - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+
+
+        return null;
+    }
+
+    public Node bodyFunction() {
+        Token begin = matchAndRemove(Type.BEGIN);
+        Token end = matchAndRemove(Type.ENDLINE);
+        if (begin != null) {
+            if (end != null) {
+                // make a bodyFunctionNode? or just return begin/end?
+                //BodyFunctionNode body = new BodyFunctionNode(); ?
+            }
+        }
+        return null;
+    }
+
+    public VariableNode variables() {
+
+       /*
+        looks for the variables token.
+        then looks for variable declarations and makes VariableNodes for each one.
+        A variable declaration is a list of identifiers (separated by commas) followed by a colon,
+        then the data type (integer or real, for now) followed by
+         endOfLine (for variables section) or a semi-colon(for function definitions).
+
+        IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
+
+        For each variable, we make a VariableNode like we did for constants.*/
+        // token equal match and remove
+        try {
+            Token iden = null;
+            while ((iden = matchAndRemove(Type.IDENTIFIER)) != null) {
+                Token comma = matchAndRemove(Type.COMMA);
+                Token colon = matchAndRemove(Type.COLON);
+                Token datatype = matchAndRemove(Type.INTEGER);
+                Token otherType = matchAndRemove(Type.REAL);
+                Token eol = matchAndRemove(Type.ENDLINE);
+                Token semi = matchAndRemove(Type.SEMICOLON);
+                if (comma != null) {
+                    if (colon != null) {
+                        if (datatype != null) {
+                            if (eol != null) {
+                                // make a VariableNode
+                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.INTEGER, false);
+                                // TODO: figure out what value should be? int node of val? Use identifier for name?
+                            }
+                            if (semi != null) {
+                                // make a VariableNode
+                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.INTEGER, false);
+                            }
+                        } else if (otherType != null) {
+                            if (eol != null) {
+                                // make a VariableNode
+                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.REAL, false); // new IntegerNode(Integer.parseInt(datatype.getValue()))?
+                            }
+                            if (semi != null) {
+                                // make a VariableNode
+                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.REAL, false);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error in variables - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+
 }

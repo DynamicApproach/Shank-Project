@@ -3,9 +3,9 @@ public class VariableNode extends Node {
     boolean isConstant;
     private String name;
     private Node value;
-    private variableType type;
+    private Type type;
 
-    public VariableNode(String name, Node value, variableType type, boolean isConstant) {
+    public VariableNode(String name, Node value, Type type, boolean isConstant) {
         this.name = name;
         this.value = value;
         this.type = type;
@@ -20,7 +20,7 @@ public class VariableNode extends Node {
         return value;
     }
 
-    public variableType getType() {
+    public Type getType() {
         return type;
     }
 
