@@ -39,14 +39,17 @@ public class Interpreter {
         }
         // if int or float print
         if (tre instanceof IntegerNode || tre instanceof FloatNode) {
-            System.out.println(tre);
+            System.out.print(tre);
         } else if (tre instanceof MathOpNode mathOpNode) {
             // if mathopnode print
-            System.out.println(mathOpNode);
+            System.out.print(mathOpNode);
             // print left
+            System.out.print("(");
             printTree(mathOpNode.getLeft());
             // print right
+            System.out.print(",");
             printTree(mathOpNode.getRight());
+            System.out.println(")");
         } else {
             throw new RuntimeException("Unknown node type: " + tre.getClass().getName());
         }
