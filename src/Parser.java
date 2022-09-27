@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -6,6 +7,20 @@ public class Parser {
     private ArrayList<Token> tokens;
 
     public Parser(ArrayList<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    /**
+     * @return the tokens
+     */
+    public ArrayList<Token> getTokens() {
+        return tokens;
+    }
+
+    /**
+     * @param tokens the tokens to set
+     */
+    public void setTokens(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
 
@@ -113,33 +128,34 @@ public class Parser {
 
         try {
             if (matchAndRemove(Type.DEFINE) != null) {
-                String iden = "";
-                Node idenval = null;
-                Type identype = Type.DEFINE;
-                boolean isConst = false;
-                Node var = new VariableNode(iden, idenval, identype, isConst);
-                if (matchAndRemove(Type.LPAREN) != null) {
-                    Constants();
-                    if (matchAndRemove(Type.RPAREN) != null) {
-/*                        if (matchAndRemove(Type.LBRACE) != null) {
-                            Node body = expression();
-                            if (matchAndRemove(Type.RBRACE) != null) {
-                                return new FunctionDefinitionNode(var, body);
-                            }
-                        }*/ // ?? TODO: Should func def be a class?
-                    }
-                }
-
+                Token name = matchAndRemove(Type.IDENTIFIER);
+                FunctionAST f = new FunctionAST(name.getValue());
+                matchAndRemove(Type.LPAREN);
+                f.setParameters(params());
+                matchAndRemove(Type.RPAREN);
+                matchAndRemove(Type.ENDLINE);
+                f.constant = constants();
+                f.variables = variables();
+                f.body = body();
+                return f;
             }
         } catch (Exception e) {
-            System.out.println("Error in FunctionDefinition - Token expected but not found.");
             throw new RuntimeException(e);
         }
         return null;
     }
 
-    private VariableNode Constants() {
-        //looks for the constants token. If it finds it, it calls a “processConstants” function that looks for tokens
+    private VariableNode body() {
+        return null;
+    }
+
+
+    private List<VariableNode> params() {
+
+        return null;
+    }
+
+    private List<VariableNode> constants() {//looks for the constants token. If it finds it, it calls a “processConstants” function that looks for token
         try {
             if (matchAndRemove(Type.CONSTANT) != null) {
                 processConstants();
