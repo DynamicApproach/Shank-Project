@@ -13,12 +13,14 @@ import java.util.HashMap;
 
 public class Lexer {
     HashMap<String, Type> reservedWords = new HashMap<String, Type>();
-
+    int index = 0;
     private ArrayList<Token> tokens = new ArrayList<>();
     private int state = 0;
     private StringBuilder builder = new StringBuilder();
+    private String input;
 
     public ArrayList<Token> Lex(String input) {
+        this.input = input;
         setupReservedWords();
         try {
             for (char c : input.toCharArray()) {
@@ -30,6 +32,7 @@ public class Lexer {
                 } else {
                     numState(c);
                 }
+                index++;
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -98,14 +101,23 @@ public class Lexer {
             case 0:
                 switch (c) {
                     case '(' -> {
-                        builder.append(c);
-                        tokens.add(new Token(Type.LPAREN, "("));
-                        builder.replace(0, builder.length(), "");
+                        // check if next char in input is a *
+                        if (input.toCharArray()[index + 1] == '*') {
+                            state = 7;
+                        } else {
+                            builder.append(c);
+                            tokens.add(new Token(Type.LPAREN, "("));
+                            builder.replace(0, builder.length(), "");
+                        }
                     }
                     case ')' -> {
-                        builder.append(c);
-                        tokens.add(new Token(Type.RPAREN, ")"));
-                        builder.replace(0, builder.length(), "");
+                        if (input.toCharArray()[index + 1] == '*') {
+                            state = 7;
+                        } else {
+                            builder.append(c);
+                            tokens.add(new Token(Type.RPAREN, ")"));
+                            builder.replace(0, builder.length(), "");
+                        }
                     }
                     case '\n' -> {
                         builder.append(c);
@@ -432,7 +444,9 @@ public class Lexer {
                             builder.replace(0, builder.length(), "");
                             state = 0;
                         }
+
                         default -> builder.append(c);
+
                     }
 
                 } else {
@@ -467,6 +481,11 @@ public class Lexer {
                             builder.replace(0, builder.length(), "");
                         }
                     }
+                    state = 0;
+                }
+            case 7:
+                // do nothing until end of comment *)
+                if (c == '*' && input.charAt(index + 1) == ')') {
                     state = 0;
                 }
         }

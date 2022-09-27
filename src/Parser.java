@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -131,7 +132,7 @@ public class Parser {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 FunctionAST f = new FunctionAST(name.getValue());
                 matchAndRemove(Type.LPAREN);
-                f.setParameters(params());
+                f.setParameters(params()); // constants, variables, body
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
                 f.constant = constants();
@@ -155,7 +156,9 @@ public class Parser {
         return null;
     }
 
-    private List<VariableNode> constants() {//looks for the constants token. If it finds it, it calls a “processConstants” function that looks for token
+    private List<VariableNode> constants() {
+        //looks for the constants token.
+        // If it finds it, it calls a “processConstants” function that looks for token
         try {
             if (matchAndRemove(Type.CONSTANT) != null) {
                 processConstants();
@@ -168,7 +171,7 @@ public class Parser {
         return null;
     }
 
-    private VariableNode processConstants() {
+    private List<VariableNode> processConstants() {
        /*
         processConstants function that looks for tokens in the format:
         Identifier equals number endOfLine
@@ -177,6 +180,7 @@ public class Parser {
         */
 
         Token x;
+        List<VariableNode> constants = new ArrayList<>();
         try {
             while ((x = matchAndRemove(Type.IDENTIFIER)) != null) {
                 Token y = matchAndRemove(Type.EQUAL);
@@ -189,30 +193,34 @@ public class Parser {
                         if (a != null) {
                             // make a VariableNode
                             VariableNode var = new VariableNode(x.getValue(), intNode, Type.CONSTANT, true);
+                            constants.add(var);
                         }
-                    }
-                    if (isFloat(tokens.get(0))) {
+                    } else if (isFloat(tokens.get(0))) {
                         FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
                         tokens.remove(0);
                         if (a != null) {
                             // make a VariableNode
                             VariableNode var = new VariableNode(x.getValue(), floatNode, Type.CONSTANT, true);
+                            constants.add(var);
                         }
                     }
                 }
+
             }
+            return constants;
         } catch (NumberFormatException e) {
             System.out.println("Error in processConstants - Token expected but not found.");
             throw new RuntimeException(e);
         }
 
 
-        return null;
     }
 
     public Node bodyFunction() {
         Token begin = matchAndRemove(Type.BEGIN);
         Token end = matchAndRemove(Type.ENDLINE);
+        matchAndRemove(Type.END);
+        matchAndRemove(Type.ENDLINE);
         if (begin != null) {
             if (end != null) {
                 // make a bodyFunctionNode? or just return begin/end?
@@ -222,58 +230,45 @@ public class Parser {
         return null;
     }
 
-    public VariableNode variables() {
+    public List<VariableNode> variables() {
 
        /*
-        looks for the variables token.
-        then looks for variable declarations and makes VariableNodes for each one.
+        We then make a Variables function that looks for the variables token.
+        If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
         A variable declaration is a list of identifiers (separated by commas) followed by a colon,
-        then the data type (integer or real, for now) followed by
-         endOfLine (for variables section) or a semi-colon(for function definitions).
-
+        then the data type (integer or real, for now) followed by endOfLine (for variables section)
+        or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
-
         For each variable, we make a VariableNode like we did for constants.*/
         // token equal match and remove
+        List<VariableNode> variables = new ArrayList<>();
+
+        // alternate method? :  all identifiers into a list and then parse the list and make a VariableNode for each one
         try {
-            Token iden = null;
-            while ((iden = matchAndRemove(Type.IDENTIFIER)) != null) {
-                Token comma = matchAndRemove(Type.COMMA);
-                Token colon = matchAndRemove(Type.COLON);
-                Token datatype = matchAndRemove(Type.INTEGER);
-                Token otherType = matchAndRemove(Type.REAL);
-                Token eol = matchAndRemove(Type.ENDLINE);
-                Token semi = matchAndRemove(Type.SEMICOLON);
-                if (comma != null) {
-                    if (colon != null) {
-                        if (datatype != null) {
-                            if (eol != null) {
+            if (matchAndRemove(Type.VARIABLES) != null) {
+                Token currenttoken = null;
+                while ((currenttoken = matchAndRemove(Type.IDENTIFIER)) != null) { // a,b,c
+                    Token comma = matchAndRemove(Type.COMMA);
+                    Token colon = matchAndRemove(Type.COLON);
+                    Token isint = matchAndRemove(Type.INTEGER);
+                    Token isreal = matchAndRemove(Type.REAL);
+                    Token endl = matchAndRemove(Type.ENDLINE);
+                    if (comma != null || colon != null) {
+                        if (isint != null || isreal != null) {
+                            if (endl != null) {
                                 // make a VariableNode
-                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.INTEGER, false);
-                                // TODO: figure out what value should be? int node of val? Use identifier for name?
-                            }
-                            if (semi != null) {
-                                // make a VariableNode
-                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.INTEGER, false);
-                            }
-                        } else if (otherType != null) {
-                            if (eol != null) {
-                                // make a VariableNode
-                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.REAL, false); // new IntegerNode(Integer.parseInt(datatype.getValue()))?
-                            }
-                            if (semi != null) {
-                                // make a VariableNode
-                                VariableNode var = new VariableNode(iden.getValue(), variables(), Type.REAL, false);
+                                VariableNode var = new VariableNode(currenttoken.getValue(), null, Type.VARIABLES, false);
+                                variables.add(var);
                             }
                         }
                     }
                 }
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Error in variables - Token expected but not found.");
+            return variables;
+        } catch (Exception e) {
+            System.out.println("Error in Variables - Token expected but not found.");
             throw new RuntimeException(e);
         }
-        return null;
     }
 
 
