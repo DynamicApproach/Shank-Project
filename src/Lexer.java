@@ -22,22 +22,14 @@ public class Lexer {
         setupReservedWords();
         try {
             for (char c : input.toCharArray()) {
-                //TODO: check if the character is a number or letter
-                //      if a letter, start in the 'letter' state machine
-                //      if it's a space, end the word and check it against the map
-                //      if it's a number, start in the 'number' state machine
-                //      if entering a state, reset the builder for the other state
-                if (reservedWords.containsKey(builder.toString())) {
-                    tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
+                if (reservedWords.containsKey(builder.toString().toUpperCase())) {
+                    tokens.add(new Token(reservedWords.get(builder.toString().toUpperCase()), builder.toString()));
                     builder.replace(0, builder.length(), "");
                     state = 0;
-                } else {
-                    // swap to check if its a character or not?
                     numState(c);
-
+                } else {
+                    numState(c);
                 }
-                // if is digit or operator of +-, go to numState else word state
-
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -115,6 +107,11 @@ public class Lexer {
                         tokens.add(new Token(Type.RPAREN, ")"));
                         builder.replace(0, builder.length(), "");
                     }
+                    case '\n' -> {
+                        builder.append(c);
+                        tokens.add(new Token(Type.ENDLINE, ")"));
+                        builder.replace(0, builder.length(), "");
+                    }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 2;
                         builder.append(c);
@@ -129,10 +126,8 @@ public class Lexer {
                         builder.append(c);
                     }
                     default -> {
-                        System.out.println("Error: Invalid character0: " + c);
-                        state = 0;
-                        builder.replace(0, builder.length(), "");
-                        throw new Exception("Invalid character0");
+                        state = 6;
+                        builder.append(c);
                     }
                 }
                 break;
@@ -392,7 +387,90 @@ public class Lexer {
                         throw new Exception("Invalid character5");
                     }
                 }
+            case 6:
+                // if not space or newline, then add to builder
+                if (c != ' ' && c != '\n') {
+                    switch (c) {
+                        case ',' -> {
+                            if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                            }
+                            builder.append(c);
+                            tokens.add(new Token(Type.COMMA, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case ':' -> {
+                            // if builder isnt empty
+                            if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                            }
+                            builder.append(c);
+                            tokens.add(new Token(Type.COLON, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case '=' -> {
+                            if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                            }
+                            builder.append(c);
+                            tokens.add(new Token(Type.EQUAL, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case ';' -> {
+                            if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                            }
+                            builder.append(c);
+                            tokens.add(new Token(Type.SEMICOLON, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        default -> builder.append(c);
+                    }
+
+                } else {
+                    // if space or newline, then end of word so add to tokens
+                    switch (builder.toString()) {
+                        case "," -> {
+
+                            tokens.add(new Token(Type.COMMA, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case ":" -> {
+                            tokens.add(new Token(Type.COLON, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case "=" -> {
+                            tokens.add(new Token(Type.EQUAL, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                            state = 0;
+                        }
+                        case ";" -> {
+                            tokens.add(new Token(Type.SEMICOLON, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                        }
+                        case "\n" -> {
+                            tokens.add(new Token(Type.ENDLINE, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                        }
+                        default -> {
+                            tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                            builder.replace(0, builder.length(), "");
+                        }
+                    }
+                    state = 0;
+                }
         }
+
     }
 
 
