@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -118,6 +117,40 @@ public class Parser {
         }
     }
 
+    public List<StatementNode> Statement() {
+
+        List<StatementNode> statements = new ArrayList<>();
+        matchAndRemove(Type.BEGIN);
+        matchAndRemove(Type.ENDLINE);
+        while (tokens.get(0).getType() != Type.END) {
+            statements.add((StatementNode) Statement());
+        }
+        // should this be wrapped in a if? if(end)if(endline)return statements?
+        matchAndRemove(Type.END);
+        matchAndRemove(Type.ENDLINE);
+        return statements;
+    }
+
+    public AssignmentNode Assignment() {
+        // identifier assignment expression endofline
+        if (peekTwice().getType() == Type.ASSIGN) {
+            String name = matchAndRemove(Type.IDENTIFIER).getValue();
+            matchAndRemove(Type.ASSIGN);
+            Node value = expression();
+            matchAndRemove(Type.ENDLINE);
+            return new AssignmentNode(new VariableReferenceNode(name), value);
+        }
+        return null;
+    }
+
+    public Token peek() {
+        return tokens.get(0);
+    }
+
+    public Token peekTwice() {
+        return tokens.get(1);
+    }
+
     public Node FunctionDefinition() {
         /*
             It looks for “define”.
@@ -130,14 +163,14 @@ public class Parser {
         try {
             if (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                FunctionAST f = new FunctionAST(name.getValue());
+                ASTNode f = new ASTNode(name.getValue());
                 matchAndRemove(Type.LPAREN);
                 f.setParameters(params()); // constants, variables, body
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
                 f.constant = constants();
                 f.variables = variables();
-                f.body = body();
+                f.body = bodyFunction();
                 return f;
             }
         } catch (Exception e) {
@@ -145,11 +178,6 @@ public class Parser {
         }
         return null;
     }
-
-    private VariableNode body() {
-        return null;
-    }
-
 
     private List<VariableNode> params() {
 
@@ -216,18 +244,15 @@ public class Parser {
 
     }
 
-    public Node bodyFunction() {
-        Token begin = matchAndRemove(Type.BEGIN);
-        Token end = matchAndRemove(Type.ENDLINE);
-        matchAndRemove(Type.END);
-        matchAndRemove(Type.ENDLINE);
-        if (begin != null) {
-            if (end != null) {
-                // make a bodyFunctionNode? or just return begin/end?
-                //BodyFunctionNode body = new BodyFunctionNode(); ?
-            }
+    public List<Node> bodyFunction() {
+        List<Node> body = new ArrayList<>();
+        while (matchAndRemove(Type.BEGIN) != null) {
+            Token end = matchAndRemove(Type.ENDLINE);
+            matchAndRemove(Type.END);
+            matchAndRemove(Type.ENDLINE);
         }
-        return null;
+
+        return body;
     }
 
     public List<VariableNode> variables() {

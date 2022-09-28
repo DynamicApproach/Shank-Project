@@ -24,11 +24,6 @@ public class Shank {
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
 
-                // TODO: create int node??
-                // TODO: create real node
-                // TODO: Constant, Variables and body function
-                // TODO: process constants function
-
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));

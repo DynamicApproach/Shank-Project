@@ -3,7 +3,12 @@ enum Type { // Token symbol types
         public String toString() {
             return "ADD";
         }
-    } // +
+    }, // +
+    ASSIGN {
+        public String toString() {
+            return "ASSIGN";
+        }
+    } // :=
     ,
     BEGIN {
         public String toString() {
