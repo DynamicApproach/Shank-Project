@@ -459,14 +459,29 @@ public class Lexer {
                             state = 0;
                         }
                         case ":" -> {
-                            tokens.add(new Token(Type.COLON, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
+                            // if  input index +1 is = then diff token
+                            if (input.charAt(index + 1) == '=') {
+                                builder.append(input.charAt(index + 1));
+                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
+                            } else {
+                                tokens.add(new Token(Type.COLON, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
+                            }
                         }
                         case "=" -> {
-                            tokens.add(new Token(Type.EQUAL, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
+                            if (builder.length() > 0 && ":".equals(builder.toString())) {
+                                builder.append(c);
+                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
+                            } else {
+                                tokens.add(new Token(Type.EQUAL, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
+                            }
                         }
                         case ";" -> {
                             tokens.add(new Token(Type.SEMICOLON, builder.toString()));

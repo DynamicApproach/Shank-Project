@@ -5,9 +5,9 @@ public class AssignmentNode extends StatementNode {
     // This is not a good tradition. I used “target” and “expression”.
 
     private VariableReferenceNode target;
-    private Node expression;
+    private ASTNode expression;
 
-    public AssignmentNode(VariableReferenceNode target, Node expression) {
+    public AssignmentNode(VariableReferenceNode target, ASTNode expression) {
         super("Assignment");
         this.target = target;
         this.expression = expression;

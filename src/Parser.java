@@ -117,18 +117,20 @@ public class Parser {
         }
     }
 
-    public List<StatementNode> Statement() {
-
+    public List<StatementNode> Statements() {
         List<StatementNode> statements = new ArrayList<>();
         matchAndRemove(Type.BEGIN);
         matchAndRemove(Type.ENDLINE);
         while (tokens.get(0).getType() != Type.END) {
-            statements.add((StatementNode) Statement());
+            statements.add(Statement());
         }
-        // should this be wrapped in a if? if(end)if(endline)return statements?
         matchAndRemove(Type.END);
         matchAndRemove(Type.ENDLINE);
         return statements;
+    }
+
+    public StatementNode Statement() {
+        return Assignment();
     }
 
     public AssignmentNode Assignment() {
@@ -136,7 +138,7 @@ public class Parser {
         if (peekTwice().getType() == Type.ASSIGN) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue();
             matchAndRemove(Type.ASSIGN);
-            Node value = expression();
+            ASTNode value = (ASTNode) expression();
             matchAndRemove(Type.ENDLINE);
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
@@ -151,7 +153,7 @@ public class Parser {
         return tokens.get(1);
     }
 
-    public Node FunctionDefinition() {
+    public ASTNode FunctionDefinition() {
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
