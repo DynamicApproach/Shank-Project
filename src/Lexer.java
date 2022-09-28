@@ -24,6 +24,7 @@ public class Lexer {
         setupReservedWords();
         try {
             for (char c : input.toCharArray()) {
+                index++;
                 if (reservedWords.containsKey(builder.toString().toUpperCase())) {
                     tokens.add(new Token(reservedWords.get(builder.toString().toUpperCase()), builder.toString()));
                     builder.replace(0, builder.length(), "");
@@ -32,7 +33,7 @@ public class Lexer {
                 } else {
                     numState(c);
                 }
-                index++;
+
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -414,20 +415,34 @@ public class Lexer {
                             state = 0;
                         }
                         case ':' -> {
-                            // if builder isnt empty
-                            if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                            // if  input index +1 is = then diff token
+                            if (input.charAt(index + 1) == '=') {
+                                builder.append(input.charAt(index + 1));
+                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
                                 builder.replace(0, builder.length(), "");
+                                state = 0;
+                            } else {
+                                tokens.add(new Token(Type.COLON, builder.toString()));
+                                builder.replace(0, builder.length(), "");
+                                state = 0;
                             }
-                            builder.append(c);
-                            tokens.add(new Token(Type.COLON, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
                         }
                         case '=' -> {
                             if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                                builder.replace(0, builder.length(), "");
+                                //if builder has colon then assign
+                                if (":".equals(builder.toString())) {
+                                    builder.append(c);
+                                    tokens.add(new Token(Type.ASSIGN, builder.toString()));
+                                    builder.replace(0, builder.length(), "");
+                                    state = 0;
+                                } else {
+                                    tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                                    builder.replace(0, builder.length(), "");
+                                    builder.append(c);
+                                    tokens.add(new Token(Type.EQUAL, builder.toString()));
+                                    builder.replace(0, builder.length(), "");
+                                    state = 0;
+                                }
                             }
                             builder.append(c);
                             tokens.add(new Token(Type.EQUAL, builder.toString()));

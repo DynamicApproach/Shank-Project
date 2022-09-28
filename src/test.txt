@@ -1,3 +1,4 @@
+a := 0
 define start (t : integer; s : real)
 constants
 pi=3.141

@@ -46,6 +46,8 @@ public class Shank {
                 Node tree = parsing.parse();
                 System.out.println("Parsing complete");
 
+                parsing.FunctionDefinition();
+                //functiondef interpret
 
                 System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter();
@@ -56,6 +58,8 @@ public class Shank {
                 System.out.println("Interpreting complete");
 
                 System.out.println("Result: " + fintree);
+                //functiondef parse
+
 
             } catch (Exception e) {
                 System.out.println("Error: " + e);
