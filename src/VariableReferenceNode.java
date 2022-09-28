@@ -1,3 +1,4 @@
+// VariableReferenceNode should contain the name of the variable being referenced.
 public class VariableReferenceNode extends ASTNode {
     private String name;
     private Type type;
@@ -5,7 +6,6 @@ public class VariableReferenceNode extends ASTNode {
     public VariableReferenceNode(String name) {
         super(name);
     }
-    // VariableReferenceNode should contain the name of the variable being referenced.
 
 }
 
