@@ -444,8 +444,6 @@ public class Lexer {
                                     state = 0;
                                 }
                             }
-                            builder.append(c);
-                            tokens.add(new Token(Type.EQUAL, builder.toString()));
                             builder.replace(0, builder.length(), "");
                             state = 0;
                         }
