@@ -41,14 +41,14 @@ public class Lexer {
                 builder.replace(0, builder.length(), "");
                 state = 0;
             } else {
-                System.out.println("Error: Invalid character6 " + builder.toString());
+                System.err.println("Error: Invalid character6 " + builder.toString());
                 builder.replace(0, builder.length(), "");
                 state = 0;
                 throw new Exception("Invalid character6");
             }
             return tokens;
         } catch (Exception e) {
-            System.out.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder.toString());
+            System.err.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder.toString());
         }
         state = 0;
         builder.replace(0, builder.length(), "");
@@ -104,7 +104,7 @@ public class Lexer {
                 builder.replace(0, builder.length(), "");
             }
         } else {
-            System.out.println("Error: Invalid character2 " + c);
+            System.err.println("Error: Invalid character2 " + c);
             throw new RuntimeException("Invalid character2");
         }
     }
@@ -168,7 +168,7 @@ public class Lexer {
                         builder.append(c);
                     }
                     default -> {
-                        System.out.println("Error: Invalid character1 " + c);
+                        System.err.println("Error: Invalid character1 " + c);
                         builder.replace(0, builder.length(), "");
                         state = 0;
                         throw new Exception("Invalid character1");
@@ -245,7 +245,7 @@ public class Lexer {
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
                     default -> {
-                        System.out.println("Error: Invalid character2 " + c);
+                        System.err.println("Error: Invalid character2 " + c);
 
                         builder.replace(0, builder.length(), "");
                         state = 0;
@@ -321,7 +321,7 @@ public class Lexer {
                         state = 0;
                     }
                     default -> {
-                        System.out.println("Error: Invalid character3 " + c);
+                        System.err.println("Error: Invalid character3 " + c);
 
                         builder.replace(0, builder.length(), "");
                         state = 0;
@@ -381,7 +381,7 @@ public class Lexer {
                     }
 
                     default -> {
-                        System.out.println("Error: Invalid character4 " + c);
+                        System.err.println("Error: Invalid character4 " + c);
                         builder.replace(0, builder.length(), "");
                         state = 0;
                         throw new Exception("Invalid character4");
@@ -406,7 +406,7 @@ public class Lexer {
                     }
                     case ' ' -> builder.append(c);
                     default -> {
-                        System.out.println("Error: Invalid character5 " + c);
+                        System.err.println("Error: Invalid character5 " + c);
                         builder.replace(0, builder.length(), "");
                         state = 0;
                         throw new Exception("Invalid character5");
