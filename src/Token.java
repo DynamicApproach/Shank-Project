@@ -134,9 +134,92 @@ enum Type { // Token symbol types
         public String toString() {
             return "CONST";
         }
-    }
-
-
+    },
+    IF {
+        public String toString() {
+            return "IF";
+        }
+    },
+    THEN {
+        public String toString() {
+            return "THEN";
+        }
+    },
+    ELSE {
+        public String toString() {
+            return "ELSE";
+        }
+    },
+    ELSIF {
+        public String toString() {
+            return "ELSIF";
+        }
+    },
+    FOR {
+        public String toString() {
+            return "FOR";
+        }
+    },
+    FROM {
+        public String toString() {
+            return "FROM";
+        }
+    },
+    TO {
+        public String toString() {
+            return "TO";
+        }
+    },
+    WHILE {
+        public String toString() {
+            return "WHILE";
+        }
+    },
+    REPEAT {
+        public String toString() {
+            return "REPEAT";
+        }
+    },
+    UNTIL {
+        public String toString() {
+            return "UNTIL";
+        }
+    }, //>, <, >=, <=, =, <>
+    GREATER {
+        public String toString() {
+            return "GREATER";
+        }
+    },
+    LESS {
+        public String toString() {
+            return "LESS";
+        }
+    },
+    GREATER_EQUAL {
+        public String toString() {
+            return "GREATER_EQUAL";
+        }
+    },
+    LESS_EQUAL {
+        public String toString() {
+            return "LESS_EQUAL";
+        }
+    },
+    EQUAL_EQUAL {
+        public String toString() {
+            return "EQUAL_EQUAL";
+        }
+    },
+    NOT_EQUAL {
+        public String toString() {
+            return "NOT_EQUAL";
+        }
+    },
+    OR {
+        public String toString() {
+            return "OR";
+        }
+    },
 }
 
 /* This file must contain a Token class. The token class is made up of an instance of an enum and a value string. There must be a public accessor
