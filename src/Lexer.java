@@ -57,7 +57,8 @@ public class Lexer {
 
     private void setupReservedWords() {
         // Identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal, comma, variables, constants
-        // integer, real, begin, end, variables, constants
+        // integer, real, begin, end, variables, constants, if, then, else, elsif, for, from, to, while, repeat, until, mod
+
         reservedWords.put("IDENTIFIER", Type.IDENTIFIER);
         reservedWords.put("DEFINE", Type.DEFINE);
         reservedWords.put("LEFTPAREN", Type.LPAREN);
@@ -74,6 +75,17 @@ public class Lexer {
         reservedWords.put("CONSTANTS", Type.CONSTANT);
         reservedWords.put("PLUS", Type.BEGIN);
         reservedWords.put("MINUS", Type.END);
+        reservedWords.put("IF", Type.IF);
+        reservedWords.put("THEN", Type.THEN);
+        reservedWords.put("ELSE", Type.ELSE);
+        reservedWords.put("ELSIF", Type.ELSIF);
+        reservedWords.put("FOR", Type.FOR);
+        reservedWords.put("FROM", Type.FROM);
+        reservedWords.put("TO", Type.TO);
+        reservedWords.put("WHILE", Type.WHILE);
+        reservedWords.put("REPEAT", Type.REPEAT);
+        reservedWords.put("UNTIL", Type.UNTIL);
+        reservedWords.put("MOD", Type.MOD);
     }
 
     private void wordState(char c) {
