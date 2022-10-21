@@ -110,7 +110,7 @@ public class Parser {
         Node node = expression();
         matchAndRemove(Type.ENDLINE);
         if (node == null) {
-            System.out.println("Node cannot be made.");
+            System.err.println("Node cannot be made.");
             return null;
         } else {
             return node;
@@ -214,7 +214,7 @@ public class Parser {
 
             }
         } catch (Exception e) {
-            System.out.println("Error in Constants - Token expected but not found.");
+            System.err.println("Error in Constants - Token expected but not found.");
             throw new RuntimeException(e);
         }
         return null;
@@ -258,7 +258,7 @@ public class Parser {
             }
             return constants;
         } catch (NumberFormatException e) {
-            System.out.println("Error in processConstants - Token expected but not found.");
+            System.err.println("Error in processConstants - Token expected but not found.");
             throw new RuntimeException(e);
         }
 
@@ -312,7 +312,7 @@ public class Parser {
             }
             return variables;
         } catch (Exception e) {
-            System.out.println("Error in Variables - Token expected but not found.");
+            System.err.println("Error in Variables - Token expected but not found.");
             throw new RuntimeException(e);
         }
     }
