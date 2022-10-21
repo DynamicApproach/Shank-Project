@@ -35,7 +35,7 @@
 
 ----------------------------------------------------------------
 
-- [/] 4 - Comments and Assignment
+- [x] 4 - Comments and Assignment
   -Attached Files:
 
     - File 4 - Comments and Assignment.docx 4 - Comments and Assignment.docx - Alternative Formats (
@@ -43,14 +43,14 @@
 
 ----------------------------------------------------------------
 
-- [ ] 5 - More Statements
+- [➡️] 5 - More Statements
   -Attached Files:
 
     - File 5 - More Statements.docx 5 - More Statements.docx - Alternative Formats (19.217 KB)
 
 ----------------------------------------------------------------
 
-- [ ] 6 - More Functions
+- [➡️] 6 - More Functions
   -Attached Files:
     - File 6 - More Functions.docx 6 - More Functions.docx - Alternative Formats (18.104 KB)
 
