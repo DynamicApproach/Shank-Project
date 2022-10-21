@@ -153,6 +153,25 @@ public class Parser {
         return tokens.get(1);
     }
 
+    // booleanExpression, booleanTerm, booleanFactor methods
+    // booleanExpression is a list of booleanTerms separated by OR
+    public Node booleanExpression() {
+        Node node = booleanTerm();
+        Type token = tokens.get(0).getType();
+        if (token == Type.OR) {
+            matchAndRemove(token);
+            node = new BooleanExpressionNode(node, booleanTerm(), Type.OR);
+
+        }
+        return node;
+    }
+
+    private Node booleanTerm() {
+        // TODO: What is a boolean term meant to check for? variables? numbers? both?
+
+        return null;
+    }
+
     public ASTNode FunctionDefinition() {
         /*
             It looks for “define”.
