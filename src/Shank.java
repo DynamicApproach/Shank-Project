@@ -18,25 +18,19 @@ public class Shank {
         if (args.length == 1) {
             try {
                 Lexer lexer = new Lexer();
-                /*String strings = Files.readAllLines(Paths.get(args[0])).toString();
-                strings = strings.substring(1, strings.length() - 1);*/
-                // Currently used option of list
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
-                text.replaceAll(s -> s + "\n"); // Add a line break to the end of each line
-
+                text.replaceAll(s -> s + "\n");
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
                 }
                 for (Token token : tokens) {
                     if (token == null) {
-
                     } else {
                         System.out.print(token);
                         if (token.getType() == Type.ENDLINE) {
                             System.out.println("\n");
                         }
-
                     }
                 }
                 Parser parsing = new Parser(tokens);
