@@ -26,6 +26,7 @@ public class Interpreter {
                 case MINUS -> left - right;
                 case MULTIPLY -> left * right;
                 case DIVIDE -> left / right;
+                case MOD -> left % right;
                 default -> throw new RuntimeException("Unknown operator: " + mathOpNode.getOp());
             };
         } else {
