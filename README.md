@@ -27,7 +27,7 @@
 
 ----------------------------------------------------------------
 
-- [ ] 3 - Add Function Declarations
+- [x] 3 - Add Function Declarations
   -Attached Files:
     - File 3 - Add Function Declarations.docx 3 - Add Function Declarations.docx - Alternative
       Formats (
@@ -35,7 +35,7 @@
 
 ----------------------------------------------------------------
 
-- [ ] 4 - Comments and Assignment
+- [/] 4 - Comments and Assignment
   -Attached Files:
 
     - File 4 - Comments and Assignment.docx 4 - Comments and Assignment.docx - Alternative Formats (
