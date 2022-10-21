@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "name": "Build",
+      "type": "jps-build",
+      "includeTests": false,
+      "module": "LexerProject"
+    },
+    {
+      "args": [
+        "$PROJECT_DIR$/src/test.txt",
+      ],
+      "dependsOn": [
+        "Build"
+      ],
+      "mainClass": "Shank",
+      "module": "LexerProject",
+      "name": "Shank",
+      "options": [
+        "-Dfile.encoding=UTF-8",
+        "-Dsun.stdout.encoding=UTF-8",
+        "-Dsun.stderr.encoding=UTF-8"
+      ],
+      "type": "jps-run"
+    }
+  ]
+}
