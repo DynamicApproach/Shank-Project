@@ -25,8 +25,7 @@ public class Shank {
                     tokens = (lexer.Lex(line));
                 }
                 for (Token token : tokens) {
-                    if (token == null) {
-                    } else {
+                    if (token != null) {
                         System.out.print(token);
                         if (token.getType() == Type.ENDLINE) {
                             System.out.println("\n");
@@ -56,9 +55,11 @@ public class Shank {
 
 
             } catch (Exception e) {
-                System.out.println("Error: " + e);
+                System.err.println("Error: " + e);
             }
         } else {
+            // print args
+            System.out.println(args.toString());
             System.out.println("Usage: java Shank <filename>");
             System.exit(1);
         }

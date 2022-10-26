@@ -220,6 +220,12 @@ enum Type { // Token symbol types
             return "OR";
         }
     },
+    VAR {
+        public String toString() {
+            return "VAR";
+        }
+    },
+
 }
 
 /* This file must contain a Token class. The token class is made up of an instance of an enum and a value string. There must be a public accessor

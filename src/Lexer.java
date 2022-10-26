@@ -86,6 +86,7 @@ public class Lexer {
         reservedWords.put("REPEAT", Type.REPEAT);
         reservedWords.put("UNTIL", Type.UNTIL);
         reservedWords.put("MOD", Type.MOD);
+        reservedWords.put("VAR", Type.VAR);
     }
 
     private void wordState(char c) {
