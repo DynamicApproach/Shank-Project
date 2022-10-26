@@ -116,7 +116,7 @@ public class Lexer {
                 switch (c) {
                     case '(' -> {
                         // check if next char in input is a *
-                        if (input.toCharArray()[index + 1] == '*') {
+                        if (input.toCharArray().length > index + 1 && input.toCharArray()[index + 1] == '*') {
                             state = 7;
                         } else {
                             builder.append(c);
@@ -125,7 +125,7 @@ public class Lexer {
                         }
                     }
                     case ')' -> {
-                        if (input.toCharArray()[index + 1] == '*') {
+                        if (input.toCharArray().length > index + 1 && input.toCharArray()[index + 1] == '*') {
                             state = 7;
                         } else {
                             builder.append(c);
@@ -429,7 +429,7 @@ public class Lexer {
                         }
                         case ':' -> {
                             // if  input index +1 is = then diff token
-                            if (input.charAt(index + 1) == '=') {
+                            if (input.toCharArray().length < index + 1 && input.charAt(index + 1) == '=') {
                                 builder.append(input.charAt(index + 1));
                                 tokens.add(new Token(Type.ASSIGN, builder.toString()));
                                 builder.replace(0, builder.length(), "");
@@ -486,7 +486,7 @@ public class Lexer {
                         }
                         case ":" -> {
                             // if  input index +1 is = then diff token
-                            if (input.charAt(index + 1) == '=') {
+                            if (input.toCharArray().length < index + 1 && input.charAt(index + 1) == '=') {
                                 builder.append(input.charAt(index + 1));
                                 tokens.add(new Token(Type.ASSIGN, builder.toString()));
                                 builder.replace(0, builder.length(), "");
@@ -526,7 +526,7 @@ public class Lexer {
                 }
             case 7:
                 // do nothing until end of comment *)
-                if (c == '*' && input.charAt(index + 1) == ')') {
+                if (input.toCharArray().length < index + 1 && c == '*' && input.charAt(index + 1) == ')') {
                     state = 0;
                 }
         }
