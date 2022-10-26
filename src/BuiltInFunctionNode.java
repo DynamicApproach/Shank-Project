@@ -5,6 +5,9 @@ public class BuiltInFunctionNode extends ASTNode {
 
     public BuiltInFunctionNode(String name, Type type, boolean varadic) {
         super(name);
+        this.name = name;
+        this.type = type;
+        this.varadic = varadic;
     }
 
     public String getName() {
