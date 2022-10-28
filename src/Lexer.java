@@ -22,8 +22,9 @@ public class Lexer {
 
     public ArrayList<Token> Lex(String input) {
         this.input = input;
-        setupReservedWords();
+
         try {
+            setupReservedWords();
             for (char c : input.toCharArray()) {
                 index++;
                 if (reservedWords.containsKey(builder.toString().toUpperCase())) {
@@ -109,7 +110,7 @@ public class Lexer {
 
     private void numState(char c) throws Exception {
         switch (state) {
-            case 0:
+            case 0: // initial state - loop with space
                 switch (c) {
                     case '(' -> {
                         // check if next char in input is a *
@@ -152,7 +153,7 @@ public class Lexer {
                     }
                 }
                 break;
-            case 1:
+            case 1: // + or -
                 switch (c) {
                     case ' ' -> builder.append(c);
                     case '.' -> {
@@ -169,7 +170,7 @@ public class Lexer {
                     }
                 }
                 break;
-            case 2:
+            case 2: // number
                 switch (c) {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -218,7 +219,7 @@ public class Lexer {
                     }
                 }
                 break;
-            case 3:
+            case 3: // number with decimal
                 switch (c) {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -265,7 +266,7 @@ public class Lexer {
                     }
                 }
                 break;
-            case 4:
+            case 4: // space after number
                 switch (c) {
 
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
@@ -299,7 +300,7 @@ public class Lexer {
                     }
                 }
                 break;
-            case 5:
+            case 5: // decimal
                 switch (c) {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
