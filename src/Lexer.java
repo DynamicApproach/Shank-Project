@@ -11,8 +11,9 @@ import java.util.HashMap;
  */
 
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Lexer {
-    HashMap<String, Type> reservedWords = new HashMap<String, Type>();
+    HashMap<String, Type> reservedWords = new HashMap<>();
     int index = 0;
     private ArrayList<Token> tokens = new ArrayList<>();
     private int state = 0;
@@ -84,6 +85,7 @@ public class Lexer {
         reservedWords.put("VAR", Type.VAR);
     }
 
+    @SuppressWarnings("unused")
     private void wordState(char c) {
         state = 0;
         builder.setLength(0);
@@ -364,9 +366,7 @@ public class Lexer {
                 } else {
                     // if space or newline, then end of word so add to tokens
                     switch (builder.toString()) {
-                        case "," -> {
-                            foundTokState(Type.COMMA, builder.toString());
-                        }
+                        case "," -> foundTokState(Type.COMMA, builder.toString());
                         case ":" -> {
                             // if  input index +1 is = then diff token
                             if (input.toCharArray().length < index + 1 && input.charAt(index + 1) == '=') {
@@ -384,15 +384,9 @@ public class Lexer {
                                 foundTokState(Type.EQUAL, builder.toString());
                             }
                         }
-                        case ";" -> {
-                            foundTok(Type.SEMICOLON, builder.toString());
-                        }
-                        case "\n" -> {
-                            foundTok(Type.ENDLINE, builder.toString());
-                        }
-                        default -> {
-                            foundTok(Type.IDENTIFIER, builder.toString());
-                        }
+                        case ";" -> foundTok(Type.SEMICOLON, builder.toString());
+                        case "\n" -> foundTok(Type.ENDLINE, builder.toString());
+                        default -> foundTok(Type.IDENTIFIER, builder.toString());
                     }
                     state = 0;
                 }
