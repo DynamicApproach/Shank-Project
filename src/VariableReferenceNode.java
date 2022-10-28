@@ -1,5 +1,5 @@
 // VariableReferenceNode should contain the name of the variable being referenced.
-public class VariableReferenceNode extends ASTNode {
+public class VariableReferenceNode extends FuctionNode {
     private String name;
     private Type type;
 

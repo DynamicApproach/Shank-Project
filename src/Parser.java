@@ -43,7 +43,7 @@ public class Parser {
         Node node = term();
         int a = 0;
         while (a < tokens.size()) {
-            Type token = tokens.get(0).getType();
+            Type token = peek(0).getType();
             if (token == Type.ADD) {
                 matchAndRemove(token);
                 node = new MathOpNode(node, term(), Type.ADD);
@@ -61,17 +61,22 @@ public class Parser {
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
-        Type token = tokens.get(0).getType();
+        Type token = peek(0).getType();
         if (token == Type.MULTIPLY) {
             matchAndRemove(token);
             node = new MathOpNode(node, factor(), Type.MULTIPLY);
         } else if (token == Type.DIVIDE) {
             matchAndRemove(token);
             node = new MathOpNode(node, factor(), Type.DIVIDE);
+        } else if (token == Type.MOD) {
+            matchAndRemove(token);
+            node = new MathOpNode(node, factor(), Type.MOD);
         }
         return node;
     }
 
+
+    // TODO:  factor accept an identifier (and creating a variableReferenceNode). -> ask about this - should it be a separate method?
     // Factor is a number or a parenthesized expression.
     public Node factor() {
         if (isInteger(tokens.get(0))) {
@@ -117,11 +122,11 @@ public class Parser {
         }
     }
 
-    public List<StatementNode> Statements() {
-        List<StatementNode> statements = new ArrayList<>();
+    public ArrayList<StatementNode> Statements() {
+        ArrayList<StatementNode> statements = new ArrayList<>();
         matchAndRemove(Type.BEGIN);
         matchAndRemove(Type.ENDLINE);
-        while (tokens.get(0).getType() != Type.END) {
+        while (peek(0).getType() != Type.END) {
             statements.add(Statement());
         }
         matchAndRemove(Type.END);
@@ -135,44 +140,87 @@ public class Parser {
 
     public AssignmentNode Assignment() {
         // identifier assignment expression endofline
-        if (peekTwice().getType() == Type.ASSIGN) {
+        if (peek(1).getType() == Type.ASSIGN) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue();
             matchAndRemove(Type.ASSIGN);
-            ASTNode value = (ASTNode) expression();
+            FuctionNode value = (FuctionNode) expression();
             matchAndRemove(Type.ENDLINE);
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
         return null;
     }
 
-    public Token peek() {
-        return tokens.get(0);
-    }
-
-    public Token peekTwice() {
-        return tokens.get(1);
+    public Token peek(int x) {
+        return tokens.get(x);
     }
 
     // booleanExpression, booleanTerm, booleanFactor methods
-    // booleanExpression is a list of booleanTerms separated by OR
+    // booleanExpression is a list of booleanTerms separated by an operator
     public Node booleanExpression() {
-        Node node = booleanTerm();
-        Type token = tokens.get(0).getType();
-        if (token == Type.OR) {
-            matchAndRemove(token);
-            node = new BooleanExpressionNode(node, booleanTerm(), Type.OR);
+        // check for expression operator expression and make a new booleanExpressionNode
+        Node node = expression();
+        Type token = peek(0).getType();
+        matchAndRemove(token);
+        node = new BooleanExpressionNode(node, Type.EQUAL, expression());
 
-        }
+
         return node;
     }
 
-    private Node booleanTerm() {
-        // TODO: What is a boolean term meant to check for? variables? numbers? both?
-
+    // TODO: whileExpression, ifExpression, forExpression, printExpression
+    //  Look for keywords to check if a while is possible
+    // If not, make sure that we haven’t taken any tokens and return null.
+    public Node whileExpression() {
+        // while booleanExpression do statements end
+        if (peek(0).getType() == Type.WHILE) {
+            matchAndRemove(Type.WHILE);
+            Node condition = booleanExpression();
+            matchAndRemove(Type.DO);
+            ArrayList<StatementNode> statements = Statements();
+            return new WhileNode(condition, statements);
+        }
         return null;
     }
 
-    public ASTNode FunctionDefinition() {
+    // TODO: FIX THIS AND IFNODE.JAVA -> ask about this - How should ifNode look?
+    public Node ifExpression() {
+        // if booleanExpression then statements end
+        if (peek(0).getType() == Type.IF) {
+            matchAndRemove(Type.IF);
+            Node condition = booleanExpression();
+            matchAndRemove(Type.THEN);
+            ArrayList<StatementNode> statements = Statements();
+            if (peek(0).getType() == Type.ELSE) {
+                matchAndRemove(Type.ELSE);
+                ArrayList<StatementNode> elseStatements = Statements();
+                return new IfNode(condition, statements, elseStatements);
+            }
+            return new IfNode(condition, statements);
+        }
+        return null;
+    }
+
+    // for
+    public Node forExpression() {
+        // for identifier assignment expression to expression do statements end
+        if (peek(0).getType() == Type.FOR) {
+            matchAndRemove(Type.FOR);
+            String name = matchAndRemove(Type.IDENTIFIER).getValue();
+            matchAndRemove(Type.ASSIGN);
+            Node start = expression();
+            matchAndRemove(Type.TO);
+            Node end = expression();
+            matchAndRemove(Type.DO);
+            ArrayList<StatementNode> statements = Statements();
+            return new ForNode(new VariableReferenceNode(name), start, end, statements);
+        }
+        return null;
+    }
+
+
+    // print
+
+    public FuctionNode FunctionDefinition() {
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
@@ -184,7 +232,7 @@ public class Parser {
         try {
             if (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                ASTNode f = new ASTNode(name.getValue());
+                FuctionNode f = new FuctionNode(name.getValue());
                 matchAndRemove(Type.LPAREN);
                 f.setParameters(params()); // constants, variables, body
                 matchAndRemove(Type.RPAREN);
@@ -292,7 +340,7 @@ public class Parser {
         // alternate method? :  all identifiers into a list and then parse the list and make a VariableNode for each one
         try {
             if (matchAndRemove(Type.VARIABLES) != null) {
-                Token currenttoken = null;
+                Token currenttoken;
                 while ((currenttoken = matchAndRemove(Type.IDENTIFIER)) != null) { // a,b,c
                     Token comma = matchAndRemove(Type.COMMA);
                     Token colon = matchAndRemove(Type.COLON);

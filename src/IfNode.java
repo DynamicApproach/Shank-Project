@@ -1,15 +1,28 @@
 import java.util.ArrayList;
 
+
+// TODO: FIX THIS AND PARSER ifExpression()
 public class IfNode extends Node {
     //  If (booleanExpression, collection of statementNodes, ifNode)
     private Node booleanExpression;
-    private ArrayList<Node> statementNodes;
+    private ArrayList<StatementNode> statementNodes;
     private IfNode ifNode;
 
-    public IfNode(Node booleanExpression, ArrayList<Node> statementNodes, IfNode ifNode) {
+    public IfNode(Node booleanExpression, ArrayList<StatementNode> statementNodes, IfNode elseStatementNodes) {
         this.booleanExpression = booleanExpression;
         this.statementNodes = statementNodes;
-        this.ifNode = ifNode;
+        ifNode = elseStatementNodes;
+    }
+
+    public IfNode(Node condition, ArrayList<StatementNode> statements) {
+        this.booleanExpression = condition;
+        this.statementNodes = statements;
+    }
+
+    public IfNode(Node condition, ArrayList<StatementNode> statements, ArrayList<StatementNode> elseStatements) {
+        this.booleanExpression = condition;
+        this.statementNodes = statements;
+        this.ifNode = new IfNode(condition, elseStatements);
     }
 
 
@@ -18,35 +31,3 @@ public class IfNode extends Node {
         return null;
     }
 }
-/*
-Why not using typical structure like this?:
-public class IfNode extends StatementNode {
-    private ExpressionNode condition;
-    private StatementNode thenPart;
-    private StatementNode elsePart;
-
-    public IfNode(ExpressionNode condition, StatementNode thenPart, StatementNode elsePart) {
-        super("if");
-        this.condition = condition;
-        this.thenPart = thenPart;
-        this.elsePart = elsePart;
-    }
-
-    public ExpressionNode getCondition() {
-        return condition;
-    }
-
-    public StatementNode getThenPart() {
-        return thenPart;
-    }
-
-    public StatementNode getElsePart() {
-        return elsePart;
-    }
-
-    public String toString() {
-        return "if " + condition + " then " + thenPart + " else " + elsePart;
-    }
-
-}
-*/

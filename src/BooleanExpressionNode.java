@@ -4,7 +4,7 @@ public class BooleanExpressionNode extends Node {
     private Node right;
     private Type condition;
 
-    public BooleanExpressionNode(Node left, Node right, Type condition) {
+    public BooleanExpressionNode(Node left, Type condition, Node right) {
         this.left = left;
         this.right = right;
         this.condition = condition;

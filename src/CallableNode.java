@@ -1,10 +1,10 @@
 import java.util.List;
 
-public class CallableNode extends ASTNode {
+public class CallableNode extends FuctionNode {
     private String name;
-    private List<ASTNode> arguments;
+    private List<FuctionNode> arguments;
 
-    public CallableNode(String name, List<ASTNode> arguments) {
+    public CallableNode(String name, List<FuctionNode> arguments) {
         super(name);
         this.name = name;
         this.arguments = arguments;
@@ -14,7 +14,7 @@ public class CallableNode extends ASTNode {
         return name;
     }
 
-    public List<ASTNode> getArguments() {
+    public List<FuctionNode> getArguments() {
         return arguments;
     }
 

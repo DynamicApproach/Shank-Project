@@ -22,7 +22,6 @@ public class Lexer {
 
     public ArrayList<Token> Lex(String input) {
         this.input = input;
-
         try {
             setupReservedWords();
             for (char c : input.toCharArray()) {
@@ -84,6 +83,7 @@ public class Lexer {
         reservedWords.put("UNTIL", Type.UNTIL);
         reservedWords.put("MOD", Type.MOD);
         reservedWords.put("VAR", Type.VAR);
+        reservedWords.put("DO", Type.DO);
     }
 
     @SuppressWarnings("unused")
@@ -365,7 +365,7 @@ public class Lexer {
                     }
 
                 } else {
-                    // if space or newline, then end of word so add to tokens
+                    // if space or newline, then end of word so add to tokens -- add word state here?
                     switch (builder.toString()) {
                         case "," -> foundTokState(Type.COMMA, builder.toString());
                         case ":" -> {

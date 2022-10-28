@@ -1,6 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -23,6 +24,7 @@ public class Shank {
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
+                    // TODO: add new line token for each line and remove the replacement
                 }
                 for (Token token : tokens) {
                     if (token != null) {
@@ -59,7 +61,7 @@ public class Shank {
             }
         } else {
             // print args
-            System.out.println(args.toString());
+            System.out.println(Arrays.toString(args));
             System.out.println("Usage: java Shank <filename>");
             System.exit(1);
         }

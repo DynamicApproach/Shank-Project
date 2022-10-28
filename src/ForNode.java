@@ -5,9 +5,9 @@ public class ForNode extends Node {
     private Node variableReference;
     private Node start;
     private Node end;
-    private ArrayList<Node> statementNodes;
+    private ArrayList<StatementNode> statementNodes;
 
-    public ForNode(Node variableReference, Node start, Node end, ArrayList<Node> statementNodes) {
+    public ForNode(Node variableReference, Node start, Node end, ArrayList<StatementNode> statementNodes) {
         this.variableReference = variableReference;
         this.start = start;
         this.end = end;

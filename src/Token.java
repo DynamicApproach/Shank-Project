@@ -9,8 +9,7 @@ enum Type { // Token symbol types
             return "ASSIGN";
         }
     } // :=
-    ,
-    BEGIN {
+    , BEGIN {
         public String toString() {
             return "BEGIN";
         }
@@ -31,8 +30,7 @@ enum Type { // Token symbol types
             return "DECIMAL";
         }
     } // .
-    ,
-    DEFINE {
+    , DEFINE {
         public String toString() {
             return "DEFINE";
         }
@@ -41,8 +39,7 @@ enum Type { // Token symbol types
             return "DIVIDE";
         }
     } // /
-    ,
-    END {
+    , END {
         public String toString() {
             return "END";
         }
@@ -51,8 +48,7 @@ enum Type { // Token symbol types
             return "ENDLINE";
         }
     } // \n
-    ,
-    EQUAL {
+    , EQUAL {
         public String toString() {
             return "EQUAL";
         }
@@ -65,50 +61,42 @@ enum Type { // Token symbol types
         public String toString() {
             return "INTEGER";
         }
-    },
-    LBRACKET {
+    }, LBRACKET {
         public String toString() {
             return "LBRACKET";
         }
     } // [
-    ,
-    LPAREN {
+    , LPAREN {
         public String toString() {
             return "LPAREN";
         }
     } // (
-    ,
-    MINUS {
+    , MINUS {
         public String toString() {
             return "MINUS";
         }
     } // -
-    ,
-    MOD {
+    , MOD {
         public String toString() {
             return "MOD";
         }
     } // %
-    ,
-    MULTIPLY {
+    , MULTIPLY {
         public String toString() {
             return "MULTIPLY";
         }
     } //*
-    ,
-    NUMBER {
+    , NUMBER {
         public String toString() {
             return "NUMBER";
         }
     } // 0-9
-    ,
-    RBRACKET {
+    , RBRACKET {
         public String toString() {
             return "RBRACKET";
         }
     } // ]
-    ,
-    REAL {
+    , REAL {
         public String toString() {
             return "REAL";
         }
@@ -117,8 +105,7 @@ enum Type { // Token symbol types
             return "RPAREN";
         }
     } // )
-    ,
-    SEMICOLON {
+    , SEMICOLON {
         public String toString() {
             return "SEMICOLON";
         }
@@ -129,58 +116,47 @@ enum Type { // Token symbol types
             return "SPACE";
         }
     } //
-    ,
-    VARIABLES {
+    , VARIABLES {
         public String toString() {
             return "CONST";
         }
-    },
-    IF {
+    }, IF {
         public String toString() {
             return "IF";
         }
-    },
-    THEN {
+    }, THEN {
         public String toString() {
             return "THEN";
         }
-    },
-    ELSE {
+    }, ELSE {
         public String toString() {
             return "ELSE";
         }
-    },
-    ELSIF {
+    }, ELSIF {
         public String toString() {
             return "ELSIF";
         }
-    },
-    FOR {
+    }, FOR {
         public String toString() {
             return "FOR";
         }
-    },
-    FROM {
+    }, FROM {
         public String toString() {
             return "FROM";
         }
-    },
-    TO {
+    }, TO {
         public String toString() {
             return "TO";
         }
-    },
-    WHILE {
+    }, WHILE {
         public String toString() {
             return "WHILE";
         }
-    },
-    REPEAT {
+    }, REPEAT {
         public String toString() {
             return "REPEAT";
         }
-    },
-    UNTIL {
+    }, UNTIL {
         public String toString() {
             return "UNTIL";
         }
@@ -189,43 +165,39 @@ enum Type { // Token symbol types
         public String toString() {
             return "GREATER";
         }
-    },
-    LESS {
+    }, LESS {
         public String toString() {
             return "LESS";
         }
-    },
-    GREATER_EQUAL {
+    }, GREATER_EQUAL {
         public String toString() {
             return "GREATER_EQUAL";
         }
-    },
-    LESS_EQUAL {
+    }, LESS_EQUAL {
         public String toString() {
             return "LESS_EQUAL";
         }
-    },
-    EQUAL_EQUAL {
+    }, EQUAL_EQUAL {
         public String toString() {
             return "EQUAL_EQUAL";
         }
-    },
-    NOT_EQUAL {
+    }, NOT_EQUAL {
         public String toString() {
             return "NOT_EQUAL";
         }
-    },
-    OR {
+    }, OR {
         public String toString() {
             return "OR";
         }
-    },
-    VAR {
+    }, VAR {
         public String toString() {
             return "VAR";
         }
+    }, DO {
+        public String toString() {
+            return "DO";
+        }
     },
-
 }
 
 /* This file must contain a Token class. The token class is made up of an instance of an enum and a value string. There must be a public accessor

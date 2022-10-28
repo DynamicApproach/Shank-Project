@@ -1,4 +1,4 @@
-public class BuiltInFunctionNode extends ASTNode {
+public class BuiltInFunctionNode extends FuctionNode {
     private String name;
     private Type type;
     private boolean varadic;
