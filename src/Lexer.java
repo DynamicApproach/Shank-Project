@@ -26,9 +26,7 @@ public class Lexer {
             for (char c : input.toCharArray()) {
                 index++;
                 if (reservedWords.containsKey(builder.toString().toUpperCase())) {
-                    tokens.add(new Token(reservedWords.get(builder.toString().toUpperCase()), builder.toString()));
-                    builder.replace(0, builder.length(), "");
-                    state = 0;
+                    foundTokState(reservedWords.get(builder.toString().toUpperCase()), builder.toString());
                     numState(c);
                 } else {
                     numState(c);
@@ -37,21 +35,18 @@ public class Lexer {
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                // tokens.add(new Token(Type.NUMBER, builder.toString()));
-                builder.replace(0, builder.length(), "");
+                builder.setLength(0);
                 state = 0;
             } else {
                 System.err.println("Error: Invalid character6 " + builder.toString());
-                builder.replace(0, builder.length(), "");
-                state = 0;
-                throw new Exception("Invalid character6");
+                reportErrorAndClear("Invalid character6");
             }
             return tokens;
         } catch (Exception e) {
             System.err.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder.toString());
         }
         state = 0;
-        builder.replace(0, builder.length(), "");
+        builder.setLength(0);
         return tokens;
     }
 
@@ -91,7 +86,7 @@ public class Lexer {
 
     private void wordState(char c) {
         state = 0;
-        builder.replace(0, builder.length(), "");
+        builder.setLength(0);
         if (Character.isLetter(c)) {
             builder.append(c);
         } else if (Character.isDigit(c)) {
@@ -99,10 +94,10 @@ public class Lexer {
         } else if (c == ' ') {
             if (reservedWords.containsKey(builder.toString())) {
                 tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
-                builder.replace(0, builder.length(), "");
+                builder.setLength(0);
             } else {
                 tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                builder.replace(0, builder.length(), "");
+                builder.setLength(0);
             }
         } else {
             System.err.println("Error: Invalid character2 " + c);
@@ -121,7 +116,7 @@ public class Lexer {
                         } else {
                             builder.append(c);
                             tokens.add(new Token(Type.LPAREN, "("));
-                            builder.replace(0, builder.length(), "");
+                            builder.setLength(0);
                         }
                     }
                     case ')' -> {
@@ -129,14 +124,12 @@ public class Lexer {
                             state = 7;
                         } else {
                             builder.append(c);
-                            tokens.add(new Token(Type.RPAREN, ")"));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.RPAREN, ")");
                         }
                     }
                     case '\n' -> {
                         builder.append(c);
-                        tokens.add(new Token(Type.ENDLINE, ")"));
-                        builder.replace(0, builder.length(), "");
+                        foundTok(Type.ENDLINE, ")");
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 2;
@@ -170,9 +163,7 @@ public class Lexer {
                     }
                     default -> {
                         System.err.println("Error: Invalid character1 " + c);
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                        throw new Exception("Invalid character1");
+                        reportErrorAndClear("Invalid character1");
                     }
                 }
                 break;
@@ -181,12 +172,10 @@ public class Lexer {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
                             tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            builder.setLength(0);
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ENDLINE, builder.toString());
                     }
                     case ' ' -> {
                         state = 4;
@@ -198,59 +187,32 @@ public class Lexer {
                     }
                     case '+' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ADD, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-
+                        foundTokState(Type.ADD, builder.toString());
                     }
                     case '/' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.DIVIDE, builder.toString()));
 
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.DIVIDE, builder.toString());
 
                     }
                     case '*' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.MULTIPLY, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-
+                        foundTokState(Type.MULTIPLY, builder.toString());
                     }
-                    case '-' -> {
-                        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                        }
-                        builder.append(c);
-                        tokens.add(new Token(Type.MINUS, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-
-                    }
+                    case '-' -> negat(c);
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
                     default -> {
                         System.err.println("Error: Invalid character2 " + c);
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                        throw new Exception("Invalid character2");
+                        reportErrorAndClear("Invalid character2");
                     }
                 }
                 break;
@@ -258,13 +220,10 @@ public class Lexer {
                 switch (c) {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ENDLINE, builder.toString());
                     }
                     case '.' -> {
                         state = 2;
@@ -276,57 +235,31 @@ public class Lexer {
                         builder.append(c);
                     }
                     case '+' -> {
-
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ADD, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ADD, builder.toString());
                     }
                     case '/' -> {
 
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.DIVIDE, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.DIVIDE, builder.toString());
                     }
                     case '*' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.MULTIPLY, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.MULTIPLY, builder.toString());
                     }
-                    case '-' -> {
-                        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                        }
-                        builder.append(c);
-                        tokens.add(new Token(Type.MINUS, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                    }
+                    case '-' -> negat(c);
                     default -> {
                         System.err.println("Error: Invalid character3 " + c);
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                        throw new Exception("Invalid character3");
+                        reportErrorAndClear("Invalid character3");
                     }
                 }
                 break;
@@ -336,56 +269,31 @@ public class Lexer {
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> builder.append(c);
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ENDLINE, builder.toString());
                     }
-                    case '-' -> {
-                        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                        }
-                        builder.append(c);
-                        tokens.add(new Token(Type.MINUS, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                    }
+                    case '-' -> negat(c);
                     case '/' -> {
-                        tokens.add(new Token(Type.NUMBER, builder.toString()));
-                        builder.replace(0, builder.length(), "");
+                        foundTok(Type.NUMBER, builder.toString());
                         builder.append(c);
-                        tokens.add(new Token(Type.DIVIDE, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.DIVIDE, builder.toString());
                     }
                     case '*' -> {
-                        tokens.add(new Token(Type.NUMBER, builder.toString()));
-                        builder.replace(0, builder.length(), "");
+                        foundTok(Type.NUMBER, builder.toString());
                         builder.append(c);
-                        tokens.add(new Token(Type.MULTIPLY, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.MULTIPLY, builder.toString());
                     }
                     case '+' -> {
-                        tokens.add(new Token(Type.NUMBER, builder.toString()));
-                        builder.replace(0, builder.length(), "");
+                        foundTok(Type.NUMBER, builder.toString());
                         builder.append(c);
-                        tokens.add(new Token(Type.ADD, builder.toString()));
-
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ADD, builder.toString());
                     }
 
                     default -> {
                         System.err.println("Error: Invalid character4 " + c);
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                        throw new Exception("Invalid character4");
+                        reportErrorAndClear("Invalid character4");
                     }
                 }
                 break;
@@ -393,13 +301,10 @@ public class Lexer {
                 switch (c) {
                     case '\n' -> {
                         if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.NUMBER, builder.toString());
                         }
                         builder.append(c);
-                        tokens.add(new Token(Type.ENDLINE, builder.toString()));
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
+                        foundTokState(Type.ENDLINE, builder.toString());
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 3;
@@ -408,9 +313,7 @@ public class Lexer {
                     case ' ' -> builder.append(c);
                     default -> {
                         System.err.println("Error: Invalid character5 " + c);
-                        builder.replace(0, builder.length(), "");
-                        state = 0;
-                        throw new Exception("Invalid character5");
+                        reportErrorAndClear("Invalid character5");
                     }
                 }
             case 6:
@@ -419,25 +322,18 @@ public class Lexer {
                     switch (c) {
                         case ',' -> {
                             if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                                builder.replace(0, builder.length(), "");
+                                foundTok(Type.IDENTIFIER, builder.toString());
                             }
                             builder.append(c);
-                            tokens.add(new Token(Type.COMMA, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
+                            foundTokState(Type.COMMA, builder.toString());
                         }
                         case ':' -> {
                             // if  input index +1 is = then diff token
                             if (input.toCharArray().length < index + 1 && input.charAt(index + 1) == '=') {
                                 builder.append(input.charAt(index + 1));
-                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.ASSIGN, builder.toString());
                             } else {
-                                tokens.add(new Token(Type.COLON, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.COLON, builder.toString());
                             }
                         }
                         case '=' -> {
@@ -445,81 +341,57 @@ public class Lexer {
                                 //if builder has colon then assign
                                 if (":".equals(builder.toString())) {
                                     builder.append(c);
-                                    tokens.add(new Token(Type.ASSIGN, builder.toString()));
-                                    builder.replace(0, builder.length(), "");
-                                    state = 0;
+                                    foundTokState(Type.ASSIGN, builder.toString());
                                 } else {
-                                    tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                                    builder.replace(0, builder.length(), "");
+                                    foundTok(Type.IDENTIFIER, builder.toString());
                                     builder.append(c);
-                                    tokens.add(new Token(Type.EQUAL, builder.toString()));
-                                    builder.replace(0, builder.length(), "");
-                                    state = 0;
+                                    foundTokState(Type.EQUAL, builder.toString());
                                 }
                             }
-                            builder.replace(0, builder.length(), "");
+                            builder.setLength(0);
                             state = 0;
                         }
                         case ';' -> {
                             if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
-                                tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                                builder.replace(0, builder.length(), "");
+                                foundTok(Type.IDENTIFIER, builder.toString());
                             }
                             builder.append(c);
-                            tokens.add(new Token(Type.SEMICOLON, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
+                            foundTokState(Type.SEMICOLON, builder.toString());
                         }
-
                         default -> builder.append(c);
-
                     }
 
                 } else {
                     // if space or newline, then end of word so add to tokens
                     switch (builder.toString()) {
                         case "," -> {
-
-                            tokens.add(new Token(Type.COMMA, builder.toString()));
-                            builder.replace(0, builder.length(), "");
-                            state = 0;
+                            foundTokState(Type.COMMA, builder.toString());
                         }
                         case ":" -> {
                             // if  input index +1 is = then diff token
                             if (input.toCharArray().length < index + 1 && input.charAt(index + 1) == '=') {
                                 builder.append(input.charAt(index + 1));
-                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.ASSIGN, builder.toString());
                             } else {
-                                tokens.add(new Token(Type.COLON, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.COLON, String.valueOf(builder));
                             }
                         }
                         case "=" -> {
                             if (builder.length() > 0 && ":".equals(builder.toString())) {
                                 builder.append(c);
-                                tokens.add(new Token(Type.ASSIGN, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.ASSIGN, builder.toString());
                             } else {
-                                tokens.add(new Token(Type.EQUAL, builder.toString()));
-                                builder.replace(0, builder.length(), "");
-                                state = 0;
+                                foundTokState(Type.EQUAL, builder.toString());
                             }
                         }
                         case ";" -> {
-                            tokens.add(new Token(Type.SEMICOLON, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.SEMICOLON, builder.toString());
                         }
                         case "\n" -> {
-                            tokens.add(new Token(Type.ENDLINE, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.ENDLINE, builder.toString());
                         }
                         default -> {
-                            tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                            builder.replace(0, builder.length(), "");
+                            foundTok(Type.IDENTIFIER, builder.toString());
                         }
                     }
                     state = 0;
@@ -533,5 +405,31 @@ public class Lexer {
 
     }
 
+    private void reportErrorAndClear(String Invalid_character1) throws Exception {
+        builder.setLength(0);
+        state = 0;
+        throw new Exception(Invalid_character1);
+    }
+
+    private void negat(char c) {
+        if (builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
+            foundTok(Type.NUMBER, builder.toString());
+        }
+        builder.append(c);
+        foundTokState(Type.MINUS, builder.toString());
+    }
+
+    // found a token, so add it to the list and reset builder
+    private void foundTok(Type ttype, String c) {
+        tokens.add(new Token(ttype, c));
+        builder.setLength(0);
+    }
+
+    // found a token that ends curstate, so add it to the list and reset builder and state
+    private void foundTokState(Type ttype, String c) {
+        tokens.add(new Token(ttype, c));
+        builder.setLength(0);
+        state = 0;
+    }
 
 }
