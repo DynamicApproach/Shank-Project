@@ -23,7 +23,6 @@ public class Lexer {
     public ArrayList<Token> Lex(String input) {
         this.input = input;
         try {
-            setupReservedWords();
             for (char c : input.toCharArray()) {
                 index++;
                 if (reservedWords.containsKey(builder.toString().toUpperCase())) {
@@ -51,7 +50,7 @@ public class Lexer {
         return tokens;
     }
 
-    private void setupReservedWords() {
+    public void setupReservedWords() {
         // Identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal, comma, variables, constants
         // integer, real, begin, end, variables, constants, if, then, else, elsif, for, from, to, while, repeat, until, mod
 

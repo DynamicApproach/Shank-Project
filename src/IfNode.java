@@ -13,10 +13,10 @@ public class IfNode extends Node {
         this.statementNodes = statements;
     }
 
-    public IfNode(Node condition, ArrayList<StatementNode> statements, ArrayList<StatementNode> elseStatements) {
+    public IfNode(Node condition, ArrayList<StatementNode> statements, IfNode ifNode) {
         this.booleanExpression = condition;
         this.statementNodes = statements;
-        this.ifNode = new IfNode(condition, elseStatements);
+        this.ifNode = ifNode;
     }
 
 

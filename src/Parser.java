@@ -170,7 +170,7 @@ public class Parser {
     // TODO: whileExpression, ifExpression, forExpression, printExpression
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
-    public Node whileExpression() {
+    public WhileNode whileExpression() {
         // while booleanExpression do statements end
         if (peek(0).getType() == Type.WHILE) {
             matchAndRemove(Type.WHILE);
@@ -183,17 +183,16 @@ public class Parser {
     }
 
     // TODO: FIX THIS AND IFNODE.JAVA -> ask about this - How should ifNode look?
-    public Node ifExpression() {
-        // if booleanExpression then statements end
+    // need to chain ifNode together -> ifNode(cond, statements, ifNode)
+    public IfNode ifExpression() {
+        // if booleanExpression then statements (if booleanExpression then statements)* end
         if (peek(0).getType() == Type.IF) {
             matchAndRemove(Type.IF);
             Node condition = booleanExpression();
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = Statements();
-            if (peek(0).getType() == Type.ELSE) {
-                matchAndRemove(Type.ELSE);
-                ArrayList<StatementNode> elseStatements = Statements();
-                return new IfNode(condition, statements, elseStatements);
+            if (peek(0).getType() == Type.IF) {
+                return new IfNode(condition, statements, ifExpression());
             }
             return new IfNode(condition, statements);
         }
@@ -201,7 +200,7 @@ public class Parser {
     }
 
     // for
-    public Node forExpression() {
+    public ForNode forExpression() {
         // for identifier assignment expression to expression do statements end
         if (peek(0).getType() == Type.FOR) {
             matchAndRemove(Type.FOR);

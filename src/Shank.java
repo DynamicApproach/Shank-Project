@@ -19,6 +19,7 @@ public class Shank {
         if (args.length == 1) {
             try {
                 Lexer lexer = new Lexer();
+                lexer.setupReservedWords();
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n");
                 for (String line : text) {
