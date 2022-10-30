@@ -364,7 +364,7 @@ public class Lexer {
                     }
 
                 } else {
-                    // if space or newline, then end of word so add to tokens -- add word state here?
+                    // if space or newline, then end of word so add to tokens -- TODO: add word state here?
                     switch (builder.toString()) {
                         case "," -> foundTokState(Type.COMMA, builder.toString());
                         case ":" -> {
