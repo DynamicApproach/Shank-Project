@@ -1,8 +1,12 @@
 public class GetRandom extends InterpreterDataType {
     private Float value;
 
-    public GetRandom(String line) {
-        super(line);
+    public GetRandom(String line) throws Exception {
+        try {
+            value = (float) (Math.random() * Float.parseFloat(line));
+        } catch (Exception e) {
+            throw new Exception("Cannot get random from input: " + line + "\n " + e + "\n");
+        }
     }
 
     public String toString(String input) throws Exception {

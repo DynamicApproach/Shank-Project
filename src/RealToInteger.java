@@ -1,8 +1,12 @@
 public class RealToInteger extends InterpreterDataType {
     private int value;
 
-    public RealToInteger(String line) {
-        super(line);
+    public RealToInteger(String line) throws Exception {
+        try {
+            value = Integer.parseInt(line);
+        } catch (Exception e) {
+            throw new Exception("Cannot convert to integer from input: " + line + "\n " + e + "\n");
+        }
     }
 
     public String toString(String input) {

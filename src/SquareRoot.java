@@ -2,7 +2,11 @@ public class SquareRoot extends InterpreterDataType {
     private Float value;
 
     public SquareRoot(String line) {
-        super(line);
+        try {
+            value = (float) Math.sqrt(Float.parseFloat(line));
+        } catch (Exception e) {
+            System.out.println("Cannot get square root from input: " + line + "\n " + e + "\n");
+        }
     }
 
     public String toString(String input) throws Exception {

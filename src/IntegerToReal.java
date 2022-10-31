@@ -2,7 +2,11 @@ public class IntegerToReal extends InterpreterDataType {
     private Float value;
 
     public IntegerToReal(String line) {
-        super(line);
+        try {
+            value = Float.parseFloat(line);
+        } catch (Exception e) {
+            System.out.println("Cannot convert to real from input: " + line + "\n " + e + "\n");
+        }
     }
 
     public String toString(String input) throws Exception {
