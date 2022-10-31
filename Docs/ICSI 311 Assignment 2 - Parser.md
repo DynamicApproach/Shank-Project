@@ -1,5 +1,17 @@
 # 311 Assignment 2 – Start the Parser
 
+-----
+Overview
+-----
+The Lexar generates a single list of tokens.
+
+The Parser reads the list of tokens and generates an Abstract Syntax Tree (AST).
+
+The AST is a tree of nodes, where each node represents a statement or expression.
+
+The AST is used to generate the output of the compiler.
+
+-----
 This assignment must have six new source files
 
     Parser.java,

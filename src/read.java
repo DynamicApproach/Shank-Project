@@ -1,22 +1,20 @@
 import java.util.ArrayList;
 
 public class read extends BuiltInFunctionNode {
-    public read(String name, ArrayList<FuctionNode> arguments, boolean varadic) {
+    String name;
+    ArrayList<FuctionNode> arguments;
+    boolean varadic;
+
+    public read(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
     }
 
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
-        // TODO: execute the read function?
-        //
-        //  new thread for fun for now
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                System.out.println("read");
-            }
-        }).start();
-
+        for (InterpreterDataType idt : arguments) {
+            // set argu to input from console
+            // idt = arguments.set(arguments.indexOf(idt), idt.fromString(System.console().readLine()));
+            // TODO: Fix Read, need to find out type of idt and then read in the correct type
+        }
     }
 }

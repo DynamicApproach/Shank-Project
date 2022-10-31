@@ -6,7 +6,7 @@ public abstract class BuiltInFunctionNode extends CallableNode {
     private boolean varadic;
 
 
-    public BuiltInFunctionNode(String name, ArrayList<FuctionNode> arguments, boolean varadic) {
+    public BuiltInFunctionNode(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
         this.name = name;
         this.arguments = arguments;

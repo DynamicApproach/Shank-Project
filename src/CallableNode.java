@@ -1,27 +1,21 @@
 import java.util.ArrayList;
-import java.util.List;
 
-public class CallableNode extends FuctionNode {
+public class CallableNode extends Node {
     private String name;
-    private List<FuctionNode> arguments;
+    private ArrayList<VariableNode> arguments;
+    private boolean varadic;
 
-    public CallableNode(String name, List<FuctionNode> arguments) {
-        super(name);
+    public CallableNode(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         this.name = name;
         this.arguments = arguments;
-    }
-
-    public CallableNode(String name, ArrayList<FuctionNode> arguments, boolean varadic) {
-        super(name);
-        this.name = name;
-        this.arguments = arguments;
+        this.varadic = varadic;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<FuctionNode> getArguments() {
+    public ArrayList<VariableNode> getArguments() {
         return arguments;
     }
 

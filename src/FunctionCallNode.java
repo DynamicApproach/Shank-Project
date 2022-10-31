@@ -1,12 +1,12 @@
-import java.util.List;
+import java.util.ArrayList;
 
 // A function call has a name (of the function) and a list of parameters.
 // A parameter needs to be its own ASTNode because a parameter can be a variable (VariableReferenceNode) or a constant value (an ASTNode).
 public class FunctionCallNode extends StatementNode {
     private String name;
-    private List<FuctionNode> arguments;
+    private ArrayList<VariableNode> arguments;
 
-    public FunctionCallNode(String name, List<FuctionNode> arguments) {
+    public FunctionCallNode(String name, ArrayList<VariableNode> arguments) {
         super(name);
         this.name = name;
         this.arguments = arguments;
@@ -16,7 +16,7 @@ public class FunctionCallNode extends StatementNode {
         return name;
     }
 
-    public List<FuctionNode> getArguments() {
+    public ArrayList<VariableNode> getArguments() {
         return arguments;
     }
 
