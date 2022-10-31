@@ -291,7 +291,6 @@ public class Lexer {
                         builder.append(c);
                         foundTokState(Type.ADD, builder.toString());
                     }
-
                     default -> {
                         System.err.println("Error: Invalid character4 " + c);
                         reportErrorAndClear("Invalid character4");
