@@ -104,6 +104,8 @@ The first is an abstract base class. It is it's own parent. It declares a ToStri
         public abstract String ToString();
         public abstract void FromString(String input); // sets the value of the data type by parsing the string
 
+No constructor and no member.
+
 The int and float versions should extend InterpreterDataType have a Value (of the appropriate type)
 They should implement FromString() and ToString() – we will use these in our read and write
 functions.
@@ -124,7 +126,8 @@ Now subclass BuiltInFunctionNode for each of the functions that we can implement
     read
 
 Read is going to read from the console. Remember that Shank doesn’t have return values. Read,
-therefore, must mutate the incoming IDTs.
+therefore, must mutate the incoming IDTs. All the executes take a collection of IDT and return
+void.
 
     write
     squareRoot(float)
