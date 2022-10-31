@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class write extends BuiltInFunctionNode {
-    public write(String name, ArrayList<VariableNode> arguments, boolean varadic) {
+public class Write extends BuiltInFunctionNode {
+    public Write(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
     }
 

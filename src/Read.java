@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class read extends BuiltInFunctionNode {
+public class Read extends BuiltInFunctionNode {
     String name;
     ArrayList<FuctionNode> arguments;
     boolean varadic;
 
-    public read(String name, ArrayList<VariableNode> arguments, boolean varadic) {
+    public Read(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
     }
 

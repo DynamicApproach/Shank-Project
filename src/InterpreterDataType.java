@@ -5,8 +5,8 @@ public abstract class InterpreterDataType {
         this.input = line;
     }
 
-    public abstract String toString(String input);
+    public abstract String toString(String input) throws Exception;
 
-    public abstract void fromString(String input);
+    public abstract void fromString(String input) throws Exception;
 
 }
