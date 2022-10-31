@@ -59,22 +59,19 @@ code to implement them.
 
 So it makes sense to have two different classes with a common base type.
 
-Make a common base type of “`CallableNode`”, which derives from ASTNode.
-
-It will have a function name and a list of `VariableNodes` for the parameters – you can move this
-from
-the existing `functionNode`. This class should be abstract.
-
-Then we need to build `BuiltInFunctionNode` and `FunctionNode`.
-
-BuiltInFunctions can do something that user-defined functions cannot (so far) – accept any number of
-parameters of any type (like read and write do).
-
-This is called **variadic**. C and Java both do this.
-
-Make a `boolean in BuiltInFunctions` to indicate if this built-in is variadic.
-
-FunctionNode needs to now inherit from `CallableNode` and to use the inherited Parameter variables.
+1. [ ] Make a common base type of “`CallableNode`”, which derives from ASTNode.
+2. [ ] 
+3. [ ] It will have a function name and a list of `VariableNodes` for the parameters – you can move
+   this from the existing `functionNode`.
+4. [ ]  This class should be abstract.
+5. [ ] Then we need to build `BuiltInFunctionNode` and `FunctionNode`.
+6. [ ] BuiltInFunctions can do something that user-defined functions cannot (so far) – accept any
+   number of
+7. [ ] parameters of any type (like read and write do).
+8. [ ] This is called **variadic**. C and Java both do this.
+9. [ ] Make a `boolean in BuiltInFunctions` to indicate if this built-in is variadic.
+10. [ ] FunctionNode needs to now inherit from `CallableNode` and to use the inherited Parameter
+    variables.
 
 -----------------------------------------------------------------------------------------------
 

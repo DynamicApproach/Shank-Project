@@ -197,14 +197,15 @@ What do we do with EndOfLine?
 
 What is MatchAndRemove?
 
-- MatchAndRemove is a very straightforward function:
-  If the next token in line is of a specific token type that we are looking for, remove it from the
-  list and return it, otherwise return null.
+    MatchAndRemove is a very straightforward function:
+      If the next token in line is of a specific token type that we are looking for, remove it from the
+      list and return it, otherwise return null.
 
-  if(MatchAndRemove(List.get(0))== token)
-  [NUMBER(5), PLUS, NUMBER(7)]
+    - if(MatchAndRemove(List.get(0))== token)
 
-- calling matchAndRemove(Token.Type.PLUS) on the above list will return null and do so appropriately
+    - [NUMBER(5), PLUS, NUMBER(7)]
+
+    calling matchAndRemove(Token.Type.PLUS) on the above list will return null and do so appropriately
 
 Do Expression, Term and Factor take parameters?
 
@@ -216,9 +217,9 @@ Is the goal of the parser to take a string of tokens and make an AST?
 
 What are Expression, Term and Factor?
 
-- Expression, Term and Factor are just names for the rules that we use to enforce order of
-  operations.
-  The parser should call Expression.
+     Expression, Term and Factor are just names for the rules that we use to enforce order of
+     operations.
+     The parser should call Expression.
 
     - Then expression runs and looks for a + or -.
       Expression should call Term.
@@ -226,6 +227,7 @@ What are Expression, Term and Factor?
         - If the next token isn’t a * or /,
           we don’t have a term, so we just return the Factor that we found.
 
+---
 eg.
 
     public Expression(){
@@ -244,14 +246,16 @@ eg.
         doesn't work ? ret null
     }
 
-Term should call Factor. If factor can’t resolve, return null (this isn’t a math operation). Now we
-have a Factor. A term is a factor * or / a factor.
+----
 
-If factor can’t resolve, return null (this isn’t a math operation). Now we have a Factor. A term is
-a factor * or / a factor. If the next token isn’t a * or /, we don’t have a term, so we just return
-the Factor that we found. Then expression runs and looks for a + or -.
-
-"Turn each of these (expression, term, factor) into a method of Parser. Use matchAndRemove to test
-for the presence of a token. Each of these methods should return a class derived from Node. Factor
-will return a FloatNode (NUMBER with a decimal point) or an IntegerNode (NUMBER without a decimal
-point)"
+    Term should call Factor. If factor can’t resolve, return null (this isn’t a math operation). Now we
+    have a Factor. A term is a factor * or / a factor.
+    
+    If factor can’t resolve, return null (this isn’t a math operation). Now we have a Factor. A term is
+    a factor * or / a factor. If the next token isn’t a * or /, we don’t have a term, so we just return
+    the Factor that we found. Then expression runs and looks for a + or -.
+    
+    "Turn each of these (expression, term, factor) into a method of Parser. Use matchAndRemove to test
+    for the presence of a token. Each of these methods should return a class derived from Node. Factor
+    will return a FloatNode (NUMBER with a decimal point) or an IntegerNode (NUMBER without a decimal
+    point)"

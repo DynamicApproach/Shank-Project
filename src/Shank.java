@@ -25,7 +25,11 @@ public class Shank {
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
-                    // TODO: add new line token for each line and remove the replacement
+                    /*
+                    // add newline token for the end of each line
+                    tokens.add(new Token(Type.ENDLINE, "\n"));
+                    */
+
                 }
                 for (Token token : tokens) {
                     if (token != null) {
@@ -37,7 +41,7 @@ public class Shank {
                 }
                 Parser parsing = new Parser(tokens);
 
-                System.out.println("Parsing: ");
+                System.out.println("\n \n \n Parsing:\n ");
                 // pass each set of nodes into the parser?
                 Node tree = parsing.parse();
                 System.out.println("Parsing complete");

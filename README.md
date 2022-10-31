@@ -43,7 +43,7 @@
 
 ----------------------------------------------------------------
 
-- [➡️] 5 - More Statements
+- [x] 5 - More Statements
   -Attached Files:
 
     - File 5 - More Statements.docx 5 - More Statements.docx - Alternative Formats (19.217 KB)
@@ -56,7 +56,7 @@
 
 ----------------------------------------------------------------
 
-- [ ] 7 - Calling Functions in the interpreter
+- [➡️] 7 - Calling Functions in the interpreter
   -Attached Files:
     - File 7 - Calling Functions in the interpreter.docx 7 - Calling Functions in the
       interpreter.docx

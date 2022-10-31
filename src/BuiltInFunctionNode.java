@@ -1,12 +1,15 @@
-public class BuiltInFunctionNode extends FuctionNode {
+import java.util.ArrayList;
+
+public class BuiltInFunctionNode extends CallableNode {
     private String name;
-    private Type type;
+    private ArrayList arguments;
     private boolean varadic;
 
-    public BuiltInFunctionNode(String name, Type type, boolean varadic) {
-        super(name);
+
+    public BuiltInFunctionNode(String name, ArrayList<FuctionNode> arguments, boolean varadic) {
+        super(name, arguments, varadic);
         this.name = name;
-        this.type = type;
+        this.arguments = arguments;
         this.varadic = varadic;
     }
 
@@ -14,11 +17,4 @@ public class BuiltInFunctionNode extends FuctionNode {
         return name;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
 }
