@@ -76,7 +76,6 @@ public class Parser {
     }
 
 
-    // TODO:  factor accept an identifier (and creating a variableReferenceNode). -> ask about this - should it be a separate method?
     // Factor is a number or a parenthesized expression.
     public Node factor() {
         if (isInteger(tokens.get(0))) {
@@ -167,7 +166,6 @@ public class Parser {
         return node;
     }
 
-    // TODO: whileExpression, ifExpression, forExpression, printExpression
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
     public WhileNode whileExpression() {
@@ -182,7 +180,6 @@ public class Parser {
         return null;
     }
 
-    // TODO: FIX THIS AND IFNODE.JAVA -> ask about this - How should ifNode look?
     // need to chain ifNode together -> ifNode(cond, statements, ifNode)
     public IfNode ifExpression() {
         // if booleanExpression then statements (if booleanExpression then statements)* end
@@ -198,6 +195,7 @@ public class Parser {
         }
         return null;
     }
+
 
     // for
     public ForNode forExpression() {

@@ -10,7 +10,7 @@ import java.util.HashMap;
  * tell that the number is complete because the next character is not a number).
  */
 
-
+// TODO: figure out how to deal w the := and x:=x+1
 @SuppressWarnings("SpellCheckingInspection")
 public class Lexer {
     public HashMap<String, Type> reservedWords = new HashMap<>();
@@ -113,7 +113,7 @@ public class Lexer {
                 switch (c) {
                     case '(' -> {
                         // check if next char in input is a *
-                        if (input.toCharArray().length > index + 1 && input.toCharArray()[index + 1] == '*') {
+                        if (input.toCharArray().length > index && input.toCharArray()[index] == '*') {
                             state = 7;
                         } else {
                             builder.append(c);
@@ -122,7 +122,7 @@ public class Lexer {
                         }
                     }
                     case ')' -> {
-                        if (input.toCharArray().length > index + 1 && input.toCharArray()[index + 1] == '*') {
+                        if (input.toCharArray().length > index && input.toCharArray()[index] == '*') {
                             state = 7;
                         } else {
                             builder.append(c);
@@ -329,10 +329,26 @@ public class Lexer {
                         }
                         case ':' -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                             // if  input index +1 is = then diff token
-                            if (input.toCharArray().length > index + 1 && input.charAt(index + 1) == '=') {
-                                builder.append(input.charAt(index + 1));
+                            if (input.toCharArray().length > index && input.charAt(index) == '=' && notSpaceOrNewLineAndHasLength()) {
+                                // eg. "idenNAME:="
+                                foundTok(Type.IDENTIFIER, builder.toString());
+                                builder.append(c);
+                                builder.append(input.charAt(index));
                                 foundTokState(Type.ASSIGN, builder.toString());
+                            } else if (input.toCharArray().length > index && input.charAt(index) == '=' && !notSpaceOrNewLineAndHasLength()) {
+                                // eg. " :="
+                                builder.append(c);
+                                builder.append(input.charAt(index));
+                                foundTokState(Type.ASSIGN, builder.toString());
+                            } else if (builder.length() > 0) {
+                                // eg. "idenNAME:"
+                                if (notSpaceOrNewLineAndHasLength()) {
+                                    foundTok(Type.IDENTIFIER, builder.toString());
+                                }
+                                builder.append(c);
+                                foundTokState(Type.COLON, builder.toString());
                             } else {
+                                // eg. ":"
                                 foundTokState(Type.COLON, builder.toString());
                             }
                         }
@@ -379,17 +395,29 @@ public class Lexer {
                         switch (builder.toString()) {
                             case "," ->
                                     foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
-                            case ":" -> {
+                            case ":" -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                                 // if  input index +1 is = then diff token
-                                if (input.toCharArray().length > index + 1 && input.charAt(index + 1) == '=') {
-                                    // if colon and equals, then foundTok for a assign eg. ":= "
-                                    builder.append(input.charAt(index + 1));
+                                if (input.toCharArray().length > index && input.charAt(index) == '=' && notSpaceOrNewLineAndHasLength()) {
+                                    foundTok(Type.IDENTIFIER, builder.toString());
+                                    builder.append(c);
+                                    builder.append(input.charAt(index));
                                     foundTokState(Type.ASSIGN, builder.toString());
+                                } else if (input.toCharArray().length > index && input.charAt(index) == '=') {
+                                    builder.append(c);
+                                    builder.append(input.charAt(index));
+                                    foundTokState(Type.ASSIGN, builder.toString());
+                                } else if (builder.length() > 0) {
+                                    if (notSpaceOrNewLineAndHasLength()) {
+                                        foundTok(Type.IDENTIFIER, builder.toString());
+                                    }
+                                    builder.append(c);
+                                    System.out.println("char is " + index + " " + input.charAt(index));
+                                    foundTokState(Type.COLON, builder.toString());
                                 } else {
-                                    // if colon, then foundTok for a colon eg. ": "
-                                    foundTokState(Type.COLON, String.valueOf(builder));
+                                    foundTokState(Type.COLON, builder.toString());
                                 }
                             }
+
                             case "=" -> { // if equals, then foundTok for a equals eg. "= "
                                 if (builder.length() > 0 && ":".equals(builder.toString())) {
                                     builder.append(c);
@@ -411,7 +439,7 @@ public class Lexer {
                 }
             case 7:
                 // do nothing until end of comment *)
-                if (input.toCharArray().length < index + 1 && c == '*' && input.charAt(index + 1) == ')') {
+                if (input.toCharArray().length < index && c == '*' && input.charAt(index) == ')') {
                     state = 0;
                 }
         }

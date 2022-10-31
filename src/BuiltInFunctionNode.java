@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class BuiltInFunctionNode extends CallableNode {
+public abstract class BuiltInFunctionNode extends CallableNode {
     private String name;
     private ArrayList arguments;
     private boolean varadic;
@@ -12,6 +12,10 @@ public class BuiltInFunctionNode extends CallableNode {
         this.arguments = arguments;
         this.varadic = varadic;
     }
+
+    //Execute will take a collection of InterpreterDataType objects. Why? Well, when the interpreter finds a call to “read”, for example,
+    // it has to be able to call your Java code.
+    public abstract void execute(ArrayList<InterpreterDataType> arguments) throws Exception;
 
     public String getName() {
         return name;
