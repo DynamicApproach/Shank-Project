@@ -4,38 +4,38 @@ import java.util.List;
 import java.util.Set;
 
 public class FuctionNode extends Node {
-    public String name;
-    public List<VariableNode> parameters;
-    public List<VariableNode> variables;
-    public List<Node> body;
-    public List<VariableNode> locals;
+    private String name;
+    private ArrayList<VariableNode> parameters;
+    private ArrayList<VariableNode> variables;
+    private ArrayList<Node> body;
+    private ArrayList<VariableNode> locals;
     // const
-    public List<VariableNode> constant;
+    private ArrayList<VariableNode> constant;
     // vars
-    public VariableNode vars;
+    private VariableNode vars;
 
     public FuctionNode(String name) {
         this.name = name;
     }
 
-    public void setBody(List<Node> body) {
+    public void setBody(ArrayList<Node> body) {
         this.body = body;
     }
 
-    public void setConstant(List<VariableNode> constant) {
+    public void setConstant(ArrayList<VariableNode> constant) {
         this.constant = constant;
     }
 
-    public void setVariables(List<VariableNode> variables) {
+    public void setVariables(ArrayList<VariableNode> variables) {
         this.variables = variables;
     }
 
 
-    public void setLocals(List<VariableNode> constant, List<VariableNode> variables) {
+    public void setLocals(ArrayList<VariableNode> constant, ArrayList<VariableNode> variables) {
 
         this.variables = variables;
         this.constant = constant;
-        locals = union(constant, variables);
+        locals = (ArrayList<VariableNode>) union(constant, variables);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class FuctionNode extends Node {
         return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ", locals=" + locals + '}';
     }
 
-    public void setParameters(List<VariableNode> parameters) {
+    public void setParameters(ArrayList<VariableNode> parameters) {
         this.parameters = parameters;
     }
 
