@@ -1,6 +1,7 @@
 define start (t : integer; s : real)
 constants
 pi=3.141
+x=2
 variables
 a,b,c : integer
 begin
