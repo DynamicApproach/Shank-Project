@@ -1,0 +1,9 @@
+define start ()
+variables
+	a,b,c : integer
+begin
+	a := 5
+	b:= 6
+	add a,b,var c
+	(* in here, a & b are the same, but c is whatever add sets sum to *)
+end

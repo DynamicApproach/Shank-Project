@@ -1,0 +1,18 @@
+(* Recursive *)
+define add (x,y : integer; var sum : integer)
+variables
+	yMinusOne, xPlusOne, newSum : integer
+begin
+	(* in here, x and y are constant *)
+	if y = 0 then
+		begin
+		sum := x
+		end
+	else
+		begin
+		xPlusOne := x + 1
+		yMinusOne := y - 1
+		add xPlusOne, yMinusOne, var newSum
+		sum := newSum
+		end
+end
