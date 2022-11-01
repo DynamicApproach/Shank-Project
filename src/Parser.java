@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -76,7 +75,6 @@ public class Parser {
     }
 
 
-    // TODO:  factor accept an identifier (and creating a variableReferenceNode). -> ask about this - should it be a separate method?
     // Factor is a number or a parenthesized expression.
     public Node factor() {
         if (isInteger(tokens.get(0))) {
@@ -167,7 +165,6 @@ public class Parser {
         return node;
     }
 
-    // TODO: whileExpression, ifExpression, forExpression, printExpression
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
     public WhileNode whileExpression() {
@@ -182,7 +179,6 @@ public class Parser {
         return null;
     }
 
-    // TODO: FIX THIS AND IFNODE.JAVA -> ask about this - How should ifNode look?
     // need to chain ifNode together -> ifNode(cond, statements, ifNode)
     public IfNode ifExpression() {
         // if booleanExpression then statements (if booleanExpression then statements)* end
@@ -198,6 +194,7 @@ public class Parser {
         }
         return null;
     }
+
 
     // for
     public ForNode forExpression() {
@@ -236,9 +233,9 @@ public class Parser {
                 f.setParameters(params()); // constants, variables, body
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
-                f.constant = constants();
-                f.variables = variables();
-                f.body = bodyFunction();
+                f.setConstant(constants());
+                f.setVariables(variables());
+                f.setBody(body());
                 return f;
             }
         } catch (Exception e) {
@@ -247,12 +244,12 @@ public class Parser {
         return null;
     }
 
-    private List<VariableNode> params() {
+    private ArrayList<VariableNode> params() {
 
         return null;
     }
 
-    private List<VariableNode> constants() {
+    private ArrayList<VariableNode> constants() {
         //looks for the constants token.
         // If it finds it, it calls a “processConstants” function that looks for token
         try {
@@ -267,7 +264,7 @@ public class Parser {
         return null;
     }
 
-    private List<VariableNode> processConstants() {
+    private ArrayList<VariableNode> processConstants() {
        /*
         processConstants function that looks for tokens in the format:
         Identifier equals number endOfLine
@@ -276,7 +273,7 @@ public class Parser {
         */
 
         Token x;
-        List<VariableNode> constants = new ArrayList<>();
+        ArrayList<VariableNode> constants = new ArrayList<>();
         try {
             while ((x = matchAndRemove(Type.IDENTIFIER)) != null) {
                 Token y = matchAndRemove(Type.EQUAL);
@@ -312,18 +309,18 @@ public class Parser {
 
     }
 
-    public List<Node> bodyFunction() {
-        List<Node> body = new ArrayList<>();
+    public ArrayList<Node> body() {
+        ArrayList<Node> bod = new ArrayList<>();
         while (matchAndRemove(Type.BEGIN) != null) {
             Token end = matchAndRemove(Type.ENDLINE);
             matchAndRemove(Type.END);
             matchAndRemove(Type.ENDLINE);
         }
 
-        return body;
+        return bod;
     }
 
-    public List<VariableNode> variables() {
+    public ArrayList<VariableNode> variables() {
 
        /*
         We then make a Variables function that looks for the variables token.
@@ -334,7 +331,7 @@ public class Parser {
         IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
         For each variable, we make a VariableNode like we did for constants.*/
         // token equal match and remove
-        List<VariableNode> variables = new ArrayList<>();
+        ArrayList<VariableNode> variables = new ArrayList<>();
 
         // alternate method? :  all identifiers into a list and then parse the list and make a VariableNode for each one
         try {

@@ -106,19 +106,16 @@ A block consists of
 You might notice a pattern – we make ASTNodes to hold the data and in parallel we make methods that
 look at the token stream to see if it matches the expected tokens.
 
+    Do we need to worry about edge cases in assignment tokens? Eg. Should “x := 2” and “x:=2” work?
+    (space between vs no spaces)
+
+Yes
+
 ## Testing
 
 Add some assignment statements between the begin and end statements from your previous assignment.
 Add some comments, too. Make sure that the comments are ignored and the assignment statements are
 printed as part of your function.
-
- 
-
- 
-
- 
-
- 
 
  
 

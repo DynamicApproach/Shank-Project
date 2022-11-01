@@ -1,4 +1,4 @@
-public class RealNode {
+public class RealNode extends Node {
     private float value;
 
     public RealNode(float value) {

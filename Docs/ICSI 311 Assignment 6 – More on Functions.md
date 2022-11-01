@@ -73,6 +73,10 @@ So it makes sense to have two different classes with a common base type.
 10. [ ] FunctionNode needs to now inherit from `CallableNode` and to use the inherited Parameter
     variables.
 
+---------
+
+    Node -> CallableNode -> BuiltInFunctionNode
+
 -----------------------------------------------------------------------------------------------
 
 ## Built-In – Parameters
@@ -95,13 +99,16 @@ the AST.
 
 Create a new set of classes: `InterpreterDataType`, `IntDataType`, `FloatDataType`.
 
-The first is an abstract base class. It declares a ToString and a FromString:
+The first is an abstract base class. It is it's own parent. It declares a ToString and a FromString:
 
         public abstract String ToString();
         public abstract void FromString(String input); // sets the value of the data type by parsing the string
 
-The int and float versions have a Value (of the appropriate type) and should implement FromString()
-and ToString() – we will use these in our read and write functions.
+No constructor and no member.
+
+The int and float versions should extend InterpreterDataType have a Value (of the appropriate type)
+They should implement FromString() and ToString() – we will use these in our read and write
+functions.
 
 Finally, we are going to go make one quick addition to `BuiltInFunctionNode` – add an abstract
 method (making the whole class abstract) called Execute.
@@ -109,15 +116,24 @@ Execute will take a collection of `InterpreterDataType` objects. Why? Well, when
 finds
 a call to “read”, for example, it
 has to be able to call your Java code.
+eg. Read will take a collection of `InterpreterDataType` objects and set the values of those objects
+from user input
+(remember that read can take any number of parameters).
+eg. Write will take a collection of `InterpreterDataType` objects and print them to the screen.
 
 Now subclass BuiltInFunctionNode for each of the functions that we can implement so far:
 
     read
+
+Read is going to read from the console. Remember that Shank doesn’t have return values. Read,
+therefore, must mutate the incoming IDTs. All the executes take a collection of IDT and return
+void.
+
     write
-    squareRoot
-    getRandom
-    integerToReal
-    realToInteger
+    squareRoot(float)
+    getRandom(float)
+    integerToReal(float)
+    realToInteger(float)
 
 Implement the Execute function for each of these.
 

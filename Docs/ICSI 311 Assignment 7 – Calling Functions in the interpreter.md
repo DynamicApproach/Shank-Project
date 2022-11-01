@@ -86,7 +86,7 @@ For every parameter in invocation:
 
 ## Work on the interpreter
 
-Create a static InterpretFunction in the interpreter – it should take a `FunctionNode` (i.e. the
+Create a static **InterpretFunction** in the interpreter – it should take a `FunctionNode` (i.e. the
 function to interpret) and a collection of `InterpreterDataType` – the parameters to the function.
 
 To interpret a function, we will make a hashmap of string->`InterpreterDataType` – this will hold
