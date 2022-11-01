@@ -49,7 +49,6 @@ public class Shank {
                 System.out.println("Parsing complete");
 
                 // print the tree
-                System.out.println(tree);
                 parsing.FunctionDefinition();
                 //functiondef interpret
 

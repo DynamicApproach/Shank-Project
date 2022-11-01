@@ -226,9 +226,6 @@ public class Parser {
         */
 
         try {
-            System.out.println("FunctionDefinition");
-            // print first token for debug
-            System.out.println(peek(0).getValue());
             if (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 FunctionNode f = new FunctionNode(name.getValue().trim());
@@ -245,6 +242,7 @@ public class Parser {
             System.err.println("Error in FunctionDefinition");
             throw new RuntimeException(e);
         }
+        System.err.println("Error in FunctionDefinition - returned null?");
         return null;
     }
 
@@ -350,6 +348,7 @@ public class Parser {
                         if (isint != null || isreal != null) {
                             if (endl != null) {
                                 // make a VariableNode
+                                // TODO: swap isint and isreal to own if statements to make the 'type' real or int
                                 VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
                                 variables.add(var);
                             }
