@@ -61,7 +61,9 @@ pi = 3.141`
 Type limits
 -------------------
 Types can be limited at declaration time using “from” and “to”. Does not apply to booleans.
+
 Example:
+
 `variables
 numberOfCards : integer from 0 to 52
 waterTemperature: real from 0.0 to 100.0
@@ -73,22 +75,22 @@ Functions (also known as: Procedures/Methods/Subroutines)
 A function is an (optional) constant section, an (optional) variable section and a block.
 
 Functions have a name and a set of parameters; this combination must be unique.
+
 Function parameters are read-only (treated as constant) by default.
 
 To allow them to be changed, we proceed them by the keyword “var” both in the function declaration
 and in the call to the function.
 
 Example:
+
 `define addTwo(x,y : integer; var sum: integer)
 begin
 sum := x + y
-end
-`
+end`
 
 To call this function:
 
-`addTwo 5,4,var total (* total was declared somewhere else *)
-`
+`addTwo 5,4,var total (* total was declared somewhere else *)`
 
 The var keyword must be used before each variable declaration that is alterable.
 
@@ -100,8 +102,7 @@ In contrast to other languages, functions never return anything except through t
 While this is unfamiliar to people who have used other languages, it is actually powerful, since you
 can return as many values as you choose.
 
-`define average(values:array of integer; var mean, median, mode : real)
-`
+`define average(values:array of integer; var mean, median, mode : real)`
 
 When the program starts, the function “start” will be called.
 
@@ -120,6 +121,7 @@ a := 5
 end
 end if`
 
+
 `if i mod 15=0 then
 begin
 write “FizzBuzz “
@@ -137,6 +139,7 @@ begin
 write I, “ “
 end`
 
+
 There are three types of loops that we support:
 
 `for integerVariable from value to value
@@ -149,16 +152,19 @@ block`
 block
 until booleanExpression`
 
+
 Note:
 
 * the control variable in the for loop is not automatically declared – it must be declared
   before the for statement is encountered.
 
 Examples:
+
 `for i from 1 to 10
 begin
 write i
 end`
+
 
 `for j from 10 to 2
 begin
@@ -178,6 +184,7 @@ end
 until j = 0`
 
 Since these are statements, they can be embedded within each other:
+
 
 `if a<5 then
 begin
