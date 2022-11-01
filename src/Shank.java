@@ -37,6 +37,8 @@ public class Shank {
                         if (token.getType() == Type.ENDLINE) {
                             System.out.println("\n");
                         }
+                    } else {
+                        System.err.println("null token");
                     }
                 }
                 Parser parsing = new Parser(tokens);
@@ -46,6 +48,8 @@ public class Shank {
                 Node tree = parsing.parse();
                 System.out.println("Parsing complete");
 
+                // print the tree
+                System.out.println(tree);
                 parsing.FunctionDefinition();
                 //functiondef interpret
 

@@ -139,9 +139,9 @@ public class Parser {
     public AssignmentNode Assignment() {
         // identifier assignment expression endofline
         if (peek(1).getType() == Type.ASSIGN) {
-            String name = matchAndRemove(Type.IDENTIFIER).getValue();
+            String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
-            FuctionNode value = (FuctionNode) expression();
+            FunctionNode value = (FunctionNode) expression();
             matchAndRemove(Type.ENDLINE);
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
@@ -201,7 +201,7 @@ public class Parser {
         // for identifier assignment expression to expression do statements end
         if (peek(0).getType() == Type.FOR) {
             matchAndRemove(Type.FOR);
-            String name = matchAndRemove(Type.IDENTIFIER).getValue();
+            String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
             Node start = expression();
             matchAndRemove(Type.TO);
@@ -216,7 +216,7 @@ public class Parser {
 
     // print
 
-    public FuctionNode FunctionDefinition() {
+    public FunctionNode FunctionDefinition() {
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
@@ -226,9 +226,12 @@ public class Parser {
         */
 
         try {
+            System.out.println("FunctionDefinition");
+            // print first token for debug
+            System.out.println(peek(0).getValue());
             if (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                FuctionNode f = new FuctionNode(name.getValue());
+                FunctionNode f = new FunctionNode(name.getValue().trim());
                 matchAndRemove(Type.LPAREN);
                 f.setParameters(params()); // constants, variables, body
                 matchAndRemove(Type.RPAREN);
@@ -239,13 +242,13 @@ public class Parser {
                 return f;
             }
         } catch (Exception e) {
+            System.err.println("Error in FunctionDefinition");
             throw new RuntimeException(e);
         }
         return null;
     }
 
     private ArrayList<VariableNode> params() {
-
         return null;
     }
 
@@ -285,7 +288,7 @@ public class Parser {
                         tokens.remove(0);
                         if (a != null) {
                             // make a VariableNode
-                            VariableNode var = new VariableNode(x.getValue(), intNode, Type.CONSTANT, true);
+                            VariableNode var = new VariableNode(x.getValue().trim(), intNode, Type.CONSTANT, true);
                             constants.add(var);
                         }
                     } else if (isFloat(tokens.get(0))) {
@@ -293,7 +296,7 @@ public class Parser {
                         tokens.remove(0);
                         if (a != null) {
                             // make a VariableNode
-                            VariableNode var = new VariableNode(x.getValue(), floatNode, Type.CONSTANT, true);
+                            VariableNode var = new VariableNode(x.getValue().trim(), floatNode, Type.CONSTANT, true);
                             constants.add(var);
                         }
                     }
@@ -347,7 +350,7 @@ public class Parser {
                         if (isint != null || isreal != null) {
                             if (endl != null) {
                                 // make a VariableNode
-                                VariableNode var = new VariableNode(currenttoken.getValue(), null, Type.VARIABLES, false);
+                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
                                 variables.add(var);
                             }
                         }

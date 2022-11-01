@@ -5,9 +5,9 @@
 public class AssignmentNode extends StatementNode {
 
     private VariableReferenceNode target;
-    private FuctionNode expression;
+    private FunctionNode expression;
 
-    public AssignmentNode(VariableReferenceNode target, FuctionNode expression) {
+    public AssignmentNode(VariableReferenceNode target, FunctionNode expression) {
         super("Assignment");
         this.target = target;
         this.expression = expression;

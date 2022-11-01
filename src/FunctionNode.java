@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FuctionNode extends Node {
+public class FunctionNode extends Node {
     private String name;
     private ArrayList<VariableNode> parameters;
     private ArrayList<VariableNode> variables;
@@ -14,7 +14,7 @@ public class FuctionNode extends Node {
     // vars
     private VariableNode vars;
 
-    public FuctionNode(String name) {
+    public FunctionNode(String name) {
         this.name = name;
     }
 
@@ -26,9 +26,28 @@ public class FuctionNode extends Node {
         this.constant = constant;
     }
 
+    public ArrayList<VariableNode> getVariables() {
+        return variables;
+    }
+
     public void setVariables(ArrayList<VariableNode> variables) {
         this.variables = variables;
     }
+
+    // get locals
+    public ArrayList<VariableNode> getLocals() {
+        return locals;
+    }
+
+    public ArrayList<VariableNode> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(ArrayList<VariableNode> parameters) {
+        this.parameters = parameters;
+    }
+
+    // params size
 
 
     public void setLocals(ArrayList<VariableNode> constant, ArrayList<VariableNode> variables) {
@@ -41,10 +60,6 @@ public class FuctionNode extends Node {
     @Override
     public String toString() {
         return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ", locals=" + locals + '}';
-    }
-
-    public void setParameters(ArrayList<VariableNode> parameters) {
-        this.parameters = parameters;
     }
 
     public <T> List<T> union(List<T> list1, List<T> list2) {

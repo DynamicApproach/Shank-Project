@@ -1,4 +1,4 @@
-public class StatementNode extends FuctionNode {
+public class StatementNode extends FunctionNode {
 
     public StatementNode(String name) {
         super(name);
