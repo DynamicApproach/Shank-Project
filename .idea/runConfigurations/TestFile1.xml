@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestFile1" type="Application" factoryName="Application" folderName="ShankTesting" singleton="false" show_console_on_std_err="true" show_console_on_std_out="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="19" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <output_file path="$ContentRoot$/debug/" />
+    <option name="MAIN_CLASS_NAME" value="Shank" />
+    <module name="LexerProject" />
+    <option name="PROGRAM_PARAMETERS" value="C:\Users\lloyd\Desktop\Homework\311\tests\test.txt" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
