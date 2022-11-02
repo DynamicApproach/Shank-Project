@@ -13,8 +13,20 @@ public class Read extends BuiltInFunctionNode {
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         for (InterpreterDataType idt : arguments) {
             // set argu to input from console
-            // idt = arguments.set(arguments.indexOf(idt), idt.fromString(System.console().readLine()));
-            // TODO: Fix Read, need to find out type of idt and then read in the correct type
+            idt = arguments.set(arguments.indexOf(idt), new InterpreterDataType() {
+                @Override
+                public String toString(String input) throws Exception {
+                    System.out.println("Input a value for toString: ");
+                    return System.console().readLine();
+                }
+
+                @Override
+                public void fromString(String input) throws Exception {
+                    System.out.println("Input a value for fromString: ");
+                    System.console().readLine();
+                }
+            });
+            // TODO: Fix Read, need to find out type of idt and then read in the correct type or make a string type???
         }
     }
 }

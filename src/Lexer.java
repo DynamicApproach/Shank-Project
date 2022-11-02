@@ -41,6 +41,7 @@ public class Lexer {
                 state = 0;
             } else {
                 System.err.println("Error: Invalid character6 " + builder.toString());
+                System.err.println("\ninput: " + input + "\n");
                 reportErrorAndClear("Invalid character6");
             }
             this.index = 0;
@@ -295,8 +296,11 @@ public class Lexer {
                         foundTokState(Type.ADD, builder.toString());
                     }
                     default -> {
-                        System.err.println("Error: Invalid character4 " + c);
-                        reportErrorAndClear("Invalid character4");
+                        foundTokState(Type.NUMBER, builder.toString());
+                        builder.append(c);
+                       /* System.err.println("Error: Invalid character4 " + c);
+                        System.err.println("\ninput: " + input);
+                        reportErrorAndClear("Invalid character4");*/
                     }
                 }
                 break;
@@ -444,7 +448,7 @@ public class Lexer {
                 }
             case 7:
                 // do nothing until end of comment *)
-                if (input.toCharArray().length < index && c == '*' && input.charAt(index) == ')') {
+                if (input.toCharArray().length > index && c == '*' && input.charAt(index) == ')') {
                     state = 0;
                 }
         }
