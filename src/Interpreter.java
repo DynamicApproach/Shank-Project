@@ -1,20 +1,20 @@
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 @SuppressWarnings("unused")
 public class Interpreter {
-    private static InterpreterDataType InterpretFunction(FunctionNode function, Collection<InterpreterDataType> parameters) {
+    private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
         Map<String, InterpreterDataType> variables = new HashMap<>();
-/*        // Add all of our parameters to the hashmap using the names that our function expects
+        // Add all of our parameters to the hashmap using the names that our function expects
         for (int i = 0; i < function.getParameters().size(); i++) {
-            //variables.put(function.getParameters().get(i), parameters.toArray()[i]); -> TODO: Have to get the InterpreterDataType from the VariableNode
+            variables.put(function.toString(), parameters.get(i)); // TODO: Check?
         }
         // Next add all of the local variables to the hashmap
         for (VariableNode localVariable : function.getLocals()) {
-            // variables.put(localVariable.getName(), localVariable);
-        }*/
+            // variables.put(localVariable.getName(), fromString(localVariable.getType(), localVariable.getValue()));
+        }
 
         // return InterpretBlock(function.getStatements(), variables);
         return null;

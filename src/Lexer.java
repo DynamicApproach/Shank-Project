@@ -9,6 +9,8 @@ import java.util.HashMap;
  * should throw an exception. The lexer needs to accumulate characters for some types (consider 123 – we need to accumulate 1, then 2, then 3, then the state machine can
  * tell that the number is complete because the next character is not a number).
  */
+
+
 @SuppressWarnings("SpellCheckingInspection")
 public class Lexer {
     public HashMap<String, Type> reservedWords = new HashMap<>();
@@ -435,9 +437,7 @@ public class Lexer {
                             case "\n" -> foundTok(Type.ENDLINE, builder.toString());
                             case ")" -> foundTok(Type.RPAREN, builder.toString());
                             // if not reserved word, then foundTok for an identifier eg. "idenNAME "
-                            default -> {
-                                foundTok(Type.IDENTIFIER, builder.toString());
-                            }
+                            default -> foundTok(Type.IDENTIFIER, builder.toString());
                         }
                     }
                     state = 0;

@@ -345,11 +345,18 @@ public class Parser {
                     Token isreal = matchAndRemove(Type.REAL);
                     Token endl = matchAndRemove(Type.ENDLINE);
                     if (comma != null || colon != null) {
-                        if (isint != null || isreal != null) {
+                        if (isint != null) {
                             if (endl != null) {
                                 // make a VariableNode
-                                // TODO: swap isint and isreal to own if statements to make the 'type' real or int
-                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
+                                // TODO: value?
+                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), new IntegerNode(Integer.parseInt(isint.getValue())), Type.VARIABLES, false);
+                                variables.add(var);
+                            }
+                        }
+                        if (isreal != null) {
+                            if (endl != null) {
+                                // make a VariableNode
+                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), new FloatNode(Float.parseFloat(isreal.getValue())), Type.VARIABLES, false);
                                 variables.add(var);
                             }
                         }
