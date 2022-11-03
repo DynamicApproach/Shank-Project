@@ -10,7 +10,7 @@ public class Interpreter {
         // Add all of our parameters to the hashmap using the names that our function expects
         for (int i = 0; i < function.getParameters().size(); i++) {
             variables.put(function.toString(), parameters.get(i)); // TODO: Check?
-        }
+        } // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
         // Next add all of the local variables to the hashmap
         for (VariableNode localVariable : function.getLocals()) {
             // variables.put(localVariable.getName(), fromString(localVariable.getType(), localVariable.getValue()));

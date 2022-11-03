@@ -10,7 +10,7 @@ import java.util.HashMap;
  * tell that the number is complete because the next character is not a number).
  */
 
-
+// once in state 5 just take the token anyway
 @SuppressWarnings("SpellCheckingInspection")
 public class Lexer {
     public HashMap<String, Type> reservedWords = new HashMap<>();

@@ -349,14 +349,14 @@ public class Parser {
                             if (endl != null) {
                                 // make a VariableNode
                                 // TODO: value?
-                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), new IntegerNode(Integer.parseInt(isint.getValue())), Type.VARIABLES, false);
+                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
                                 variables.add(var);
                             }
                         }
                         if (isreal != null) {
                             if (endl != null) {
                                 // make a VariableNode
-                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), new FloatNode(Float.parseFloat(isreal.getValue())), Type.VARIABLES, false);
+                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
                                 variables.add(var);
                             }
                         }
