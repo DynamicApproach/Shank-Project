@@ -42,7 +42,7 @@ Next we need to deal with boolean expressions. These are simpler than math opera
 are no “chained” operators or differences in precedence. There is a subtle “gotcha” though – we
 don’t know the data type of either side of the expression. We know that we have
 
-Expression boolOp Expression
+`Expression boolOp Expression`
 
 But Expression could be int or float. There are a few ways to resolve this; be creative here. Create
 “**EvaluateBooleanExpression**” which returns a boolean. You will need to pass in the

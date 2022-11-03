@@ -114,7 +114,7 @@ Finally, we are going to go make one quick addition to `BuiltInFunctionNode` –
 method (making the whole class abstract) called Execute.
 Execute will take a collection of `InterpreterDataType` objects. Why? Well, when the interpreter
 finds
-a call to “read”, for example, it
+a call to “`read`”, for example, it
 has to be able to call your Java code.
 eg. Read will take a collection of `InterpreterDataType` objects and set the values of those objects
 from user input
@@ -139,7 +139,7 @@ Implement the Execute function for each of these.
 
 Use the collection of `InterpreterDataType` to get parameters and to output to variable parameters.
 
-Make sure that you check the data types of the InterpreterDataTypes.
+Make sure that you check the data types of the `InterpreterDataTypes`.
 
 Throw exceptions if the functions are called incorrectly.
 

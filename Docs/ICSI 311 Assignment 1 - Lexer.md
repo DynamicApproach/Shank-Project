@@ -49,7 +49,8 @@ If lex throws an exception, you **must** catch
 the exception, print that there was an exception. You **must** then print each token out (this is a
 temporary step to show that it works) once the lexing is complete.
 
-One file must be called Token.java. This file **must** contain a `Token` class. The `token` class is
+One file must be called `Token.java`. This file **must** contain a `Token` class. The `token` class
+is
 made up of an instance of an enum and a value string. There **must** be a public accessor for both
 the enum and the value string; the underlying variables **must** be private. You may create whatever
 constructors you choose.

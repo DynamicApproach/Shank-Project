@@ -27,17 +27,17 @@ nodes.
 
 1. [ ] 
 2. [ ] To start this process, make an abstract Node class.
-3. [ ] 
+3. [ ]
 4. [ ] First of all, we define our abstract class. This class can't be instantiated, but can be
    extended.
 5. [ ] We can also define functions that must be implemented in all classes that extends this
    one.```
 6. [ ] 
 7. [ ] Add an abstract ToString override.
-8. [ ] Now create an IntegerNode class that derives from Node.
+8. [ ] Now create an `IntegerNode` class that derives from Node.
 9. [ ] It must hold an integer number in a private member and have a read-only accessor.
 10. [ ] 6. [ ]Create a similar class for floating point numbers called `FloatNode`.java.
-11. [ ] Both of these classes should have appropriate constructors and ToString() overrides.
+11. [ ] Both of these classes should have appropriate constructors and **ToString**() overrides.
 12. [ ] Create a new class called `MathOpNode` that also derives from Node.
 13. [ ] MathOpNode must have an enum indicating which math operation (add, subtract, multiply,
     divide) the
@@ -63,9 +63,9 @@ which would yield 21, not 17.
 2. [ ] 
 3. [ ] It must have a constructor that accepts your collection of Tokens.
 4. [ ] 
-5. [ ] Create a public parse method (no parameters, returns “Node”).
+5. [ ] Create a public **parse** method (no parameters, returns “Node”).
 6. [ ] 
-7. [ ] Parse must call **expression** (it will do more later) and then **matchAndRemove**() a
+7. [ ] **Parse** must call **expression** (it will do more later) and then **matchAndRemove**() a
    newLine.
 8. [ ] 
 9. [ ] You must create some helper methods as **matchAndRemove**() as described in lecture.

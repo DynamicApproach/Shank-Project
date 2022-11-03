@@ -134,10 +134,10 @@ and one for local variables.
 
             Identifier equals number endOfLine
 
-It should make a VariableNode for each of these – this should be a loop until it doesn’t find an
+It should make a `VariableNode` for each of these – this should be a loop until it doesn’t find an
 identifier anymore.
 We then make a Variables function that looks for the variables token. If it finds it, it then looks
-for variable declarations and makes VariableNodes for each one.
+for variable declarations and makes `VariableNodes` for each one.
 
 A variable declaration is a list of identifiers (separated by commas) followed by a colon, then the
 data type (integer or real, for now) followed by endOfLine (for variables section) or a semi-colon (
