@@ -319,8 +319,7 @@ public class Lexer {
                     }
                     case ' ' -> builder.append(c);
                     default -> {
-                        System.err.println("Error: Invalid character5 " + c);
-                        reportErrorAndClear("Invalid character5");
+                        foundTokState(Type.NUMBER, builder.toString());
                     }
                 }
             case 6:

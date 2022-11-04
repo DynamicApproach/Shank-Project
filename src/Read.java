@@ -12,22 +12,18 @@ public class Read extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         for (InterpreterDataType idt : arguments) {
-            // set argu to input from console
-            // instance of to get type -> shove thing of that type from cmdline into it
-            idt = arguments.set(arguments.indexOf(idt), new InterpreterDataType() {
-                @Override
-                public String toString(String input) throws Exception {
-                    System.out.println("Input a value for toString: ");
-                    return System.console().readLine();
-                }
-
-                @Override
-                public void fromString(String input) throws Exception {
-                    System.out.println("Input a value for fromString: ");
-                    System.console().readLine();
-                }
-            });
-            // TODO: Fix Read, need to find out type of idt and then read in the correct type or make a string type???
+            // TODO: Double check
+            // Use instance of to get the InterpreterDataType ->
+            // Take item from command line ->
+            // shove thing of that type from cmdline into it
+            // idt instance of intdatatype -> idt = new intdatatype(Integer.parseInt(cmdline))
+            if (idt instanceof IntDataType) {
+                idt = new IntDataType(System.console().readLine());
+            } else if (idt instanceof FloatDataType) {
+                idt = new FloatDataType(System.console().readLine());
+            } else {
+                throw new Exception("Invalid type");
+            }
         }
     }
 }

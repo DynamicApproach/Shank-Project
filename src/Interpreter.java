@@ -8,13 +8,17 @@ public class Interpreter {
     private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
         Map<String, InterpreterDataType> variables = new HashMap<>();
         // Add all of our parameters to the hashmap using the names that our function expects
-        for (int i = 0; i < function.getParameters().size(); i++) {
-            variables.put(function.toString(), parameters.get(i)); // TODO: Check?
-        } // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
-        // Next add all of the local variables to the hashmap
-        for (VariableNode localVariable : function.getLocals()) {
-            // variables.put(localVariable.getName(), fromString(localVariable.getType(), localVariable.getValue()));
+        // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
+        for (int i = 0; i < function.getVariables().size(); i++) {
+            variables.put(function.getVariables().get(i).getName(), parameters.get(i));
         }
+        // Next add all of the local variables to the hashmap
+
+        // run over the functionNode passed in and attach the local variables to the passed in interpeterdatatype
+        for (int i = 0; i < function.getLocals().size(); i++) {
+            variables.put(function.getLocals().get(i).getName(), parameters.get(i));
+        }
+
 
         // return InterpretBlock(function.getStatements(), variables);
         return null;
@@ -26,24 +30,26 @@ public class Interpreter {
     //
     //If the statement is a function call, implement the process described in the background section, otherwise we will ignore the statement (for now).
 
-    // private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> variables) {
-        /*for (Node statement : statements) {
-            if (statement instanceof CallableNode callable) {*/
-    // TODO: When a function is called:
-    // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
-    // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
-    // Make a collection of values (InterpreterDataType):
-    //For every parameter in invocation:
-    //  `Add the constant value or the current value of the variable in the invocation`
-    //Now we call the function (either the interpreter or the “execute” of the built-in function), passing it our collection.
-    //Finally, we loop over that set of values – the called function might have changed some!
-    //a. For each value, if the called function is variadic or the called function is marked as VAR and the invocation is marked as VAR then
-    //
-    //b. Update the working variable value with the values “passed back” from the function.
-    //}
-    // }
-    //   return null;
-    //}
+    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> variables) {
+        // this function will process all of the code between “begin” and “end”; we will use it later for conditionals and loops.
+        //InterpretBlock should take the collection of statements and a hashmap of variables.
+        // We will loop over the collection of statements.
+        for (Node statement : statements) {
+            if (statement instanceof FunctionCallNode functionCall) {
+                FunctionNode function = null;
+                // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
+                // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
+                // Make a collection of values (InterpreterDataType):
+                ArrayList<InterpreterDataType> parameters = new ArrayList<>();
+                for (VariableNode parameter : functionCall.getArguments()) {
+                    //parameters.add(InterpretExpression(parameter, variables));
+                }
+                // Call InterpretFunction with the function definition and the collection of values.
+                InterpretFunction(function, parameters);
+            }
+        }
+        return null;
+    }
 
     @SuppressWarnings("unused")
     public float Resolve(Node node) {
