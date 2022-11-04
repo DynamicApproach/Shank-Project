@@ -1,0 +1,61 @@
+define f1(var num1: real ; var num2:integer)
+variables
+i:integer
+begin
+
+while i = 0
+begin
+if num1 < 10 then
+begin
+
+if num1 > 5 then
+begin
+num2 := num2 + 7
+i:=i+1
+end
+
+elsif num1 < 5 then
+begin
+num2 := num2 + 2
+i:=i+1
+end
+
+end
+
+else
+begin
+num2 := num2 +20
+i:=i+1
+end
+
+end
+
+define f2 (var num1: real ; var num2:integer)
+variables
+q:integer
+begin
+
+for q from 10 to 2
+begin
+num2 := num2 +1
+end
+
+end
+
+
+define start ()
+constants
+pi = 3.14
+variables
+inputnum,result:real
+res:integer
+
+begin
+read var inputnum
+dof1 var inputnum, var res
+write inputnum
+write res
+dof2 var inputnum, var res
+write number
+write res
+end
