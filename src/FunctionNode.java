@@ -8,7 +8,6 @@ public class FunctionNode extends Node {
     private ArrayList<VariableNode> parameters;
     private ArrayList<VariableNode> variables;
     private ArrayList<Node> body;
-    private ArrayList<VariableNode> locals;
     // const
     private ArrayList<VariableNode> constant;
     // vars
@@ -16,6 +15,10 @@ public class FunctionNode extends Node {
 
     public FunctionNode(String name) {
         this.name = name;
+    }
+
+    public ArrayList<Node> getBody() {
+        return body;
     }
 
     public void setBody(ArrayList<Node> body) {
@@ -34,11 +37,6 @@ public class FunctionNode extends Node {
         this.variables = variables;
     }
 
-    // get locals
-    public ArrayList<VariableNode> getLocals() {
-        return locals;
-    }
-
     public ArrayList<VariableNode> getParameters() {
         return parameters;
     }
@@ -50,16 +48,9 @@ public class FunctionNode extends Node {
     // params size
 
 
-    public void setLocals(ArrayList<VariableNode> constant, ArrayList<VariableNode> variables) {
-
-        this.variables = variables;
-        this.constant = constant;
-        locals = (ArrayList<VariableNode>) union(constant, variables);
-    }
-
     @Override
     public String toString() {
-        return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ", locals=" + locals + '}';
+        return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ",  + '}'";
     }
 
     public <T> List<T> union(List<T> list1, List<T> list2) {

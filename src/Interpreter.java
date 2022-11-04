@@ -9,19 +9,17 @@ public class Interpreter {
         Map<String, InterpreterDataType> variables = new HashMap<>();
         // Add all of our parameters to the hashmap using the names that our function expects
         // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
-        for (int i = 0; i < function.getVariables().size(); i++) {
-            variables.put(function.getVariables().get(i).getName(), parameters.get(i));
+        for (int i = 0; i < function.getParameters().size(); i++) {
+            variables.put(function.getParameters().get(i).getName(), parameters.get(i));
         }
+
         // Next add all of the local variables to the hashmap
-
         // run over the functionNode passed in and attach the local variables to the passed in interpeterdatatype
-        for (int i = 0; i < function.getLocals().size(); i++) {
-            variables.put(function.getLocals().get(i).getName(), parameters.get(i));
+
+        for (int i = 0; i < function.getVariables().size(); i++) {
+            variables.put(function.getVariables().get(i).getName(), parameters.get(i)); // swap to figure out type using type from variablenode
         }
-
-
-        // return InterpretBlock(function.getStatements(), variables);
-        return null;
+        return InterpretBlock(function.getBody(), variables);
     }
 
     //InterpretBlock should take the collection of statements and a hashmap of variables. We will loop over the collection of statements.
@@ -31,12 +29,17 @@ public class Interpreter {
     //If the statement is a function call, implement the process described in the background section, otherwise we will ignore the statement (for now).
 
     private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> variables) {
-        // this function will process all of the code between “begin” and “end”; we will use it later for conditionals and loops.
-        //InterpretBlock should take the collection of statements and a hashmap of variables.
+        // this function will process all of the code between “begin” and “end”; we will use it later
+        // for conditionals and loops.
+        // InterpretBlock should take the collection of statements and a hashmap of variables.
         // We will loop over the collection of statements.
         for (Node statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
                 FunctionNode function = null;
+                // get name of function call
+                // make arraylist
+                // get arguments from function call
+                // call function
                 // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
                 // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
                 // Make a collection of values (InterpreterDataType):

@@ -156,10 +156,16 @@ public class Parser {
     // booleanExpression is a list of booleanTerms separated by an operator
     public Node booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
-        Node node = expression();
-        Type token = peek(0).getType();
-        matchAndRemove(token);
-        node = new BooleanExpressionNode(node, Type.EQUAL, expression());
+        Node node = null;
+        try {
+            node = expression();
+            Type token = peek(0).getType();
+            matchAndRemove(token);
+            node = new BooleanExpressionNode(node, Type.EQUAL, expression());
+        } catch (Exception e) {
+            System.out.println("Not an expression");
+            throw new RuntimeException(e);
+        }
 
 
         return node;
