@@ -87,8 +87,15 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
+        // if identifier creat variablerefNode TODO: ask about this
+        if (tokens.get(0).getType() == Type.IDENTIFIER) { // TODO: double check
+            VariableReferenceNode variableRefNode = new VariableReferenceNode((tokens.get(0).getValue()));
+            tokens.remove(0);
+            return variableRefNode;
+        }
         return null;
     }
+
 
     private boolean isFloat(Token token) {
         try {
@@ -318,10 +325,15 @@ public class Parser {
 
     public ArrayList<Node> body() {
         ArrayList<Node> bod = new ArrayList<>();
-        while (matchAndRemove(Type.BEGIN) != null) {
-            Token end = matchAndRemove(Type.ENDLINE);
-            matchAndRemove(Type.END);
-            matchAndRemove(Type.ENDLINE);
+        try {
+            while (matchAndRemove(Type.BEGIN) != null) {
+                Token end = matchAndRemove(Type.ENDLINE);
+                matchAndRemove(Type.END);
+                matchAndRemove(Type.ENDLINE);
+            }
+        } catch (Exception e) {
+            System.err.println("Error in body - Token expected but not found.");
+            throw new RuntimeException(e);
         }
 
         return bod;

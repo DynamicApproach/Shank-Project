@@ -15,6 +15,13 @@ public class Shank {
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
+        ArrayList<String> functionNames = new ArrayList<>();
+        functionNames.add("read");
+        functionNames.add("write");
+        functionNames.add("SquareRoot");
+        functionNames.add("getrandom");
+        functionNames.add("inttoreal");
+        functionNames.add("realtoint");
         ArrayList<Token> tokens = new ArrayList<>(1000);
         if (args.length == 1) {
             try {
@@ -45,6 +52,10 @@ public class Shank {
 
                 System.out.println("\n \n \n Parsing:\n ");
                 // pass each set of nodes into the parser?
+                // for each line of tokens, parse it
+                for (int i = 0; i < tokens.size(); i++) {
+                    parsing.parse();
+                }
                 Node tree = parsing.parse();
                 System.out.println("Parsing complete");
 

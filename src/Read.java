@@ -12,11 +12,8 @@ public class Read extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         for (InterpreterDataType idt : arguments) {
-            // TODO: Double check
-            // Use instance of to get the InterpreterDataType ->
             // Take item from command line ->
             // shove thing of that type from cmdline into it
-            // idt instance of intdatatype -> idt = new intdatatype(Integer.parseInt(cmdline))
             if (idt instanceof IntDataType) {
                 idt = new IntDataType(System.console().readLine());
             } else if (idt instanceof FloatDataType) {

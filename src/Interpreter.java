@@ -6,52 +6,67 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class Interpreter {
     private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
-        Map<String, InterpreterDataType> variables = new HashMap<>();
+        // function was just called and have to make the hash map for your local variables and parameters.
+        Map<String, InterpreterDataType> stringToFuct = new HashMap<>();
         // Add all of our parameters to the hashmap using the names that our function expects
         // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
-        for (int i = 0; i < function.getParameters().size(); i++) {
-            variables.put(function.getParameters().get(i).getName(), parameters.get(i));
-        }
-
-        // Next add all of the local variables to the hashmap
+        for (int i = 0; i < function.getParameters().size(); i++)
+            stringToFuct.put(function.getParameters().get(i).getName(), parameters.get(i));
+        // Next add all the local variables to the hashmap
         // run over the functionNode passed in and attach the local variables to the passed in interpeterdatatype
-
         for (int i = 0; i < function.getVariables().size(); i++) {
-            variables.put(function.getVariables().get(i).getName(), parameters.get(i)); // swap to figure out type using type from variablenode
+            stringToFuct.put(function.getVariables().get(i).getName(), (parameters.get(i))); // TODO: swap to figure out type using type from variablenode
         }
-        return InterpretBlock(function.getBody(), variables);
+        return InterpretBlock(function.getBody(), stringToFuct);
     }
 
-    //InterpretBlock should take the collection of statements and a hashmap of variables. We will loop over the collection of statements.
-    //
     //For now, the only statement type that we will handle is function calls.
-    //
-    //If the statement is a function call, implement the process described in the background section, otherwise we will ignore the statement (for now).
+    //If the statement is a function call, implement the process described in the background section,
+    // otherwise we will ignore the statement (for now).
 
-    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> variables) {
-        // this function will process all of the code between “begin” and “end”; we will use it later
-        // for conditionals and loops.
+    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> stringToFunc) {
+
         // InterpretBlock should take the collection of statements and a hashmap of variables.
         // We will loop over the collection of statements.
+        // you are interpreting statements that are part of the function right now the only statement
+        // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
         for (Node statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
-                FunctionNode function = null;
                 // get name of function call
-                // make arraylist
-                // get arguments from function call
-                // call function
-                // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
-                // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
-                // Make a collection of values (InterpreterDataType):
+                String functionName = ((FunctionCallNode) statement).getName();
+                int numParameters = ((FunctionCallNode) statement).getParameters().size();
+                // check params are the same size as the function
+                if (functionCall.getParameters().size() > 0 && stringToFunc.size() == numParameters) {
+                    ArrayList<InterpreterDataType> parameters = new ArrayList<>();
+                    for (int i = 0; i < functionCall.getParameters().size(); i++) {
+                        // make collection of InterpreterDataType
+                        // parameters.add((functionCall.getParameters().get(i), variables));
+                    }
+                    // return InterpretFunction(function, parameters);
+                }
+
                 ArrayList<InterpreterDataType> parameters = new ArrayList<>();
                 for (VariableNode parameter : functionCall.getArguments()) {
-                    //parameters.add(InterpretExpression(parameter, variables));
+                    // check arguments are same size
+                    // make collection of InterpreterDataType
                 }
+
+                ArrayList<VariableNode> arguments = functionCall.getArguments();
                 // Call InterpretFunction with the function definition and the collection of values.
-                InterpretFunction(function, parameters);
+                // call function
+                executeFunction(functionName, parameters);
             }
         }
         return null;
+    }
+
+    public static void executeFunction(String functionName, ArrayList<InterpreterDataType> parameters) {
+        // get function from function name
+        // execute function
+        // pass in parameters
+        // return value
+        functionName = functionName.toLowerCase();
+
     }
 
     @SuppressWarnings("unused")
@@ -82,6 +97,8 @@ public class Interpreter {
     public void printTree(Node tre) {
         System.out.println("Tree: --------------------");
         // if int or float print
+        if (tre.toString() == null) {
+        }
         if (tre instanceof IntegerNode || tre instanceof FloatNode) {
             System.out.print(tre);
         } else if (tre instanceof MathOpNode mathOpNode) {
@@ -98,8 +115,7 @@ public class Interpreter {
             System.out.println("End Tree---------------------");
             throw new RuntimeException("Unknown node type: " + tre.getClass().getName());
         }
-        if (tre.toString() == null) {
-        }
+
         System.out.println("End Tree---------------------");
     }
 }
