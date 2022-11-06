@@ -1,16 +1,22 @@
-public class SquareRoot extends InterpreterDataType {
+import java.util.ArrayList;
+
+public class SquareRoot extends BuiltInFunctionNode {
     private Float value;
 
-    public SquareRoot(String line) {
+    public SquareRoot(String name, ArrayList<VariableNode> arguments, boolean varadic) {
+        super(name, arguments, varadic);
+    }
+
+    @Override
+    public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         try {
-            value = (float) Math.sqrt(Float.parseFloat(line));
+            value = (float) Math.sqrt(Float.parseFloat(arguments.get(0).toString()));
         } catch (Exception e) {
-            System.out.println("Cannot get square root from input: " + line + "\n " + e + "\n");
+            System.out.println("Cannot get square root from input: " + value + "\n " + e + "\n");
         }
     }
 
     public String toString(String input) throws Exception {
-        // check if input is able to be square rooted if it can return else exception
         try {
             return Float.toString((float) Math.sqrt(Double.parseDouble(input)));
         } catch (Exception e) {
@@ -18,13 +24,5 @@ public class SquareRoot extends InterpreterDataType {
         }
     }
 
-    public void fromString(String input) throws Exception {
-        // try to square root if it can return else exception
-        try {
-            this.value = (float) Math.sqrt(Float.parseFloat(input));
-        } catch (Exception e) {
-            throw new Exception("Cannot square root input:" + input + "\n " + e + "\n");
-        }
-    }
 }
 

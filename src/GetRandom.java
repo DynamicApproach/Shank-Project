@@ -1,11 +1,20 @@
-public class GetRandom extends InterpreterDataType {
+import java.util.ArrayList;
+
+public class GetRandom extends BuiltInFunctionNode {
     private Float value;
 
-    public GetRandom(String line) throws Exception {
-        try {
-            value = (float) (Math.random() * Float.parseFloat(line));
-        } catch (Exception e) {
-            throw new Exception("Cannot get random from input: " + line + "\n " + e + "\n");
+    public GetRandom(String name, ArrayList<VariableNode> arguments, boolean varadic) {
+        super(name, arguments, varadic);
+    }
+
+    @Override
+    public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
+        for (InterpreterDataType idt : arguments) {
+            try {
+                value = (float) (Math.random() * Float.parseFloat(idt.toString()));
+            } catch (Exception e) {
+                throw new Exception("Cannot get random from input: " + value + "\n " + e + "\n");
+            }
         }
     }
 
@@ -17,13 +26,4 @@ public class GetRandom extends InterpreterDataType {
             throw new Exception("Cannot get random number from input:" + input + "\n " + e + "\n");
         }
     }
-
-    public void fromString(String input) throws Exception {
-        try {
-            this.value = (float) (Math.random() * Float.parseFloat(input));
-        } catch (Exception e) {
-            throw new Exception("Cannot get random number from input:" + input + "\n " + e + "\n");
-        }
-    }
-
 }

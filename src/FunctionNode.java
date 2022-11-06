@@ -11,7 +11,6 @@ public class FunctionNode extends Node {
     // const
     private ArrayList<VariableNode> constant;
     // vars
-    private VariableNode vars;
 
     public FunctionNode(String name) {
         this.name = name;
