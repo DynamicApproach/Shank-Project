@@ -16,7 +16,7 @@ public class FunctionNode extends Node {
         this.name = name;
     }
 
-    public ArrayList<Node> getBody() {
+    public ArrayList<Node> getBody() {// returns node with whole body of tokens
         return body;
     }
 
