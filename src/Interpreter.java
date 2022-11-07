@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 @SuppressWarnings("unused")
 public class Interpreter {
     private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
         // function was just called and have to make the hash map for your local variables and parameters.
-        Map<String, InterpreterDataType> stringToFuct = new HashMap<>();
+        HashMap<String, InterpreterDataType> stringToFuct = new HashMap<>();
         // Add all of our parameters to the hashmap using the names that our function expects
         // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
         for (int i = 0; i < function.getParameters().size(); i++)
@@ -23,9 +22,7 @@ public class Interpreter {
     //For now, the only statement type that we will handle is function calls.
     //If the statement is a function call, implement the process described in the background section,
     // otherwise we will ignore the statement (for now).
-
-    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, Map<String, InterpreterDataType> stringToFunc) {
-
+    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // InterpretBlock should take the collection of statements and a hashmap of variables.
         // We will loop over the collection of statements.
         // you are interpreting statements that are part of the function right now the only statement
@@ -44,16 +41,12 @@ public class Interpreter {
                     }
                     // return InterpretFunction(function, parameters);
                 }
-
                 ArrayList<InterpreterDataType> parameters = new ArrayList<>();
                 for (VariableNode parameter : functionCall.getArguments()) {
                     // check arguments are same size
                     // make collection of InterpreterDataType
                 }
-
                 ArrayList<VariableNode> arguments = functionCall.getArguments();
-                // Call InterpretFunction with the function definition and the collection of values.
-                // call function
                 executeFunction(functionName, parameters);
             }
         }
