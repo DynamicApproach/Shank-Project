@@ -1,11 +1,11 @@
 public class RealNode extends Node {
-    private float value;
+    private Float value;
 
-    public RealNode(float value) {
+    public RealNode(Float value) {
         this.value = value;
     }
 
-    public float getValue() {
+    public Float getValue() {
         return value;
     }
 

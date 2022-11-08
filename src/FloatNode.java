@@ -1,5 +1,5 @@
 public class FloatNode extends Node {
-    private float value;
+    private Float value;
 
     public FloatNode(float value) {
         this.value = value;
