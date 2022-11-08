@@ -4,7 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="Shank" />
     <module name="LexerProject" />
-    <option name="PROGRAM_PARAMETERS" value="$ContentRoot$/tests/test.txt" />
+    <option name="PROGRAM_PARAMETERS" value="$ContentRoot$/tests/test.shank" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
