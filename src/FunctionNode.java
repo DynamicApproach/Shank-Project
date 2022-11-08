@@ -7,7 +7,7 @@ public class FunctionNode extends Node {
     private String name;
     private ArrayList<VariableNode> parameters;
     private ArrayList<VariableNode> variables;
-    private ArrayList<Node> body;
+    private ArrayList<StatementNode> body;
     // const
     private ArrayList<VariableNode> constant;
     // vars
@@ -16,11 +16,11 @@ public class FunctionNode extends Node {
         this.name = name;
     }
 
-    public ArrayList<Node> getBody() {// returns node with whole body of tokens
+    public ArrayList<StatementNode> getBody() {// returns node with whole body of tokens
         return body;
     }
 
-    public void setBody(ArrayList<Node> body) {
+    public void setBody(ArrayList<StatementNode> body) {
         this.body = body;
     }
 
