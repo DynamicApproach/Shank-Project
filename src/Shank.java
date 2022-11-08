@@ -2,6 +2,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -15,13 +16,13 @@ public class Shank {
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
-        ArrayList<String> functionNames = new ArrayList<>();
-        functionNames.add("read");
-        functionNames.add("write");
-        functionNames.add("SquareRoot");
-        functionNames.add("getrandom");
-        functionNames.add("inttoreal");
-        functionNames.add("realtoint");
+        HashMap<String, CallableNode> functionNames = new HashMap<>();
+        functionNames.put("read", new Read("read", new ArrayList<VariableNode>(), false));
+        functionNames.put("write", new Write("write", new ArrayList<VariableNode>(), false));
+        functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<VariableNode>(), false));
+        functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<VariableNode>(), false));
+        functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<VariableNode>(), false));
+        functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<VariableNode>(), false));
         ArrayList<Token> tokens = new ArrayList<>(1000);
         if (args.length == 1) {
             try {

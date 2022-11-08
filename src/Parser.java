@@ -323,8 +323,8 @@ public class Parser {
 
     }
 
-    public ArrayList<Node> body() {
-        ArrayList<Node> bod = new ArrayList<>();
+    public ArrayList<StatementNode> body() {
+        ArrayList<StatementNode> bod = new ArrayList<>();
         try {
             while (matchAndRemove(Type.BEGIN) != null) {
                 Token end = matchAndRemove(Type.ENDLINE);
