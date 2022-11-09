@@ -22,33 +22,30 @@ public class Interpreter {
     //For now, the only statement type that we will handle is function calls.
     //If the statement is a function call, implement the process described in the background section,
     // otherwise we will ignore the statement (for now).
-    private static InterpreterDataType InterpretBlock(ArrayList<Node> statements, HashMap<String, InterpreterDataType> stringToFunc) {
+    // Functions body is a list of statements
+    private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // InterpretBlock should take the collection of statements and a hashmap of variables.
         // We will loop over the collection of statements.
         // you are interpreting statements that are part of the function right now the only statement
         // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
-        for (Node statement : statements) {
+        for (StatementNode statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
-                // get name of function call
-                String functionName = ((FunctionCallNode) statement).getName();
-                int numParameters = ((FunctionCallNode) statement).getParameters().size();
-                // check params are the same size as the function
-                if (functionCall.getParameters().size() > 0 && stringToFunc.size() == numParameters) {
-                    ArrayList<InterpreterDataType> parameters = new ArrayList<>();
-                    for (int i = 0; i < functionCall.getParameters().size(); i++) {
-                        // make collection of InterpreterDataType
-                        // parameters.add((functionCall.getParameters().get(i), variables));
-                    }
-                    // return InterpretFunction(function, parameters);
+                // If the statement is a function call, implement the process described in the background section,
+                // otherwise we will ignore the statement (for now).
+                // get the function from the hashmap
+                InterpreterDataType function = stringToFunc.get(functionCall.getName());
+                // get the parameters from the function call
+                ArrayList<VariableNode> parameters = functionCall.getArguments();
+                // create a list of interpreter data types
+                ArrayList<InterpreterDataType> interpreterDataTypes = new ArrayList<>();
+                // loop over the parameters and add the interpreter data types to the list
+                for (VariableNode parameter : parameters) {
+                    //  interpreterDataTypes.add(InterpretExpression(parameter, stringToFunc));
                 }
-                ArrayList<InterpreterDataType> parameters = new ArrayList<>();
-                for (VariableNode parameter : functionCall.getArguments()) {
-                    // check arguments are same size
-                    // make collection of InterpreterDataType
-                }
-                ArrayList<VariableNode> arguments = functionCall.getArguments();
-                executeFunction(functionName, parameters);
+                // call the function with the list of interpreter data types
+                // InterpretFunction(function, interpreterDataTypes);
             }
+
         }
         return null;
     }
@@ -72,8 +69,8 @@ public class Interpreter {
         } else if (node instanceof FloatNode) {
             return ((FloatNode) node).getValue();
         } else if (node instanceof MathOpNode mathOpNode) {
-            float left = Resolve(mathOpNode.getLeft());
-            float right = Resolve(mathOpNode.getRight());
+            Float left = Resolve(mathOpNode.getLeft());
+            Float right = Resolve(mathOpNode.getRight());
             return switch (mathOpNode.getOp()) {
                 case ADD -> left + right;
                 case MINUS -> left - right;
