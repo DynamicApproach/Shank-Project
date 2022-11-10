@@ -7,7 +7,7 @@ public class FunctionCallNode extends StatementNode {
     private ArrayList<VariableNode> arguments;
 
     public FunctionCallNode(String name, ArrayList<VariableNode> arguments) {
-        super(name);
+        super(name, arguments);
         this.name = name;
         this.arguments = arguments;
     }

@@ -8,7 +8,7 @@ public class AssignmentNode extends StatementNode {
     private FunctionNode expression;
 
     public AssignmentNode(VariableReferenceNode target, FunctionNode expression) {
-        super("Assignment");
+        super("Assignment", null);
         this.target = target;
         this.expression = expression;
     }

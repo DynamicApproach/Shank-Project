@@ -4,7 +4,7 @@ public class VariableReferenceNode extends FunctionNode {
     private Type type;
 
     public VariableReferenceNode(String name) {
-        super(name);
+        super(name, null);
     }
 
 }
