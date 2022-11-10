@@ -70,6 +70,10 @@ public class Parser {
         } else if (token == Type.MOD) {
             matchAndRemove(token);
             node = new MathOpNode(node, factor(), Type.MOD);
+        } else if (token == Type.LESS) {
+            node = new MathOpNode(node, factor(), Type.LESS);
+        } else if (token == Type.GREATER) {
+            node = new MathOpNode(node, factor(), Type.GREATER);
         }
         return node;
     }
@@ -116,6 +120,7 @@ public class Parser {
 
     @SuppressWarnings("unused")
     public Node parse() {
+        // TODO: Change to parse till no tokens are left? Or keep calling from Shank?
         Node node = expression();
         matchAndRemove(Type.ENDLINE);
         if (node == null) {
