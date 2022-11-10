@@ -87,11 +87,10 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
-        // if identifier creat variablerefNode TODO: ask about this
-        if (tokens.get(0).getType() == Type.IDENTIFIER) { // TODO: double check
-            VariableReferenceNode variableRefNode = new VariableReferenceNode((tokens.get(0).getValue()));
-            tokens.remove(0);
-            return variableRefNode;
+        // if identifier create variablerefnode
+        Token temp = matchAndRemove(Type.IDENTIFIER);
+        if (temp != null) {
+            return new VariableReferenceNode(temp.getValue());
         }
         return null;
     }
@@ -230,6 +229,7 @@ public class Parser {
     // print
 
     public FunctionNode FunctionDefinition() {
+        // TODO: double check changes
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
@@ -240,16 +240,20 @@ public class Parser {
 
         try {
             if (matchAndRemove(Type.DEFINE) != null) {
+                //The function declaration is the word “define”, then a name, left parenthesis,
+                // then a list of variable declarations, separated by semi-colons and finally a
+                // right parenthesis. The constants section has one (or more) name/value pairs.
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                FunctionNode f = new FunctionNode(name.getValue().trim());
+                // name, constants, variables, body
+                String nameStr = name.getValue();
                 matchAndRemove(Type.LPAREN);
-                f.setParameters(params()); // constants, variables, body
+                ArrayList<VariableNode> vars = variables();
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
-                f.setConstant(constants());
-                f.setVariables(variables());
-                f.setBody(body());
-                return f;
+                ArrayList<VariableNode> consta = constants();
+                ArrayList<StatementNode> body = body();
+                return new FunctionNode(name.getValue(), vars); // TODO: WHAT TO DO WITH BODY? NEW CONSTRUCTOR?
+                //return f;
             }
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");
@@ -259,9 +263,6 @@ public class Parser {
         return null;
     }
 
-    private ArrayList<VariableNode> params() {
-        return null;
-    }
 
     private ArrayList<VariableNode> constants() {
         //looks for the constants token.
@@ -365,8 +366,7 @@ public class Parser {
                     if (comma != null || colon != null) {
                         if (isint != null) {
                             if (endl != null) {
-                                // make a VariableNode
-                                // TODO: value?
+                                // TODO: DOUBLE CHECK
                                 VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
                                 variables.add(var);
                             }

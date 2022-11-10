@@ -1,11 +1,13 @@
 public class ParameterNode extends Node {
     private boolean isVariable = false;
     private String name;
-    private Type type;
+    private String type;
+    private String value;
 
-    public ParameterNode(String name, Type type, Boolean isVariable) {
+    public ParameterNode(String name, String type, String value, Boolean isVariable) {
         this.name = name;
         this.type = type;
+        this.value = value;
         this.isVariable = isVariable;
     }
 
@@ -13,7 +15,7 @@ public class ParameterNode extends Node {
         return name;
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -24,5 +26,13 @@ public class ParameterNode extends Node {
         } else {
             return "const: " + name + " : " + type;
         }
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
