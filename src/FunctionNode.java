@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class FunctionNode extends Node {
+public class FunctionNode extends CallableNode {
     private String name;
     private ArrayList<VariableNode> parameters;
     private ArrayList<VariableNode> variables;
@@ -12,8 +11,8 @@ public class FunctionNode extends Node {
     private ArrayList<VariableNode> constant;
     // vars
 
-    public FunctionNode(String name) {
-        this.name = name;
+    public FunctionNode(String value, ArrayList<VariableNode> vars) {
+        super(value, vars);
     }
 
     public ArrayList<StatementNode> getBody() {// returns node with whole body of tokens
@@ -24,8 +23,9 @@ public class FunctionNode extends Node {
         this.body = body;
     }
 
-    public void setConstant(ArrayList<VariableNode> constant) {
-        this.constant = constant;
+    // vars
+    public ArrayList<VariableNode> getArgs() {
+        return unionArray(parameters, variables);
     }
 
     public ArrayList<VariableNode> getVariables() {
@@ -44,18 +44,25 @@ public class FunctionNode extends Node {
         this.parameters = parameters;
     }
 
-    // params size
-
-
     @Override
     public String toString() {
         return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ",  + '}'";
     }
 
-    public <T> List<T> union(List<T> list1, List<T> list2) {
-        Set<T> set = new HashSet<>();
-        set.addAll(list1);
-        set.addAll(list2);
-        return new ArrayList<>(set);
+    // params size
+
+    public ArrayList<VariableNode> unionArray(ArrayList<VariableNode> a, ArrayList<VariableNode> b) {
+        Set<VariableNode> set = new HashSet<VariableNode>();
+        set.addAll(a);
+        set.addAll(b);
+        return new ArrayList<VariableNode>(set);
+    }
+
+    public ArrayList<VariableNode> getConstant() {
+        return constant;
+    }
+
+    public void setConstant(ArrayList<VariableNode> constant) {
+        this.constant = constant;
     }
 }
