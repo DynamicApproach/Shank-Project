@@ -123,8 +123,9 @@ variable declarations (see below). We then call the Constants, then Variables, t
 from below.
 
 The functionAST node should have 2 different collection classes of `VariableNode` – one for
-parameters
-and one for local variables.
+parameters and one for local variables.
+
+---------------------------------------------------------------------------------------------
 
 - It should include the “ToString()” method, which should output the
   local variables and the parameterVariables as well as the function name.

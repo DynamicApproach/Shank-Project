@@ -29,7 +29,7 @@ name (of the function) and a list of parameters.
 
 ----
 
-A `parameter` needs to be its own ASTNode.
+**A `parameter` needs to be its own ASTNode.**
 
 Remember that a parameter can be a variable (`VariableReferenceNode`) or a constant value (an
 ASTNode)
