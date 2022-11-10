@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class RepeatNode extends BuiltInFunctionNode {
+public class RepeatNode extends StatementNode {
     //Repeat (booleanExpression and collection of statementNodes)
     private Node booleanExpression;
-    private ArrayList<Node> statementNodes;
+    private ArrayList<StatementNode> statementNodes;
 
-    public RepeatNode(Node booleanExpression, ArrayList<Node> statementNodes) {
-        super("repeat", null, false);
+    public RepeatNode(Node booleanExpression, ArrayList<StatementNode> statementNodes) {
+        super("repeat", statementNodes);
         this.booleanExpression = booleanExpression;
         this.statementNodes = statementNodes;
     }
@@ -16,8 +16,5 @@ public class RepeatNode extends BuiltInFunctionNode {
         return "Repeat: " + statementNodes.toString() + " Until: " + booleanExpression.toString();
     }
 
-    @Override
-    public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
 
-    }
 }

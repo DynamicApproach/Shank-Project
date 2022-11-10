@@ -218,7 +218,7 @@ public class Token {
     }
 
     public String getValue() {
-        return value;
+        return value.trim();
     }
 
     public String toString() {
