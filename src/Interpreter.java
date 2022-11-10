@@ -33,17 +33,26 @@ public class Interpreter {
                 // If the statement is a function call, implement the process described in the background section,
                 // otherwise we will ignore the statement (for now).
                 // get the function from the hashmap
-                InterpreterDataType function = stringToFunc.get(functionCall.getName());
+                FunctionNode function = new FunctionNode(stringToFunc.get(functionCall.getName()).toString(), null);
                 // get the parameters from the function call
-                ArrayList<VariableNode> parameters = functionCall.getArguments();
+                ArrayList<ParameterNode> parameters = functionCall.getParameters();
                 // create a list of interpreter data types
                 ArrayList<InterpreterDataType> interpreterDataTypes = new ArrayList<>();
                 // loop over the parameters and add the interpreter data types to the list
-                for (VariableNode parameter : parameters) {
-                    //  interpreterDataTypes.add(InterpretExpression(parameter, stringToFunc));
+                for (ParameterNode parameter : parameters) {
+                    if (parameter.getType() == "int") {
+                        interpreterDataTypes.add(new IntDataType(parameter.getName()));
+                    } else if (parameter.getType() == "float") {
+                        interpreterDataTypes.add(new FloatDataType(parameter.getValue()));
+                    } else if (parameter.getType() == "string") {
+                        // interpreterDataTypes.add(new InterpreterDataType(parameter.getValue(), "string"));
+                    } else {
+                        // interpreterDataTypes.add(new InterpreterDataType(parameter.getValue(), "void"));
+                    }
                 }
                 // call the function with the list of interpreter data types
-                // InterpretFunction(function, interpreterDataTypes);
+
+                InterpretFunction(function, interpreterDataTypes);
             }
 
         }
@@ -56,6 +65,7 @@ public class Interpreter {
         // pass in parameters
         // return value
         functionName = functionName.toLowerCase();
+
 
     }
 
