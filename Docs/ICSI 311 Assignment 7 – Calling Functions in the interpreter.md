@@ -57,7 +57,7 @@ For example:
     end
 
 And what if I call changer with:
-changer z
+```changer z```
 
 One approach to this is to forbid it. If you try to call a function without matching “var”, it
 should fail. This is a legitimate way to handle this situation, but we are doing something else –
@@ -71,7 +71,7 @@ When a function is called:
 
 3)      Make a collection of values (InterpreterDataType):
 
-For every parameter in invocation:
+For each parameter in invocation:
 
 4)       `Add the constant value or the current value of the variable in the invocation`
 
@@ -84,17 +84,19 @@ For every parameter in invocation:
 
    b.       `Update the working variable value with the values “passed back” from the function.`
 
+-------------------------------------------------------------------------------------------------
+
 ## Work on the interpreter
 
 Create a static **InterpretFunction** in the interpreter – it should take a `FunctionNode` (i.e. the
 function to interpret) and a collection of `InterpreterDataType` – the parameters to the function.
 
 To interpret a function, we will make a hashmap of string->`InterpreterDataType` – this will hold
-our
-variables.
+our variables.
 
-Add all of our parameters to the hashmap using the names that our function expects. Next add all of
-the local variables to the hashmap. Remember that we stored the constants in the “Local Variable”
+Add all of our parameters to the hashmap using the names that our function expects.
+Next add all the local variables to the hashmap. Remember that we stored the constants in the “Local
+Variable”
 section, so we need to set the initial values of these variables as appropriate.
 
 Finally, we will call a function called “**InterpretBlock**” - this function will process all of the
@@ -108,12 +110,18 @@ For now, the only statement type that we will handle is function calls.
 If the statement is a function call, implement the process described in the background section,
 otherwise we will ignore the statement (for now).
 
+-------------------------------------------------------------------------------------------------
+
 ## Finish up
 
 In “main” we are using the parser to parse functions. Create a hashmap in the interpreter that maps
-names (strings) to `CallableNodes`. In main, every time we encounter a function, add it to that
-hashmap. Also add the built-in functions that we created previously to the hashmap. We now have a
-complete data structure of all of our code. Finally, in main, call **InterpretFunction** on the
+names (strings) to `CallableNodes`.
+
+In main, every time we encounter a function, add it to that hashmap.
+Also add the built-in functions that we created previously to the hashmap.
+
+We now have a complete data structure of all of our code. Finally, in main, call **
+InterpretFunction** on the
 function
 named “start”; it is an error for that function not to exist.
 
