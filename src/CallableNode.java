@@ -3,12 +3,10 @@ import java.util.ArrayList;
 public class CallableNode extends Node {
     private String name;
     private ArrayList<VariableNode> arguments;
-    private boolean varadic;
 
-    public CallableNode(String name, ArrayList<VariableNode> arguments, boolean varadic) {
+    public CallableNode(String name, ArrayList<VariableNode> arguments) {
         this.name = name;
         this.arguments = arguments;
-        this.varadic = varadic;
     }
 
     public String getName() {
