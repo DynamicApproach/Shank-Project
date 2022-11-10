@@ -75,7 +75,10 @@ So it makes sense to have two different classes with a common base type.
 
 ---------
 
-    Node -> CallableNode -> BuiltInFunctionNode
+    Node -> CallableNode -> BuiltInFunctionNode ->  FunctionNode + FunctionCallNode
+
+Node (parent of) CallableNode (parent of) BuiltInFunctionNode (parent of) FunctionNode AND
+FunctionCallNode
 
 -----------------------------------------------------------------------------------------------
 
@@ -99,7 +102,8 @@ the AST.
 
 Create a new set of classes: `InterpreterDataType`, `IntDataType`, `FloatDataType`.
 
-The first is an abstract base class. It is it's own parent. It declares a ToString and a FromString:
+The first is an abstract _base_ class. It is _it's own parent_. It declares a ToString and a
+FromString:
 
         public abstract String ToString();
         public abstract void FromString(String input); // sets the value of the data type by parsing the string
@@ -125,9 +129,9 @@ Now subclass BuiltInFunctionNode for each of the functions that we can implement
 
     read
 
-Read is going to read from the console. Remember that Shank doesn’t have return values. Read,
-therefore, must mutate the incoming IDTs. All the executes take a collection of IDT and return
-void.
+        Read is going to read from the console. Remember that Shank doesn’t have return values. Read,
+        therefore, must mutate the incoming IDTs. All the executes take a collection of IDT and return
+        void.
 
     write
     squareRoot(float)
