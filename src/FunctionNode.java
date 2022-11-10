@@ -11,6 +11,11 @@ public class FunctionNode extends CallableNode {
         super(value, vars);
     }
 
+    public FunctionNode(String value, ArrayList<VariableNode> vars, ArrayList<StatementNode> body) {
+        super(value, vars);
+        this.body = body;
+    }
+
     public ArrayList<StatementNode> getBody() {// returns node with whole body of tokens
         return body;
     }

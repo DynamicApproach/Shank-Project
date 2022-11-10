@@ -252,8 +252,7 @@ public class Parser {
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<VariableNode> consta = constants();
                 ArrayList<StatementNode> body = body();
-                return new FunctionNode(name.getValue(), vars); // TODO: WHAT TO DO WITH BODY? NEW CONSTRUCTOR?
-                //return f;
+                return new FunctionNode(name.getValue(), vars, body);
             }
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");

@@ -17,7 +17,14 @@ public class WhileNode extends BuiltInFunctionNode {
 
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
+        if (arguments.size() != 0) {
+            throw new Exception("Invalid number of arguments");
+        }
         // TODO: finish
+        // check condition
+        // if true, continue statements
+        // if false, stop
+
     }
 
     @Override
