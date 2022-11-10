@@ -1,9 +1,8 @@
 public class ParameterNode extends Node {
-    boolean isVariable = false;
+    private boolean isVariable = false;
     private String name;
     private Type type;
 
-    // TODO: Double check hierarchy of ParameterNode
     public ParameterNode(String name, Type type, Boolean isVariable) {
         this.name = name;
         this.type = type;

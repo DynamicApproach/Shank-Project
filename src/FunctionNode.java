@@ -1,15 +1,11 @@
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class FunctionNode extends CallableNode {
     private String name;
-    private ArrayList<VariableNode> parameters;
+    private ArrayList<ParameterNode> parameters;
     private ArrayList<VariableNode> variables;
     private ArrayList<StatementNode> body;
-    // const
     private ArrayList<VariableNode> constant;
-    // vars
 
     public FunctionNode(String value, ArrayList<VariableNode> vars) {
         super(value, vars);
@@ -23,10 +19,6 @@ public class FunctionNode extends CallableNode {
         this.body = body;
     }
 
-    // vars
-    public ArrayList<VariableNode> getArgs() {
-        return unionArray(parameters, variables);
-    }
 
     public ArrayList<VariableNode> getVariables() {
         return variables;
@@ -36,26 +28,17 @@ public class FunctionNode extends CallableNode {
         this.variables = variables;
     }
 
-    public ArrayList<VariableNode> getParameters() {
+    public ArrayList<ParameterNode> getParameters() {
         return parameters;
     }
 
-    public void setParameters(ArrayList<VariableNode> parameters) {
+    public void setParameters(ArrayList<ParameterNode> parameters) {
         this.parameters = parameters;
     }
 
     @Override
     public String toString() {
         return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ",  + '}'";
-    }
-
-    // params size
-
-    public ArrayList<VariableNode> unionArray(ArrayList<VariableNode> a, ArrayList<VariableNode> b) {
-        Set<VariableNode> set = new HashSet<VariableNode>();
-        set.addAll(a);
-        set.addAll(b);
-        return new ArrayList<VariableNode>(set);
     }
 
     public ArrayList<VariableNode> getConstant() {
