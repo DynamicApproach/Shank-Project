@@ -94,7 +94,7 @@ public class Parser {
         // if identifier create variablerefnode
         Token temp = matchAndRemove(Type.IDENTIFIER);
         if (temp != null) {
-            return new VariableReferenceNode(temp.getValue());
+            return new VariableReferenceNode(temp.toString());
         }
         return null;
     }
@@ -165,21 +165,30 @@ public class Parser {
 
     // booleanExpression, booleanTerm, booleanFactor methods
     // booleanExpression is a list of booleanTerms separated by an operator
-    public Node booleanExpression() {
+    public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
-        Node node = null;
+        BooleanExpressionNode node = null;
         try {
-            node = expression();
+            node = booleanTerm();
             Type token = peek(0).getType();
             matchAndRemove(token);
             node = new BooleanExpressionNode(node, Type.EQUAL, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e);
-        }
-
-
+        } // TODO: ASK ABOUT THIS - not sure how this never got properly caught
         return node;
+    }
+
+    private BooleanExpressionNode booleanTerm() {
+        //TODO: implement
+        return null;
+    }
+
+    private BooleanExpressionNode booleanFactor() {
+        //TODO: implement
+        //
+        return null;
     }
 
     //  Look for keywords to check if a while is possible
@@ -201,13 +210,14 @@ public class Parser {
         // if booleanExpression then statements (if booleanExpression then statements)* end
         if (peek(0).getType() == Type.IF) {
             matchAndRemove(Type.IF);
-            Node condition = booleanExpression();
+            BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = Statements();
-            if (peek(0).getType() == Type.IF) {
+            if ((matchAndRemove(Type.ELSE) != null) && (matchAndRemove(Type.IF) != null)) {
                 return new IfNode(condition, statements, ifExpression());
             }
-            return new IfNode(condition, statements);
+            return new IfNode(condition, statements); // TODO: WTF is this? Double check this.
+            // Resulted when ifNode needed to be StatementNode
         }
         return null;
     }
@@ -250,14 +260,16 @@ public class Parser {
                 // right parenthesis. The constants section has one (or more) name/value pairs.
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 // name, constants, variables, body
-                String nameStr = name.getValue();
+                if (name != null) {
+                    String nameStr = name.getValue();
+                }
                 matchAndRemove(Type.LPAREN);
                 ArrayList<VariableNode> vars = variables();
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<VariableNode> consta = constants();
                 ArrayList<StatementNode> body = body();
-                return new FunctionNode(name.getValue(), vars, body);
+                return new FunctionNode(name != null ? name.getValue() : null, vars, body);
             }
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");

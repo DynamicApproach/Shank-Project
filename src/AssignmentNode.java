@@ -4,17 +4,9 @@
 // This is not a good tradition. I used “target” and “expression”.
 public class AssignmentNode extends StatementNode {
 
-    private VariableReferenceNode target;
-    private FunctionNode expression;
 
-    public AssignmentNode(VariableReferenceNode target, FunctionNode expression) {
-        super("Assignment", null);
-        this.target = target;
-        this.expression = expression;
+    public AssignmentNode(VariableReferenceNode statement, Node expression) {
+        super(statement, expression);
     }
 
-    @Override
-    public String toString() {
-        return target.toString() + " = " + expression.toString();
-    }
 }

@@ -1,11 +1,14 @@
 // VariableReferenceNode should contain the name of the variable being referenced.
-public class VariableReferenceNode extends FunctionNode {
+public class VariableReferenceNode extends Node {
     private String name;
-    private Type type;
 
     public VariableReferenceNode(String name) {
-        super(name, null);
+        this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 
