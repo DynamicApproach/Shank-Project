@@ -8,6 +8,8 @@ variableName := expression
 
 Of course, you have already written (most of) expression. As promised, we are going to use that code
 now. By the end of this assignment, your interpreter will be using variables and running
+assignments.
+
 -----------
 
 ## Comments
@@ -50,8 +52,9 @@ make the interpreter process them.
 * Create two new ASTNodes called `AssignmentNode` and `VariableReferenceNode`.
 
 
-* `VariableReferenceNode` should contain the name of the variable being referenced. `AssignmentNode`
-  should have a `VariableReferenceNode` (for the variable being assigned) and an ASTNode for the
+* `VariableReferenceNode` should contain the name of the variable being referenced.
+* `AssignmentNode` should have a `VariableReferenceNode` (for the variable being assigned) and an
+  ASTNode for the
   expression that is being assigned.
 
 The tradition in compilers is to use “lhs” and “rhs” (left-hand
@@ -67,9 +70,8 @@ side and right-hand side) for these members. This is not a good tradition. I use
 * Add a collection of `statementNode` to the **functionDefinition**.
   Now
   our functions can have statements.
-* Make a parser method that creates assignments or fails (returns null). **Assignment**()
-  succeeds if it
-  finds:
+* Make a parser method that creates assignments or fails (returns null). **Assignment()**
+  succeeds if it finds:
 
        Identifier assignment expression endOfLine
 
