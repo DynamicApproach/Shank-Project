@@ -9,6 +9,10 @@ public class StatementNode extends Node {
         this.children = children;
     }
 
+    public StatementNode(VariableReferenceNode statement, Node expression) {
+        super();
+    }
+
 
     @Override
     public String toString() {
