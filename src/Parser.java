@@ -197,7 +197,7 @@ public class Parser {
         // while booleanExpression do statements end
         if (peek(0).getType() == Type.WHILE) {
             matchAndRemove(Type.WHILE);
-            Node condition = booleanExpression();
+            BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.DO);
             ArrayList<StatementNode> statements = Statements();
             return new WhileNode(condition, statements);

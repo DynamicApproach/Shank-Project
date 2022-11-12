@@ -4,9 +4,12 @@
 // This is not a good tradition. I used “target” and “expression”.
 public class AssignmentNode extends StatementNode {
 
+    private VariableReferenceNode target;
+    private Node expression;
 
     public AssignmentNode(VariableReferenceNode statement, Node expression) {
-        super(statement, expression);
+        this.target = statement;
+        this.expression = expression;
     }
 
 }

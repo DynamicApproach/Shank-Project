@@ -7,16 +7,11 @@ public class ForNode extends StatementNode {
     private Node end;
     private ArrayList<StatementNode> statementNodes;
 
-    public ForNode(Node variableReference, Node start, Node end, ArrayList<StatementNode> statementNodes) {
-        super("for", statementNodes);
+    public ForNode(VariableReferenceNode variableReference, Node start, Node end, ArrayList<StatementNode> statements) {
         this.variableReference = variableReference;
         this.start = start;
         this.end = end;
-        this.statementNodes = statementNodes;
-    }
-
-    public ForNode(VariableReferenceNode variableReference, Node start, Node end, ArrayList<StatementNode> statements) {
-        super("for", statements);
+        this.statementNodes = statements;
     }
 
     @Override

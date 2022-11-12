@@ -7,13 +7,14 @@ public class IfNode extends StatementNode {
     private IfNode ifNode;
 
     public IfNode(BooleanExpressionNode statement, ArrayList<StatementNode> children) {
-        super("IF", children);
+        this.booleanExpression = statement;
+        this.statementNodes = children;
     }
 
     public IfNode(BooleanExpressionNode statement, ArrayList<StatementNode> children, IfNode ifNode) {
-        super("IF", children);
-        this.ifNode = ifNode;
         this.booleanExpression = statement;
+        this.statementNodes = children;
+        this.ifNode = ifNode;
     }
 
 

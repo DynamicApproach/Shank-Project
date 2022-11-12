@@ -5,8 +5,7 @@ public class WhileNode extends StatementNode {
     private Node booleanExpression;
     private ArrayList<StatementNode> statementNodes;
 
-    public WhileNode(Node booleanExpression, ArrayList<StatementNode> statementNodes) {
-        super("while", statementNodes);
+    public WhileNode(BooleanExpressionNode booleanExpression, ArrayList<StatementNode> statementNodes) {
         this.booleanExpression = booleanExpression;
         this.statementNodes = statementNodes;
     }

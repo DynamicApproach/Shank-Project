@@ -6,7 +6,6 @@ public class RepeatNode extends StatementNode {
     private ArrayList<StatementNode> statementNodes;
 
     public RepeatNode(Node booleanExpression, ArrayList<StatementNode> statementNodes) {
-        super("repeat", statementNodes);
         this.booleanExpression = booleanExpression;
         this.statementNodes = statementNodes;
     }
