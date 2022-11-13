@@ -41,6 +41,9 @@ public class Parser {
     public Node expression() {
         Node node = term();
         int a = 0;
+        if (node == null) {
+            return null;
+        }
         while (a < tokens.size()) {
             Type token = peek(0).getType();
             if (token == Type.ADD) {
@@ -49,10 +52,7 @@ public class Parser {
             } else if (token == Type.MINUS) {
                 matchAndRemove(token);
                 node = new MathOpNode(node, term(), Type.MINUS);
-            } else {
-                break;
             }
-            a++;
         }
         return node;
     }
@@ -60,6 +60,9 @@ public class Parser {
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
         Node node = factor();
+        if (node == null) {
+            return null;
+        }
         Type token = peek(0).getType();
         if (token == Type.MULTIPLY) {
             matchAndRemove(token);
@@ -120,7 +123,6 @@ public class Parser {
 
     @SuppressWarnings("unused")
     public Node parse() {
-        // TODO: Change to parse till no tokens are left? Or keep calling from Shank?
         Node node = expression();
         matchAndRemove(Type.ENDLINE);
         if (node == null) {
@@ -169,26 +171,14 @@ public class Parser {
         // check for expression operator expression and make a new booleanExpressionNode
         BooleanExpressionNode node = null;
         try {
-            node = booleanTerm();
             Type token = peek(0).getType();
             matchAndRemove(token);
-            node = new BooleanExpressionNode(node, Type.EQUAL, expression());
+            node = new BooleanExpressionNode(expression(), token, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e);
-        } // TODO: ASK ABOUT THIS - not sure how this never got properly caught
+        } // TODO: CHECK WITH PROF
         return node;
-    }
-
-    private BooleanExpressionNode booleanTerm() {
-        //TODO: implement
-        return null;
-    }
-
-    private BooleanExpressionNode booleanFactor() {
-        //TODO: implement
-        //
-        return null;
     }
 
     //  Look for keywords to check if a while is possible
