@@ -233,7 +233,7 @@ public class Parser {
 
     // print
 
-    public FunctionNode FunctionDefinition() {
+    public FunctionNode functionDefinition() {
         // TODO: double check changes
         /*
             It looks for “define”.

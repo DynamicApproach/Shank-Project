@@ -17,12 +17,12 @@ public class Shank {
         // start time stamp
         long startTime = System.currentTimeMillis();
         HashMap<String, CallableNode> functionNames = new HashMap<>();
-        functionNames.put("read", new Read("read", new ArrayList<VariableNode>(), false));
-        functionNames.put("write", new Write("write", new ArrayList<VariableNode>(), false));
-        functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<VariableNode>(), false));
-        functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<VariableNode>(), false));
-        functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<VariableNode>(), false));
-        functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<VariableNode>(), false));
+        functionNames.put("read", new Read("read", new ArrayList<>(), false));
+        functionNames.put("write", new Write("write", new ArrayList<>(), false));
+        functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<>(), false));
+        functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<>(), false));
+        functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<>(), false));
+        functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<>(), false));
         ArrayList<Token> tokens = new ArrayList<>(1000);
         if (args.length == 1) {
             try {
@@ -50,15 +50,17 @@ public class Shank {
                     }
                 }
                 System.out.println("\n \n \n Parsing:\n ");
-                Parser parsing = new Parser(tokens);
-                Node tree = parsing.FunctionDefinition();
-                // pass each set of nodes into the parser?
+
+                //create new parser and parse tokens
+
+                Parser parsed = new Parser(tokens);
+
                 // for each line of tokens, parse it
-                for (int i = 0; i < tokens.size(); i++) {
-                    parsing.parse();
-                }
+                FunctionNode node = parsed.functionDefinition();
+                //
 
-
+                // print out the function
+                System.out.println(node.toString());
                 System.out.println("Parsing complete");
 
                 // print the tree
@@ -66,13 +68,13 @@ public class Shank {
 
                 System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter();
-                interpreter.printTree(tree);
+                //interpreter.printTree(tree);
 
 
-                float fintree = interpreter.Resolve(tree);
+                //float fintree = interpreter.Resolve(tree);
                 System.out.println("Interpreting complete");
 
-                System.out.println("Result: " + fintree);
+                //System.out.println("Result: " + fintree);
                 //functiondef parse
 
 
