@@ -177,11 +177,12 @@ public class Lexer {
                 switch (c) {
                     case '\n' -> {
                         if (notSpaceOrNewLineAndHasLength()) {
-                            tokens.add(new Token(Type.NUMBER, builder.toString()));
+                            foundTokState(Type.NUMBER, builder.toString());
+                            foundTokState(Type.ENDLINE, builder.toString());
+                        } else {
+                            builder.append(c);
                             foundTokState(Type.ENDLINE, builder.toString());
                         }
-                        builder.append(c);
-                        foundTokState(Type.ENDLINE, builder.toString());
                     }
                     case ' ' -> {
                         state = 4;
@@ -403,6 +404,8 @@ public class Lexer {
                     // check for keyword before token is output
                     if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
                         foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
+                        //check for newline
+                        EOLfound(c);
                     } else {
                         // if space or newline, then end of word so add to tokens
                         // c : int
@@ -438,9 +441,15 @@ public class Lexer {
                                 }
                             }
                             case ";" -> foundTok(Type.SEMICOLON, builder.toString());
-                            case "\n" -> foundTok(Type.ENDLINE, builder.toString());
-                            case ")" -> foundTok(Type.RPAREN, builder.toString());
-                            default -> foundTok(Type.IDENTIFIER, builder.toString());
+                            case "\n" -> EOLfound(c);
+                            case ")" -> {
+                                foundTok(Type.RPAREN, builder.toString());
+                                EOLfound(c);
+                            }
+                            default -> {
+                                foundTok(Type.IDENTIFIER, builder.toString());
+                                EOLfound(c);
+                            }
                         }
                     }
                     state = 0;
@@ -452,6 +461,13 @@ public class Lexer {
                 }
         }
 
+    }
+
+    private void EOLfound(char c) {
+        if (c == '\n') {
+            builder.append(c);
+            foundTok(Type.ENDLINE, builder.toString());
+        }
     }
 
     private void notEmpty(char c) {
