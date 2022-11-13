@@ -254,13 +254,22 @@ public class Parser {
                     String nameStr = name.toString();
                 }
                 matchAndRemove(Type.LPAREN);
-                ArrayList<VariableNode> vars = variables();
+                ArrayList<ParameterNode> params = parameters();
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
-                ArrayList<VariableNode> consta = constants();
+                ArrayList<VariableNode> vars = null;
+                if (matchAndRemove(Type.VARIABLES) != null) {
+                    matchAndRemove(Type.ENDLINE);
+                    vars = variables();
+                }
+                ArrayList<VariableNode> consta = null;
+                if (matchAndRemove(Type.CONSTANT) != null) {
+                    matchAndRemove(Type.ENDLINE);
+                    consta = constants();
+                }
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<StatementNode> body = body();
-                return new FunctionNode(name.toString(), vars, body);
+                return new FunctionNode(name.toString(), params, vars, consta, body);
             }
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");
@@ -270,126 +279,8 @@ public class Parser {
         return null;
     }
 
+    private ArrayList<ParameterNode> parameters() {
 
-    private ArrayList<VariableNode> constants() {
-        //looks for the constants token.
-        // If it finds it, it calls a “processConstants” function that looks for token
-        try {
-            if (matchAndRemove(Type.CONSTANT) != null) {
-                processConstants();
-            }
-        } catch (Exception e) {
-            System.err.println("Error in Constants - Token expected but not found.");
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    private ArrayList<VariableNode> processConstants() {
-       /*
-        processConstants function that looks for tokens in the format:
-        Identifier equals number endOfLine
-        It should make a VariableNode for each of these – this
-        should be a loop until it doesn’t find an identifier anymore.
-        */
-        int state = 0;
-        Token x;
-        ArrayList<VariableNode> constants = new ArrayList<>();
-        // TODO: FIX constants
-        // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
-        // A,B,C:INT
-        //STATES:
-        // 0 - IDEN
-        // 1 - COMMA
-        // 2 - COLON
-        // 3 - INT / REAL / STRING
-        // 4 - ENDLINE
-        ArrayList<Token> tokens = new ArrayList<>();
-        int curState = 0;
-        try {
-            while (curState != 4) {
-                switch (curState) {
-                    case 0 -> {
-                        x = matchAndRemove(Type.IDENTIFIER);
-                        if (x != null) {
-                            // add to list
-                            curState = 1;
-                            tokens.add(x);
-                        } else {
-                            curState = 5;
-                        }
-                    }
-                    case 1 -> {
-                        x = matchAndRemove(Type.COMMA);
-                        if (x != null) {
-                            curState = 0;
-                        } else {
-                            curState = 2;
-                        }
-                    }
-                    case 2 -> {
-                        x = matchAndRemove(Type.COLON);
-                        if (x != null) {
-                            curState = 3;
-                        }
-                    }
-                    case 3 -> {
-                        x = matchAndRemove(Type.INTEGER);
-                        if (x != null) {
-                            for (Token t : tokens) {
-                                constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, true));
-                            }
-                            tokens.clear();
-                            curState = 4;
-                        }
-                        x = matchAndRemove(Type.REAL);
-                        if (x != null) {
-                            for (Token t : tokens) {
-                                constants.add(new VariableNode(t.getValue(), null, Type.REAL, true));
-                            }
-                            // CLEAR LIST
-                            tokens.clear();
-                            curState = 4;
-                        }
-                    }
-                    case 4 -> {
-                        x = matchAndRemove(Type.ENDLINE);
-                        if (x != null) {
-                            curState = 0;
-                        }
-                    }
-                    case 5 -> System.err.println("Error in processConstants - Invalid state");
-                    default -> curState = 5;
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error in processConstants");
-            throw new RuntimeException(e);
-        }
-        return constants;
-    }
-
-    public ArrayList<StatementNode> body() {
-        ArrayList<StatementNode> bod = new ArrayList<>();
-        try {
-            if (matchAndRemove(Type.BEGIN) != null) {
-                // while not at the end token, keep adding statements
-                while (matchAndRemove(Type.END) != null) {
-                    StatementNode statement = statement();
-                    if (statement != null) {
-                        bod.add(statement);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error in body - Token expected but not found.");
-            throw new RuntimeException(e);
-        }
-
-        return bod;
-    }
-
-    public ArrayList<VariableNode> variables() {
         // TODO: fix and make sure it outputs a list of variable nodes
        /*
         We then make a Variables function that looks for the variables token.
@@ -400,7 +291,7 @@ public class Parser {
         IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
         For each variable, we make a VariableNode like we did for constants.*/
         // token equal match and remove
-        ArrayList<VariableNode> variables = new ArrayList<>();
+        ArrayList<ParameterNode> paramets = new ArrayList<>();
         try {
             // STATES:
             // State 0 - Var -> 1
@@ -453,8 +344,8 @@ public class Parser {
                         Token a = matchAndRemove(Type.INTEGER);
                         if (a != null) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), null, Type.INTEGER, isVar);
-                                variables.add(var);
+                                ParameterNode var = new ParameterNode(token.getValue().trim(), Type.INTEGER, null, !(isVar));
+                                paramets.add(var);
                                 isVar = false;
                             }
                             idenList.clear();
@@ -464,8 +355,8 @@ public class Parser {
                             if (b != null) {
                                 // create a VariableNode for each identifier in the list
                                 for (Token token : idenList) {
-                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.REAL, isVar);
-                                    variables.add(var);
+                                    ParameterNode var = new ParameterNode(token.getValue().trim(), Type.REAL, null, !(isVar));
+                                    paramets.add(var);
                                     isVar = false;
                                 }
                                 idenList.clear();
@@ -493,11 +384,217 @@ public class Parser {
                     }
                 }
             }
-            return variables;
         } catch (Exception e) {
             System.err.println("Error in Variables - Token expected but not found.");
             throw new RuntimeException(e);
         }
+        return paramets;
+    }
+
+
+    private ArrayList<VariableNode> constants() {
+        //looks for the constants token.
+        // If it finds it, it calls a “processConstants” function that looks for token
+        try {
+            if (matchAndRemove(Type.CONSTANT) != null) {
+                processConstants();
+            }
+        } catch (Exception e) {
+            System.err.println("Error in Constants - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private ArrayList<VariableNode> processConstants() {
+       /*
+        processConstants function that looks for tokens in the format:
+        Identifier equals number endOfLine
+        It should make a VariableNode for each of these – this
+        should be a loop until it doesn’t find an identifier anymore.
+        */
+        ArrayList<VariableNode> consties = new ArrayList<>();
+        try {
+            // STATES:
+            // Identifier equals number endOfLine
+            // 0 - IDEN
+            // 1 - EQUALS
+            // 2 - NUMBER
+            // 3 - ENDLINE
+            int state = 0;
+            boolean isVar = false;
+            Token name = null;
+
+            Token number = null;
+            ArrayList<Token> idenList = new ArrayList<>();
+            while (state != 4) {
+                switch (state) {
+                    case 0 -> {
+                        name = matchAndRemove(Type.IDENTIFIER);
+                        if (name != null) {
+                            idenList.add(name);
+                            state = 1;
+                        } else {
+                            state = 4;
+                        }
+                    }
+                    case 1 -> {
+                        if (matchAndRemove(Type.EQUAL) != null) {
+                            state = 2;
+                        } else {
+                            state = 4;
+                        }
+                    }
+                    case 2 -> {
+                        // check if real or int
+                        number = matchAndRemove(Type.INTEGER);
+                        if (number != null) {
+                            // create a VariableNode for each identifier in the list
+                            for (Token token : idenList) {
+                                VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(Integer.parseInt(number.getValue())), Type.INTEGER, true);
+                                consties.add(var);
+                            }
+                        }
+                        number = matchAndRemove(Type.REAL);
+                        if (number != null) {
+                            // create a VariableNode for each identifier in the list
+                            for (Token token : idenList) {
+                                VariableNode var = new VariableNode(token.getValue().trim(), new RealNode(Float.parseFloat(number.getValue())), Type.REAL, true);
+                                consties.add(var);
+                            }
+                        }
+                        idenList.clear();
+                        state = 0;
+
+                    }
+                    case 3 -> {
+
+                        if (matchAndRemove(Type.ENDLINE) != null) {
+                            // End of variables?
+                            state = 0;
+                        } else {
+                            state = 4;
+                        }
+                    }
+                    default -> state = 4;
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error in Variables - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+        return (consties.isEmpty() ? consties : null);
+    }
+
+    public ArrayList<StatementNode> body() {
+        ArrayList<StatementNode> bod = new ArrayList<>();
+        try {
+            if (matchAndRemove(Type.BEGIN) != null) {
+                // while not at the end token, keep adding statements
+                while (matchAndRemove(Type.END) != null) {
+                    StatementNode statement = statement();
+                    if (statement != null) {
+                        bod.add(statement);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error in body - Token expected but not found.");
+            throw new RuntimeException(e);
+        }
+
+        return bod;
+    }
+
+    public ArrayList<VariableNode> variables() {
+        // TODO: fix and make sure it outputs a list of variable nodes
+       /*
+        We then make a Variables function that looks for the variables token.
+        If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
+        A variable declaration is a list of identifiers (separated by commas) followed by a colon,
+        then the data type (integer or real, for now) followed by endOfLine (for variables section)
+        or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
+        IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
+        For each variable, we make a VariableNode like we did for constants.*/
+        // token equal match and remove
+        ArrayList<VariableNode> variables = new ArrayList<>();
+        int state = 0;
+        Token x;
+        ArrayList<VariableNode> constants = new ArrayList<>();
+        // TODO: FIX constants
+        // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
+        // A,B,C:INT
+        //STATES:
+        // 0 - IDEN
+        // 1 - COMMA
+        // 2 - COLON
+        // 3 - INT / REAL / STRING
+        // 4 - ENDLINE
+        ArrayList<Token> tokens = new ArrayList<>();
+        boolean isVar = false;
+        int curState = 0;
+        try {
+            while (curState != 4) {
+                switch (curState) {
+                    case 0 -> {
+                        isVar = (matchAndRemove(Type.VAR) != null);
+                        x = matchAndRemove(Type.IDENTIFIER);
+                        if (x != null) {
+                            curState = 1;
+                            tokens.add(x);
+                        } else {
+                            curState = 5;
+                        }
+                    }
+                    case 1 -> {
+                        x = matchAndRemove(Type.COMMA);
+                        if (x != null) {
+                            curState = 0;
+                        } else {
+                            curState = 2;
+                        }
+                    }
+                    case 2 -> {
+                        x = matchAndRemove(Type.COLON);
+                        if (x != null) {
+                            curState = 3;
+                        }
+                    }
+                    case 3 -> {
+                        x = matchAndRemove(Type.INTEGER);
+                        if (x != null) {
+                            for (Token t : tokens) {
+                                constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, isVar));
+                            }
+                            tokens.clear();
+                            curState = 4;
+                        }
+                        x = matchAndRemove(Type.REAL);
+                        if (x != null) {
+                            for (Token t : tokens) {
+                                constants.add(new VariableNode(t.getValue(), null, Type.REAL, isVar));
+                            }
+                            // CLEAR LIST
+                            tokens.clear();
+                            curState = 4;
+                        }
+                    }
+                    case 4 -> {
+                        x = matchAndRemove(Type.ENDLINE);
+                        if (x != null) {
+                            curState = 0;
+                        }
+                    }
+                    case 5 -> System.err.println("Error in processConstants - Invalid state");
+                    default -> curState = 5;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error in processConstants");
+            throw new RuntimeException(e);
+        }
+        return constants;
     }
 
 

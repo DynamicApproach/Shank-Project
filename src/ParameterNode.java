@@ -1,10 +1,10 @@
 public class ParameterNode extends Node {
     private boolean isVariable = false;
     private String name;
-    private String type;
+    private Type type;
     private String value;
 
-    public ParameterNode(String name, String type, String value, Boolean isVariable) {
+    public ParameterNode(String name, Type type, String value, Boolean isVariable) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -15,7 +15,7 @@ public class ParameterNode extends Node {
         return name;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 

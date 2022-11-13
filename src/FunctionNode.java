@@ -20,6 +20,24 @@ public class FunctionNode extends CallableNode {
         this.variables = vars;
     }
 
+    public FunctionNode(String value, ArrayList<ParameterNode> params, ArrayList<VariableNode> vars, ArrayList<StatementNode> body) {
+        super(value, vars);
+        this.name = value;
+        this.parameters = params;
+        this.body = body;
+        this.variables = vars;
+    }
+
+    public FunctionNode(String value, ArrayList<ParameterNode> params, ArrayList<VariableNode> vars, ArrayList<VariableNode> constant, ArrayList<StatementNode> body) {
+        super(value, vars);
+        this.name = value;
+        this.parameters = params;
+        this.body = body;
+        this.variables = vars;
+        this.constant = constant;
+    }
+
+
     public ArrayList<StatementNode> getBody() {// returns node with whole body of tokens
         return body;
     }
