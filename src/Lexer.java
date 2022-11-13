@@ -348,17 +348,7 @@ public class Lexer {
                                 builder.append(input.charAt(index));
                                 foundTokState(Type.ASSIGN, builder.toString());
                                 skip = true;
-                            } else if (builder.length() > 0) {
-                                // eg. "idenNAME:"
-                                if (notSpaceOrNewLineAndHasLength()) {
-                                    foundTok(Type.IDENTIFIER, builder.toString());
-                                }
-                                builder.append(c);
-                                foundTokState(Type.COLON, builder.toString());
-                            } else {
-                                // eg. ":"
-                                foundTokState(Type.COLON, builder.toString());
-                            }
+                            } else notEmpty(c);
                         }
                         case '=' -> {
                             if (notSpaceOrNewLineAndHasLength()) {
@@ -385,7 +375,9 @@ public class Lexer {
                             foundTokState(Type.SEMICOLON, builder.toString());
                         }
                         case ')' -> { // if right bracket, then foundTok for an identifier and then a right bracket eg. "idenNAME) "
-                            if (notSpaceOrNewLineAndHasLength()) {
+                            if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+                                foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
+                            } else if (notSpaceOrNewLineAndHasLength()) {
                                 foundTok(Type.IDENTIFIER, builder.toString());
                             }
                             builder.append(c);
@@ -428,11 +420,8 @@ public class Lexer {
                                     builder.append(input.charAt(index));
                                     foundTokState(Type.ASSIGN, builder.toString());
                                     skip = true;
-                                } else if (builder.length() > 0) {
-                                    builder.append(c);
-                                    foundTokState(Type.COLON, builder.toString());
                                 } else {
-                                    foundTokState(Type.COLON, builder.toString());
+                                    notEmpty(c);
                                 }
                             }
                             case "=" -> { // if equals, then foundTok for a equals eg. "= "
@@ -447,7 +436,6 @@ public class Lexer {
                             case ";" -> foundTok(Type.SEMICOLON, builder.toString());
                             case "\n" -> foundTok(Type.ENDLINE, builder.toString());
                             case ")" -> foundTok(Type.RPAREN, builder.toString());
-                            // if not reserved word, then foundTok for an identifier eg. "idenNAME "
                             default -> foundTok(Type.IDENTIFIER, builder.toString());
                         }
                     }
@@ -460,6 +448,20 @@ public class Lexer {
                 }
         }
 
+    }
+
+    private void notEmpty(char c) {
+        if (builder.length() > 0) {
+            if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+                foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
+            } else if (notSpaceOrNewLineAndHasLength()) {
+                foundTok(Type.IDENTIFIER, builder.toString());
+            }
+            builder.append(c);
+            foundTokState(Type.COLON, builder.toString());
+        } else {
+            foundTokState(Type.COLON, builder.toString());
+        }
     }
 
     private boolean notSpaceOrNewLineAndHasLength() {

@@ -133,23 +133,23 @@ public class Parser {
         }
     }
 
-    public ArrayList<StatementNode> Statements() {
+    public ArrayList<StatementNode> statements() {
         ArrayList<StatementNode> statements = new ArrayList<>();
         matchAndRemove(Type.BEGIN);
         matchAndRemove(Type.ENDLINE);
         while (peek(0).getType() != Type.END) {
-            statements.add(Statement());
+            statements.add(statement());
         }
         matchAndRemove(Type.END);
         matchAndRemove(Type.ENDLINE);
         return statements;
     }
 
-    public StatementNode Statement() {
-        return Assignment();
+    public StatementNode statement() {
+        return assignment();
     }
 
-    public AssignmentNode Assignment() {
+    public AssignmentNode assignment() {
         // identifier assignment expression endofline
         if (peek(1).getType() == Type.ASSIGN) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
@@ -189,7 +189,7 @@ public class Parser {
             matchAndRemove(Type.WHILE);
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.DO);
-            ArrayList<StatementNode> statements = Statements();
+            ArrayList<StatementNode> statements = statements();
             return new WhileNode(condition, statements);
         }
         return null;
@@ -202,7 +202,7 @@ public class Parser {
             matchAndRemove(Type.IF);
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.THEN);
-            ArrayList<StatementNode> statements = Statements();
+            ArrayList<StatementNode> statements = statements();
             if ((matchAndRemove(Type.ELSE) != null) && (matchAndRemove(Type.IF) != null)) {
                 return new IfNode(condition, statements, ifExpression());
             }
@@ -224,7 +224,7 @@ public class Parser {
             matchAndRemove(Type.TO);
             Node end = expression();
             matchAndRemove(Type.DO);
-            ArrayList<StatementNode> statements = Statements();
+            ArrayList<StatementNode> statements = statements();
             return new ForNode(new VariableReferenceNode(name), start, end, statements);
         }
         return null;
@@ -372,10 +372,14 @@ public class Parser {
     public ArrayList<StatementNode> body() {
         ArrayList<StatementNode> bod = new ArrayList<>();
         try {
-            while (matchAndRemove(Type.BEGIN) != null) {
-                Token end = matchAndRemove(Type.ENDLINE);
-                matchAndRemove(Type.END);
-                matchAndRemove(Type.ENDLINE);
+            if (matchAndRemove(Type.BEGIN) != null) {
+                // while not at the end token, keep adding statements
+                while (matchAndRemove(Type.END) != null) {
+                    StatementNode statement = statement();
+                    if (statement != null) {
+                        bod.add(statement);
+                    }
+                }
             }
         } catch (Exception e) {
             System.err.println("Error in body - Token expected but not found.");
@@ -397,16 +401,15 @@ public class Parser {
         For each variable, we make a VariableNode like we did for constants.*/
         // token equal match and remove
         ArrayList<VariableNode> variables = new ArrayList<>();
-// STATES:
-        // State 0 - Var -> 1
-        // State 1 - IDEN -> 2, 3
-        // State 2 - COMMA -> 0
-        // State 3 - COLON -> 4
-        // State 4 - INT OR REAL -> 0,5
-        // State 5 - SEMI-COLON -> 0
-        // State 6 - RPAREN/EOL - end
         try {
-
+            // STATES:
+            // State 0 - Var -> 1
+            // State 1 - IDEN -> 2, 3
+            // State 2 - COMMA -> 0
+            // State 3 - COLON -> 4
+            // State 4 - INT OR REAL -> 0,5
+            // State 5 - SEMI-COLON -> 0
+            // State 6 - RPAREN/EOL - end
             int state = 0;
             boolean isVar = false;
             ArrayList<Token> idenList = new ArrayList<>();
