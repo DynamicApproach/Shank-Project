@@ -178,7 +178,7 @@ public class Lexer {
                     case '\n' -> {
                         if (notSpaceOrNewLineAndHasLength()) {
                             tokens.add(new Token(Type.NUMBER, builder.toString()));
-                            builder.setLength(0);
+                            foundTokState(Type.ENDLINE, builder.toString());
                         }
                         builder.append(c);
                         foundTokState(Type.ENDLINE, builder.toString());
@@ -390,6 +390,14 @@ public class Lexer {
                             }
                             builder.append(c);
                             foundTokState(Type.RPAREN, builder.toString());
+
+                        }
+                        case '(' -> { // if left bracket, then foundTok for an identifier and then a left bracket eg. "functionNAME( "
+                            if (notSpaceOrNewLineAndHasLength()) {
+                                foundTok(Type.IDENTIFIER, builder.toString());
+                            }
+                            builder.append(c);
+                            foundTokState(Type.LPAREN, builder.toString());
 
                         }
                         default -> builder.append(c);

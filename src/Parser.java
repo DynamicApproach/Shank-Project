@@ -295,7 +295,7 @@ public class Parser {
         int state = 0;
         Token x;
         ArrayList<VariableNode> constants = new ArrayList<>();
-        try {
+        try { // TODO: FIX constants
             // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
             // A,B,C:INT
             //STATES:
@@ -386,7 +386,7 @@ public class Parser {
     }
 
     public ArrayList<VariableNode> variables() {
-
+        // TODO: fix and make sure it outputs a list of variable nodes
        /*
         We then make a Variables function that looks for the variables token.
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
@@ -413,7 +413,7 @@ public class Parser {
             while (state != 6) {
                 switch (state) {
                     case 0 -> {
-                        if (matchAndRemove(Type.VARIABLES) != null) {
+                        if (matchAndRemove(Type.VAR) != null) {
                             state = 1;
                             isVar = true;
                         } else {
