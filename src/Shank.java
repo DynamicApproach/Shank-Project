@@ -57,10 +57,12 @@ public class Shank {
 
                 // for each line of tokens, parse it
                 FunctionNode node = parsed.functionDefinition();
-                //
+                // add function node to hashmap
+                functionNames.put(node.getName(), node);
+
 
                 // print out the function
-                System.out.println(node.toString());
+                System.out.println(node);
                 System.out.println("Parsing complete");
 
                 // print the tree

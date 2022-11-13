@@ -295,78 +295,78 @@ public class Parser {
         int state = 0;
         Token x;
         ArrayList<VariableNode> constants = new ArrayList<>();
-        try { // TODO: FIX constants
-            // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
-            // A,B,C:INT
-            //STATES:
-            // 0 - IDEN
-            // 1 - COMMA
-            // 2 - COLON
-            // 3 - INT / REAL / STRING
-            // 4 - ENDLINE
-            ArrayList<Token> tokens = new ArrayList<>();
-            switch (state) {
-                case 0 -> {
-                    x = matchAndRemove(Type.IDENTIFIER);
-                    if (x != null) {
-                        // add to list
-                        tokens.add(x);
-                        state = 1;
-                    } else {
-                        state = 5;
-                    }
-                }
-                case 1 -> {
-                    x = matchAndRemove(Type.COMMA);
-                    if (x != null) {
-                        state = 0;
-                    } else {
-                        state = 2;
-                    }
-                }
-                case 2 -> {
-                    x = matchAndRemove(Type.COLON);
-                    if (x != null) {
-                        state = 3;
-                    }
-                }
-                case 3 -> {
-                    x = matchAndRemove(Type.INTEGER);
-                    if (x != null) {
-                        for (Token t : tokens) {
-                            constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, true));
+        // TODO: FIX constants
+        // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
+        // A,B,C:INT
+        //STATES:
+        // 0 - IDEN
+        // 1 - COMMA
+        // 2 - COLON
+        // 3 - INT / REAL / STRING
+        // 4 - ENDLINE
+        ArrayList<Token> tokens = new ArrayList<>();
+        int curState = 0;
+        try {
+            while (curState != 4) {
+                switch (curState) {
+                    case 0 -> {
+                        x = matchAndRemove(Type.IDENTIFIER);
+                        if (x != null) {
+                            // add to list
+                            curState = 1;
+                            tokens.add(x);
+                        } else {
+                            curState = 5;
                         }
-                        tokens.clear();
-                        state = 4;
                     }
-                    x = matchAndRemove(Type.REAL);
-                    if (x != null) {
-                        for (Token t : tokens) {
-                            constants.add(new VariableNode(t.getValue(), null, Type.REAL, true));
+                    case 1 -> {
+                        x = matchAndRemove(Type.COMMA);
+                        if (x != null) {
+                            curState = 0;
+                        } else {
+                            curState = 2;
                         }
-                        // CLEAR LIST
-                        tokens.clear();
-                        state = 4;
                     }
-                }
-                    /*x = matchAndRemove(Type.STRING);
-                    if (x != null) {
-                        state = 4;
-                    }*/
-                case 4 -> {
-                    x = matchAndRemove(Type.ENDLINE);
-                    if (x != null) {
-                        state = 0;
+                    case 2 -> {
+                        x = matchAndRemove(Type.COLON);
+                        if (x != null) {
+                            curState = 3;
+                        }
                     }
+                    case 3 -> {
+                        x = matchAndRemove(Type.INTEGER);
+                        if (x != null) {
+                            for (Token t : tokens) {
+                                constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, true));
+                            }
+                            tokens.clear();
+                            curState = 4;
+                        }
+                        x = matchAndRemove(Type.REAL);
+                        if (x != null) {
+                            for (Token t : tokens) {
+                                constants.add(new VariableNode(t.getValue(), null, Type.REAL, true));
+                            }
+                            // CLEAR LIST
+                            tokens.clear();
+                            curState = 4;
+                        }
+                    }
+                    case 4 -> {
+                        x = matchAndRemove(Type.ENDLINE);
+                        if (x != null) {
+                            curState = 0;
+                        }
+                    }
+                    case 5 -> System.err.println("Error in processConstants - Invalid state");
+                    default -> curState = 5;
                 }
-                case 5 -> System.err.println("Error in processConstants - Invalid state");
-                default -> System.err.println("Error in processConstants - Invalid state");
             }
-            return constants;
-        } catch (NumberFormatException e) {
-            System.err.println("Error in processConstants - Token expected but not found.");
+        } catch (Exception e) {
+            System.err.println("Error in processConstants");
             throw new RuntimeException(e);
         }
+        return constants;
     }
 
     public ArrayList<StatementNode> body() {

@@ -328,7 +328,11 @@ public class Lexer {
                     switch (c) {
                         case ',' -> { // if comma, then foundTok for an identifier and then a comma eg. "idenNAME, "
                             if (notSpaceOrNewLineAndHasLength()) {
-                                foundTok(Type.IDENTIFIER, builder.toString());
+                                if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) {
+                                    foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
+                                } else {
+                                    foundTokState(Type.IDENTIFIER, builder.toString());
+                                }
                             }
                             builder.append(c);
                             foundTokState(Type.COMMA, builder.toString());
@@ -342,7 +346,7 @@ public class Lexer {
                                 builder.append(input.charAt(index));
                                 foundTokState(Type.ASSIGN, builder.toString());
                                 skip = true;
-                            } else if (input.toCharArray().length > index && input.charAt(index) == '=' && !notSpaceOrNewLineAndHasLength()) {
+                            } else if (input.toCharArray().length > index && input.charAt(index) == '=' && builder.toString().trim().isEmpty()) {
                                 // eg. " :="
                                 builder.append(c);
                                 builder.append(input.charAt(index));
@@ -454,7 +458,7 @@ public class Lexer {
         if (builder.length() > 0) {
             if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
                 foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
-            } else if (notSpaceOrNewLineAndHasLength()) {
+            } else if (notSpaceOrNewLineAndHasLength() && !":".equals(builder.toString())) {
                 foundTok(Type.IDENTIFIER, builder.toString());
             }
             builder.append(c);
@@ -465,7 +469,7 @@ public class Lexer {
     }
 
     private boolean notSpaceOrNewLineAndHasLength() {
-        return !builder.isEmpty() && !" ".equals(builder.toString()) && !"\n".equals(builder.toString());
+        return !builder.toString().trim().isEmpty() && !"\n".equals(builder.toString().trim());
     }
 
     private void reportErrorAndClear(String Invalid_character1) throws Exception {
@@ -484,13 +488,13 @@ public class Lexer {
 
     // found a token, so add it to the list and reset builder
     protected void foundTok(Type ttype, String c) {
-        tokens.add(new Token(ttype, c));
+        tokens.add(new Token(ttype, c.trim()));
         builder.setLength(0);
     }
 
     // found a token that ends curstate, so add it to the list and reset builder and state
     private void foundTokState(Type ttype, String c) {
-        tokens.add(new Token(ttype, c));
+        tokens.add(new Token(ttype, c.trim()));
         builder.setLength(0);
         state = 0;
     }
