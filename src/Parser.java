@@ -452,6 +452,7 @@ public class Parser {
                             for (Token token : idenList) {
                                 VariableNode var = new VariableNode(token.getValue().trim(), null, Type.INTEGER, isVar);
                                 variables.add(var);
+                                isVar = false;
                             }
                             idenList.clear();
                             state = 5;
@@ -462,6 +463,7 @@ public class Parser {
                                 for (Token token : idenList) {
                                     VariableNode var = new VariableNode(token.getValue().trim(), null, Type.REAL, isVar);
                                     variables.add(var);
+                                    isVar = false;
                                 }
                                 idenList.clear();
                                 state = 5;

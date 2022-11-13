@@ -23,7 +23,7 @@ public class Shank {
         functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<>(), false));
         functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<>(), false));
         functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<>(), false));
-        ArrayList<Token> tokens = new ArrayList<>(1000);
+        ArrayList<Token> tokens = new ArrayList<>(10000);
         if (args.length == 1) {
             try {
                 Lexer lexer = new Lexer();

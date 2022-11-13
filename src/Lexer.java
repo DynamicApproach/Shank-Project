@@ -405,8 +405,8 @@ public class Lexer {
 
                 } else {
                     // check for keyword before token is output
-                    if (reservedWords.containsKey(builder.toString().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
-                        foundTokState(reservedWords.get(builder.toString().toUpperCase()), builder.toString());
+                    if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+                        foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
                     } else {
                         // if space or newline, then end of word so add to tokens
                         // c : int
