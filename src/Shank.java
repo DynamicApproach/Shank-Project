@@ -49,19 +49,19 @@ public class Shank {
                         System.err.println("null token");
                     }
                 }
-                Parser parsing = new Parser(tokens);
-
                 System.out.println("\n \n \n Parsing:\n ");
+                Parser parsing = new Parser(tokens);
+                Node tree = parsing.FunctionDefinition();
                 // pass each set of nodes into the parser?
                 // for each line of tokens, parse it
                 for (int i = 0; i < tokens.size(); i++) {
                     parsing.parse();
                 }
-                Node tree = parsing.parse();
+
+
                 System.out.println("Parsing complete");
 
                 // print the tree
-                parsing.FunctionDefinition();
                 //functiondef interpret
 
                 System.out.println("Interpreting: ");
