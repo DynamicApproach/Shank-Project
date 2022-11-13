@@ -7,15 +7,11 @@ public class Interpreter {
     private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
         // function was just called and have to make the hash map for your local variables and parameters.
         HashMap<String, InterpreterDataType> stringToFuct = new HashMap<>();
-        // Add all of our parameters to the hashmap using the names that our function expects
-        // run over the functionNode passed in and attach the variables to the passed in interpeterdatatype
         for (int i = 0; i < function.getParameters().size(); i++)
             stringToFuct.put(function.getParameters().get(i).getName(), parameters.get(i));
-        // Next add all the local variables to the hashmap
-        // run over the functionNode passed in and attach the local variables to the passed in interpeterdatatype
-        for (int i = 0; i < function.getVariables().size(); i++) {
-            stringToFuct.put(function.getVariables().get(i).getName(), (parameters.get(i))); // TODO: swap to figure out type using type from variablenode
-        }
+        for (int i = 0; i < function.getVariables().size(); i++)
+            stringToFuct.put(function.getVariables().get(i).getName(), parameters.get(i));
+
         return InterpretBlock(function.getBody(), stringToFuct);
     }
 
@@ -33,26 +29,11 @@ public class Interpreter {
                 // If the statement is a function call, implement the process described in the background section,
                 // otherwise we will ignore the statement (for now).
                 // get the function from the hashmap
-                FunctionNode function = new FunctionNode(stringToFunc.get(functionCall.getName()).toString(), null);
+                // FunctionNode function = new FunctionNode(stringToFunc.get(functionCall.getName()).toString(), null);
                 // get the parameters from the function call
-                ArrayList<ParameterNode> parameters = functionCall.getParameters();
+                // ArrayList<ParameterNode> parameters = functionCall.getParameters();
                 // create a list of interpreter data types
                 ArrayList<InterpreterDataType> interpreterDataTypes = new ArrayList<>();
-                // loop over the parameters and add the interpreter data types to the list
-                for (ParameterNode parameter : parameters) {
-                    if (parameter.getType() == "int") {
-                        interpreterDataTypes.add(new IntDataType(parameter.getName()));
-                    } else if (parameter.getType() == "float") {
-                        interpreterDataTypes.add(new FloatDataType(parameter.getValue()));
-                    } else if (parameter.getType() == "string") {
-                        // interpreterDataTypes.add(new InterpreterDataType(parameter.getValue(), "string"));
-                    } else {
-                        // interpreterDataTypes.add(new InterpreterDataType(parameter.getValue(), "void"));
-                    }
-                }
-                // call the function with the list of interpreter data types
-
-                InterpretFunction(function, interpreterDataTypes);
             }
 
         }
