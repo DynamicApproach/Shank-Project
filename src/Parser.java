@@ -277,6 +277,8 @@ public class Parser {
             if (matchAndRemove(Type.CONSTANT) != null) {
                 processConstants();
 
+            } else if (matchAndRemove(Type.ENDLINE) != null) {
+                // do nothing
             }
         } catch (Exception e) {
             System.err.println("Error in Constants - Token expected but not found.");
