@@ -250,16 +250,17 @@ public class Parser {
                 // right parenthesis. The constants section has one (or more) name/value pairs.
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 // name, constants, variables, body
-                if (name != null) {
-                    String nameStr = name.getValue();
+                if (name.toString() != null) {
+                    String nameStr = name.toString();
                 }
                 matchAndRemove(Type.LPAREN);
                 ArrayList<VariableNode> vars = variables();
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<VariableNode> consta = constants();
+                matchAndRemove(Type.ENDLINE);
                 ArrayList<StatementNode> body = body();
-                return new FunctionNode(name != null ? name.getValue() : null, vars, body);
+                return new FunctionNode(name.toString(), vars, body);
             }
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");
@@ -276,9 +277,6 @@ public class Parser {
         try {
             if (matchAndRemove(Type.CONSTANT) != null) {
                 processConstants();
-
-            } else if (matchAndRemove(Type.ENDLINE) != null) {
-                // do nothing
             }
         } catch (Exception e) {
             System.err.println("Error in Constants - Token expected but not found.");
@@ -294,42 +292,81 @@ public class Parser {
         It should make a VariableNode for each of these – this
         should be a loop until it doesn’t find an identifier anymore.
         */
-
+        int state = 0;
         Token x;
         ArrayList<VariableNode> constants = new ArrayList<>();
         try {
-            while ((x = matchAndRemove(Type.IDENTIFIER)) != null) {
-                Token y = matchAndRemove(Type.EQUAL);
-                Token z = matchAndRemove(Type.NUMBER);
-                Token a = matchAndRemove(Type.ENDLINE);
-                if ((y != null)) {
-                    if (isInteger(tokens.get(0))) {
-                        IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
-                        tokens.remove(0);
-                        if (a != null) {
-                            // make a VariableNode
-                            VariableNode var = new VariableNode(x.getValue().trim(), intNode, Type.CONSTANT, true);
-                            constants.add(var);
-                        }
-                    } else if (isFloat(tokens.get(0))) {
-                        FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
-                        tokens.remove(0);
-                        if (a != null) {
-                            // make a VariableNode
-                            VariableNode var = new VariableNode(x.getValue().trim(), floatNode, Type.CONSTANT, true);
-                            constants.add(var);
-                        }
+            // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
+            // A,B,C:INT
+            //STATES:
+            // 0 - IDEN
+            // 1 - COMMA
+            // 2 - COLON
+            // 3 - INT / REAL / STRING
+            // 4 - ENDLINE
+            ArrayList<Token> tokens = new ArrayList<>();
+            switch (state) {
+                case 0 -> {
+                    x = matchAndRemove(Type.IDENTIFIER);
+                    if (x != null) {
+                        // add to list
+                        tokens.add(x);
+                        state = 1;
+                    } else {
+                        state = 5;
                     }
                 }
-
+                case 1 -> {
+                    x = matchAndRemove(Type.COMMA);
+                    if (x != null) {
+                        state = 0;
+                    } else {
+                        state = 2;
+                    }
+                }
+                case 2 -> {
+                    x = matchAndRemove(Type.COLON);
+                    if (x != null) {
+                        state = 3;
+                    }
+                }
+                case 3 -> {
+                    x = matchAndRemove(Type.INTEGER);
+                    if (x != null) {
+                        for (Token t : tokens) {
+                            constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, true));
+                        }
+                        tokens.clear();
+                        state = 4;
+                    }
+                    x = matchAndRemove(Type.REAL);
+                    if (x != null) {
+                        for (Token t : tokens) {
+                            constants.add(new VariableNode(t.getValue(), null, Type.REAL, true));
+                        }
+                        // CLEAR LIST
+                        tokens.clear();
+                        state = 4;
+                    }
+                }
+                    /*x = matchAndRemove(Type.STRING);
+                    if (x != null) {
+                        state = 4;
+                    }*/
+                case 4 -> {
+                    x = matchAndRemove(Type.ENDLINE);
+                    if (x != null) {
+                        state = 0;
+                    }
+                }
+                case 5 -> System.err.println("Error in processConstants - Invalid state");
+                default -> System.err.println("Error in processConstants - Invalid state");
             }
             return constants;
         } catch (NumberFormatException e) {
             System.err.println("Error in processConstants - Token expected but not found.");
             throw new RuntimeException(e);
         }
-
-
     }
 
     public ArrayList<StatementNode> body() {
@@ -360,32 +397,94 @@ public class Parser {
         For each variable, we make a VariableNode like we did for constants.*/
         // token equal match and remove
         ArrayList<VariableNode> variables = new ArrayList<>();
-
-        // alternate method? :  all identifiers into a list and then parse the list and make a VariableNode for each one
+// STATES:
+        // State 0 - Var -> 1
+        // State 1 - IDEN -> 2, 3
+        // State 2 - COMMA -> 0
+        // State 3 - COLON -> 4
+        // State 4 - INT OR REAL -> 0,5
+        // State 5 - SEMI-COLON -> 0
+        // State 6 - RPAREN/EOL - end
         try {
-            if (matchAndRemove(Type.VARIABLES) != null) {
-                Token currenttoken;
-                while ((currenttoken = matchAndRemove(Type.IDENTIFIER)) != null) { // a,b,c
-                    Token comma = matchAndRemove(Type.COMMA);
-                    Token colon = matchAndRemove(Type.COLON);
-                    Token isint = matchAndRemove(Type.INTEGER);
-                    Token isreal = matchAndRemove(Type.REAL);
-                    Token endl = matchAndRemove(Type.ENDLINE);
-                    if (comma != null || colon != null) {
-                        if (isint != null) {
-                            if (endl != null) {
-                                // TODO: DOUBLE CHECK
-                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
+
+            int state = 0;
+            boolean isVar = false;
+            ArrayList<Token> idenList = new ArrayList<>();
+            while (state != 6) {
+                switch (state) {
+                    case 0 -> {
+                        if (matchAndRemove(Type.VARIABLES) != null) {
+                            state = 1;
+                            isVar = true;
+                        } else {
+                            state = 1;
+                            isVar = false;
+                        }
+                    }
+                    case 1 -> {
+                        Token x = matchAndRemove(Type.IDENTIFIER);
+                        idenList.add(x);
+                        if (x != null) {
+                            state = 2;
+                        } else {
+                            state = 6;
+                        }
+                    }
+                    case 2 -> {
+                        Token y = matchAndRemove(Type.COMMA);
+                        if (y != null) {
+                            state = 0;
+                        } else {
+                            state = 3;
+                        }
+                    }
+                    case 3 -> {
+                        Token z = matchAndRemove(Type.COLON);
+                        if (z != null) {
+                            state = 4;
+                        } else {
+                            state = 6;
+                        }
+                    }
+                    case 4 -> {
+                        Token a = matchAndRemove(Type.INTEGER);
+                        if (a != null) {
+                            for (Token token : idenList) {
+                                VariableNode var = new VariableNode(token.getValue().trim(), null, Type.INTEGER, isVar);
                                 variables.add(var);
                             }
-                        }
-                        if (isreal != null) {
-                            if (endl != null) {
-                                // make a VariableNode
-                                VariableNode var = new VariableNode(currenttoken.getValue().trim(), null, Type.VARIABLES, false);
-                                variables.add(var);
+                            idenList.clear();
+                            state = 5;
+                        } else {
+                            Token b = matchAndRemove(Type.REAL);
+                            if (b != null) {
+                                // create a VariableNode for each identifier in the list
+                                for (Token token : idenList) {
+                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.REAL, isVar);
+                                    variables.add(var);
+                                }
+                                idenList.clear();
+                                state = 5;
+                            } else {
+                                state = 6;
                             }
                         }
+                    }
+                    case 5 -> {
+                        Token c = matchAndRemove(Type.SEMICOLON);
+                        if (c != null) {
+                            state = 0;
+                        } else {
+                            Token d = matchAndRemove(Type.ENDLINE);
+                            if (d != null) {
+                                state = 0;
+                            } else {
+                                state = 6;
+                            }
+                        }
+                    }
+                    default -> {
+                        state = 6;
                     }
                 }
             }
