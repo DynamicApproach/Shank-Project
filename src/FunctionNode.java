@@ -65,7 +65,7 @@ public class FunctionNode extends CallableNode {
 
     @Override
     public String toString() {
-        return "FunctionAST{" + "name='" + name + '\'' + ", parameters=" + parameters + ", variables=" + variables + ", body=" + body + ",  + '}'";
+        return "FunctionAST{" + "name='" + name + "\n" + ", parameters=" + parameters + "\n" + ", variables=" + variables + "\n" + ",  + constants: " + constant + "\n" + ", body=" + body;
     }
 
     public ArrayList<VariableNode> getConstant() {

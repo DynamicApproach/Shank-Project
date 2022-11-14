@@ -374,13 +374,12 @@ public class Parser {
         //looks for the constants token.
         // If it finds it, it calls a “processConstants” function that looks for token
         try {
-            processConstants();
+            return processConstants();
 
         } catch (Exception e) {
             System.err.println("Error in Constants - Token expected but not found.");
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     private ArrayList<VariableNode> processConstants() {
@@ -413,7 +412,7 @@ public class Parser {
                             idenList.add(name);
                             state = 1;
                         } else {
-                            state = 4;
+                            state = 3;
                         }
                     }
                     case 1 -> {
@@ -445,7 +444,16 @@ public class Parser {
                         }
 
                     }
-                    default -> state = 4;
+                    case 3 -> {
+                        if (peek(0).getType() == Type.ENDLINE || peek(0).getType() == Type.IDENTIFIER) {
+                            state = 0;
+                        } else {
+                            return consties;
+                        }
+                    }
+                    default -> {
+                        return consties;
+                    }
                 }
             }
 
