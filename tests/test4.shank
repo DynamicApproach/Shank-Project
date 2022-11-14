@@ -1,0 +1,6 @@
+define addTwo(x,y : integer; var sum: integer)
+constants
+pi = 3.14
+begin
+sum := x + y
+end
