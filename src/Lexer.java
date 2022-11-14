@@ -512,6 +512,7 @@ public class Lexer {
             if (!":".equals(builder.toString())) {
                 checkReservedVsIden();
             }
+            builder.append(c);
             foundTokState(Type.COLON, builder.toString());
         }
     }

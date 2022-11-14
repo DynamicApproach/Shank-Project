@@ -44,15 +44,16 @@ public class Parser {
         if (node == null) {
             return null;
         }
-        while (a < tokens.size()) {
+        while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
             Type token = peek(0).getType();
             if (token == Type.ADD) {
                 matchAndRemove(token);
-                node = new MathOpNode(node, term(), Type.ADD);
+                node = new MathOpNode(node, factor(), Type.ADD);
             } else if (token == Type.MINUS) {
                 matchAndRemove(token);
-                node = new MathOpNode(node, term(), Type.MINUS);
+                node = new MathOpNode(node, factor(), Type.MINUS);
             }
+            a++;
         }
         return node;
     }
@@ -96,10 +97,7 @@ public class Parser {
         }
         // if identifier create variablerefnode
         Token temp = matchAndRemove(Type.IDENTIFIER);
-        if (temp != null) {
-            return new VariableReferenceNode(temp.toString());
-        }
-        return null;
+        return (temp != null) ? new VariableReferenceNode(temp.toString()) : null;
     }
 
 
@@ -154,7 +152,7 @@ public class Parser {
         if (peek(1).getType() == Type.ASSIGN) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
-            FunctionNode value = (FunctionNode) expression();
+            MathOpNode value = (MathOpNode) expression();
             matchAndRemove(Type.ENDLINE);
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
@@ -165,11 +163,9 @@ public class Parser {
         return tokens.get(x);
     }
 
-    // booleanExpression, booleanTerm, booleanFactor methods
-    // booleanExpression is a list of booleanTerms separated by an operator
     public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
-        BooleanExpressionNode node = null;
+        BooleanExpressionNode node;
         try {
             Type token = peek(0).getType();
             matchAndRemove(token);
@@ -230,26 +226,18 @@ public class Parser {
         return null;
     }
 
-
-    // print
-
     public FunctionNode functionDefinition() {
-        // TODO: double check changes
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
             It populates the name from the identifier, then looks for the left parenthesis.
             It then looks for variable declarations (see below).
             We then call the Constants, then Variables, then Body function from below.
+            name, (, params, ), constants, variables, body
         */
-
         try {
             if (matchAndRemove(Type.DEFINE) != null) {
-                //The function declaration is the word “define”, then a name, left parenthesis,
-                // then a list of variable declarations, separated by semi-colons and finally a
-                // right parenthesis. The constants section has one (or more) name/value pairs.
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                // name, constants, variables, body
                 if (name.toString() != null) {
                     String nameStr = name.toString();
                 }
@@ -281,27 +269,23 @@ public class Parser {
     }
 
     private ArrayList<ParameterNode> parameters() {
-
-        // TODO: fix and make sure it outputs a list of variable nodes
        /*
         We then make a Variables function that looks for the variables token.
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
         A variable declaration is a list of identifiers (separated by commas) followed by a colon,
         then the data type (integer or real, for now) followed by endOfLine (for variables section)
         or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
-        IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
-        For each variable, we make a VariableNode like we did for constants.*/
-        // token equal match and remove
+        IDEN     COMMA/COLON    DATA-TYPE   EOL OR ; IDEN    COMMA/COLON    DATA-TYPE     )/EOL
+        */// STATES:
+        // State 0 - Var -> 1
+        // State 1 - IDEN -> 2, 3
+        // State 2 - COMMA -> 0
+        // State 3 - COLON -> 4
+        // State 4 - INT OR REAL -> 0,5
+        // State 5 - SEMI-COLON -> 0
+        // State 6 - RPAREN/EOL - end
         ArrayList<ParameterNode> paramets = new ArrayList<>();
         try {
-            // STATES:
-            // State 0 - Var -> 1
-            // State 1 - IDEN -> 2, 3
-            // State 2 - COMMA -> 0
-            // State 3 - COLON -> 4
-            // State 4 - INT OR REAL -> 0,5
-            // State 5 - SEMI-COLON -> 0
-            // State 6 - RPAREN/EOL - end
             int state = 0;
             boolean isVar = false;
             ArrayList<Token> idenList = new ArrayList<>();
@@ -317,33 +301,33 @@ public class Parser {
                         }
                     }
                     case 1 -> {
-                        Token x = matchAndRemove(Type.IDENTIFIER);
-                        if (x != null) {
-                            idenList.add(x);
+                        Token ID = matchAndRemove(Type.IDENTIFIER);
+                        if (ID != null) {
+                            idenList.add(ID);
                             state = 2;
                         } else {
                             state = 6;
                         }
                     }
                     case 2 -> {
-                        Token y = matchAndRemove(Type.COMMA);
-                        if (y != null) {
+                        Token COMMA = matchAndRemove(Type.COMMA);
+                        if (COMMA != null) {
                             state = 0;
                         } else {
                             state = 3;
                         }
                     }
                     case 3 -> {
-                        Token z = matchAndRemove(Type.COLON);
-                        if (z != null) {
+                        Token COLON = matchAndRemove(Type.COLON);
+                        if (COLON != null) {
                             state = 4;
                         } else {
                             state = 6;
                         }
                     }
                     case 4 -> {
-                        Token a = matchAndRemove(Type.INTEGER);
-                        if (a != null) {
+                        Token isInt = matchAndRemove(Type.INTEGER);
+                        if (isInt != null) {
                             for (Token token : idenList) {
                                 ParameterNode var = new ParameterNode(token.getValue().trim(), Type.INTEGER, null, !(isVar));
                                 paramets.add(var);
@@ -375,9 +359,7 @@ public class Parser {
                             state = 6;
                         }
                     }
-                    default -> {
-                        state = 6;
-                    }
+                    default -> state = 6;
                 }
             }
         } catch (Exception e) {
@@ -392,9 +374,8 @@ public class Parser {
         //looks for the constants token.
         // If it finds it, it calls a “processConstants” function that looks for token
         try {
-            if (matchAndRemove(Type.CONSTANT) != null) {
-                processConstants();
-            }
+            processConstants();
+
         } catch (Exception e) {
             System.err.println("Error in Constants - Token expected but not found.");
             throw new RuntimeException(e);
@@ -419,13 +400,14 @@ public class Parser {
             // 3 - ENDLINE
             int state = 0;
             boolean isVar = false;
-            Token name = null;
+            Token name;
 
-            Token number = null;
+            Token number;
             ArrayList<Token> idenList = new ArrayList<>();
             while (state != 4) {
                 switch (state) {
                     case 0 -> {
+                        matchAndRemove(Type.ENDLINE);
                         name = matchAndRemove(Type.IDENTIFIER);
                         if (name != null) {
                             idenList.add(name);
@@ -443,34 +425,25 @@ public class Parser {
                     }
                     case 2 -> {
                         // check if real or int
-                        number = matchAndRemove(Type.INTEGER);
-                        if (number != null) {
-                            // create a VariableNode for each identifier in the list
+                        number = matchAndRemove(Type.NUMBER);
+                        if (isInteger(number)) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(Integer.parseInt(number.getValue())), Type.INTEGER, true);
+                                VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(Integer.parseInt(number.getValue())), Type.INTEGER, false);
                                 consties.add(var);
                             }
-                        }
-                        number = matchAndRemove(Type.REAL);
-                        if (number != null) {
-                            // create a VariableNode for each identifier in the list
+                            idenList.clear();
+                            state = 3;
+                        } else if (isFloat(number)) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), new RealNode(Float.parseFloat(number.getValue())), Type.REAL, true);
+                                VariableNode var = new VariableNode(token.getValue().trim(), new RealNode(Float.parseFloat(number.getValue())), Type.REAL, false);
                                 consties.add(var);
                             }
-                        }
-                        idenList.clear();
-                        state = 0;
-
-                    }
-                    case 3 -> {
-
-                        if (matchAndRemove(Type.ENDLINE) != null) {
-                            // End of variables?
+                            idenList.clear();
                             state = 0;
                         } else {
                             state = 4;
                         }
+
                     }
                     default -> state = 4;
                 }
@@ -485,26 +458,24 @@ public class Parser {
 
     public ArrayList<StatementNode> body() {
         ArrayList<StatementNode> bod = new ArrayList<>();
-        try {
-            if (matchAndRemove(Type.BEGIN) != null) {
-                // while not at the end token, keep adding statements
-                while (matchAndRemove(Type.END) != null) {
-                    StatementNode statement = statement();
-                    if (statement != null) {
-                        bod.add(statement);
-                    }
+
+        if (matchAndRemove(Type.BEGIN) != null) {
+            // while not at the end token, keep adding statements
+            while (matchAndRemove(Type.END) == null) {
+                matchAndRemove(Type.ENDLINE);
+                StatementNode statement = statement();
+                if (statement != null) {
+                    matchAndRemove(Type.ENDLINE);
+                    bod.add(statement);
                 }
             }
-        } catch (Exception e) {
-            System.err.println("Error in body - Token expected but not found.");
-            throw new RuntimeException(e);
+            return bod;
         }
 
-        return bod;
+        return null;
     }
 
     public ArrayList<VariableNode> variables() {
-        // TODO: fix and make sure it outputs a list of variable nodes
        /*
         We then make a Variables function that looks for the variables token.
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
@@ -513,12 +484,6 @@ public class Parser {
         or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
         For each variable, we make a VariableNode like we did for constants.*/
-        // token equal match and remove
-        ArrayList<VariableNode> variables = new ArrayList<>();
-        int state = 0;
-        Token x;
-        ArrayList<VariableNode> constants = new ArrayList<>();
-        // TODO: FIX constants
         // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
         // A,B,C:INT
         //STATES:
@@ -527,6 +492,11 @@ public class Parser {
         // 2 - COLON
         // 3 - INT / REAL / STRING
         // 4 - ENDLINE
+        ArrayList<VariableNode> variables = new ArrayList<>();
+        int state = 0;
+        Token x;
+        ArrayList<VariableNode> constants = new ArrayList<>();
+
         ArrayList<Token> tokens = new ArrayList<>();
         boolean isVar = false;
         int curState = 0;
