@@ -158,7 +158,16 @@ public class Lexer {
                 break;
             case 1: // + or -
                 switch (c) {
-                    case ' ' -> builder.append(c);
+                    case ' ' -> {
+                        if ("+".equals(builder.toString().trim())) {
+                            foundTokState(Type.ADD, "+");
+                        } else if ("-".equals(builder.toString().trim())) {
+                            foundTokState(Type.MINUS, "-");
+                        } else {
+                            System.err.println("Error: Invalid character3 " + c);
+                            throw new RuntimeException("Invalid character3");
+                        }
+                    }
                     case '.' -> {
                         state = 5;
                         builder.append(c);
@@ -168,8 +177,30 @@ public class Lexer {
                         builder.append(c);
                     }
                     default -> {
-                        System.err.println("Error: Invalid character1 " + c);
-                        reportErrorAndClear("Invalid character1");
+                        // EG IDEN + IDEN
+                        switch (c) {
+                            case '+' -> {
+                                foundTok(Type.ADD, "+");
+                            }
+                            case '-' -> {
+                                foundTok(Type.MINUS, "-");
+                            }
+                            case '*' -> {
+                                foundTok(Type.MULTIPLY, "*");
+                            }
+                            case '/' -> {
+                                foundTok(Type.DIVIDE, "/");
+                            }
+                        }
+                        if (reservedWords.containsKey(builder.toString())) {
+                            tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
+                            builder.setLength(0);
+                        } else {
+                            tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
+                            builder.setLength(0);
+                        }
+                        /*System.err.println("Error: Invalid character1 " + c);
+                        reportErrorAndClear("Invalid character1");*/
                     }
                 }
                 break;
@@ -329,11 +360,7 @@ public class Lexer {
                     switch (c) {
                         case ',' -> { // if comma, then foundTok for an identifier and then a comma eg. "idenNAME, "
                             if (notSpaceOrNewLineAndHasLength()) {
-                                if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) {
-                                    foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
-                                } else {
-                                    foundTokState(Type.IDENTIFIER, builder.toString());
-                                }
+                                checkReservedVsIden();
                             }
                             builder.append(c);
                             foundTokState(Type.COMMA, builder.toString());
@@ -373,18 +400,12 @@ public class Lexer {
                             state = 0;
                         }
                         case ';' -> { // if semicolon, then foundTok for an identifier and then a semicolon eg. "idenNAME; "
-                            if (notSpaceOrNewLineAndHasLength()) {
-                                foundTok(Type.IDENTIFIER, builder.toString());
-                            }
+                            checkReservedVsIden();
                             builder.append(c);
                             foundTokState(Type.SEMICOLON, builder.toString());
                         }
                         case ')' -> { // if right bracket, then foundTok for an identifier and then a right bracket eg. "idenNAME) "
-                            if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
-                                foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
-                            } else if (notSpaceOrNewLineAndHasLength()) {
-                                foundTok(Type.IDENTIFIER, builder.toString());
-                            }
+                            checkReservedVsIden();
                             builder.append(c);
                             foundTokState(Type.RPAREN, builder.toString());
 
@@ -403,13 +424,11 @@ public class Lexer {
                 } else {
                     // check for keyword before token is output
                     if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
-                        foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
-                        //check for newline
+                        reservedWordFromBuilder(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
                         EOLfound(c);
                     } else {
                         // if space or newline, then end of word so add to tokens
                         // c : int
-
                         switch (builder.toString()) {
                             case "," ->
                                     foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
@@ -440,14 +459,17 @@ public class Lexer {
                                     foundTokState(Type.EQUAL, builder.toString());
                                 }
                             }
-                            case ";" -> foundTok(Type.SEMICOLON, builder.toString());
+                            case ";" -> {
+                                foundTok(Type.SEMICOLON, builder.toString());
+                            }
                             case "\n" -> EOLfound(c);
                             case ")" -> {
-                                foundTok(Type.RPAREN, builder.toString());
+                                checkReservedVsIden();
+                                foundTokState(Type.RPAREN, builder.toString());
                                 EOLfound(c);
                             }
                             default -> {
-                                foundTok(Type.IDENTIFIER, builder.toString());
+                                foundTokState(Type.IDENTIFIER, builder.toString());
                                 EOLfound(c);
                             }
                         }
@@ -463,6 +485,18 @@ public class Lexer {
 
     }
 
+    private void checkReservedVsIden() {
+        if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+            reservedWordFromBuilder(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
+        } else if (notSpaceOrNewLineAndHasLength()) {
+            foundTok(Type.IDENTIFIER, builder.toString());
+        }
+    }
+
+    private void reservedWordFromBuilder(Type reservedWords, String builder) {
+        foundTokState(reservedWords, builder);
+    }
+
     private void EOLfound(char c) {
         if (c == '\n') {
             builder.append(c);
@@ -471,15 +505,13 @@ public class Lexer {
     }
 
     private void notEmpty(char c) {
-        if (builder.length() > 0) {
-            if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
-                foundTokState(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
-            } else if (notSpaceOrNewLineAndHasLength() && !":".equals(builder.toString())) {
-                foundTok(Type.IDENTIFIER, builder.toString());
-            }
+        if (builder.toString().trim().isEmpty() && c == ':') {
             builder.append(c);
             foundTokState(Type.COLON, builder.toString());
         } else {
+            if (!":".equals(builder.toString())) {
+                checkReservedVsIden();
+            }
             foundTokState(Type.COLON, builder.toString());
         }
     }

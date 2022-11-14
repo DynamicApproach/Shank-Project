@@ -263,6 +263,7 @@ public class Parser {
                     vars = variables();
                 }
                 ArrayList<VariableNode> consta = null;
+                matchAndRemove(Type.ENDLINE);
                 if (matchAndRemove(Type.CONSTANT) != null) {
                     matchAndRemove(Type.ENDLINE);
                     consta = constants();
@@ -317,8 +318,8 @@ public class Parser {
                     }
                     case 1 -> {
                         Token x = matchAndRemove(Type.IDENTIFIER);
-                        idenList.add(x);
                         if (x != null) {
+                            idenList.add(x);
                             state = 2;
                         } else {
                             state = 6;
@@ -346,8 +347,8 @@ public class Parser {
                             for (Token token : idenList) {
                                 ParameterNode var = new ParameterNode(token.getValue().trim(), Type.INTEGER, null, !(isVar));
                                 paramets.add(var);
-                                isVar = false;
                             }
+                            isVar = false;
                             idenList.clear();
                             state = 5;
                         } else {
@@ -371,12 +372,7 @@ public class Parser {
                         if (c != null) {
                             state = 0;
                         } else {
-                            Token d = matchAndRemove(Type.ENDLINE);
-                            if (d != null) {
-                                state = 0;
-                            } else {
-                                state = 6;
-                            }
+                            state = 6;
                         }
                     }
                     default -> {
