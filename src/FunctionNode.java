@@ -65,7 +65,38 @@ public class FunctionNode extends CallableNode {
 
     @Override
     public String toString() {
-        return "FunctionAST{" + "name='" + name + "\n" + ", parameters=" + parameters + "\n" + ", variables=" + variables + "\n" + ",  + constants: " + constant + "\n" + ", body=" + body;
+        String out = "FunctionAST{" + "name='";
+        String outname = name + "\n" + ", parameters=";
+        String param = parameters + "\n";
+        String vars = ", variables=" + variables + "\n" + "";
+        String consts = ",  + constants: " + constant + "\n";
+        String body = ", body=" + printBody() + "\n" + '}';
+        String returnedStr = out;
+        if (name != null) {
+            returnedStr += outname;
+        }
+        if (parameters != null) {
+            returnedStr += param;
+        }
+        if (variables != null) {
+            returnedStr += vars;
+        }
+        if (constant != null) {
+            returnedStr += consts;
+        }
+        if (printBody() != null) {
+            returnedStr += printBody();
+        }
+        return returnedStr;
+
+    }
+
+    private String printBody() {
+        ArrayList<String> toPrint = new ArrayList<>();
+        for (StatementNode statement : body) {
+            toPrint.add(statement.toString());
+        }
+        return toPrint.toString();
     }
 
     public ArrayList<VariableNode> getConstant() {
