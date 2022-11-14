@@ -12,4 +12,9 @@ public class AssignmentNode extends StatementNode {
         this.expression = expression;
     }
 
+    //tostring
+    public String toString() {
+        return target.toString() + " = " + expression.toString();
+    }
+
 }

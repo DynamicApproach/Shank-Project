@@ -472,7 +472,7 @@ public class Parser {
             while (matchAndRemove(Type.END) == null) {
                 matchAndRemove(Type.ENDLINE);
                 StatementNode statement = statement();
-                if (statement != null) {
+                if (statement.toString() != null) {
                     matchAndRemove(Type.ENDLINE);
                     bod.add(statement);
                 }
