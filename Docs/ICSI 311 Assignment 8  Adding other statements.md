@@ -1,4 +1,4 @@
-# Adding Other Statements
+# ICSI 311 Assignment 8 – Adding Other Statements
 
 [Previous Assignment](./ICSI%20311%20Assignment%207%20%20Calling%20Functions%20in%20the%20interpreter.md)
 | [Next Assignment](./ICSI%20311%20Assignment%209%20Adding%20more%20data%20types.md)

@@ -1,4 +1,4 @@
-# Calling Functions In The Interpreter
+# ICSI 311 Assignment 7 – Calling Functions In The Interpreter
 
 [Previous Assignment](./ICSI%20311%20Assignment%206%20%20More%20on%20Functions.md)
 | [Next Assignment](./ICSI%20311%20Assignment%208%20%20Adding%20other%20statements.md)

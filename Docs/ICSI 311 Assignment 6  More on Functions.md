@@ -1,4 +1,4 @@
-# More On Functions
+# ICSI 311 Assignment 6 – More On Functions
 
 [Previous Assignment](./ICSI%20311%20Assignment%205%20%20More%20Statements.md)
 | [Next Assignment](./ICSI%20311%20Assignment%207%20%20Calling%20Functions%20in%20the%20interpreter.md)

@@ -1,4 +1,6 @@
-# Lexer Changes – Words!
+# ICSI 311 Assignment 5 – Function Additions
+
+### Adding words to the lexer!
 
 [Previous Assignment](./ICSI%20311%20Assignment%202%20%20Parser.md)
 | [Next Assignment](./ICSI%20311%20Assignment%204%20Comments%20and%20Assignments.md)

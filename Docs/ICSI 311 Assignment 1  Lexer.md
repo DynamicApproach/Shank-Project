@@ -1,4 +1,7 @@
 # ICSI 311 Assignment 1 – The Lexer
+
+### Introduction
+
 [Previous Assignment](./ICSI%20311%20Assignment%202%20%20Parser.md)
 | [Next Assignment](./ICSI%20311%20Assignment%203%20%20FuctAdditions.md)
 
