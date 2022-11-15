@@ -1,9 +1,11 @@
 # Language Definition of Shank
 
 ------------------------------------------------------------------------------------------------------------------------
+([Comments](#Comments) | [Variables](#Variables) | [Functions](#Functions)
+| [Built-In Functions](#Built-In-Functions) | [Types](#Types) | [Operators](#Operators)
+| [Examples](#Examples))
 
 ## Comments
-
 
 Comments can span multiple lines. They start with (* and end with *)
 Example:
