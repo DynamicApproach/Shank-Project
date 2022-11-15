@@ -33,31 +33,31 @@ There are two types of words that we need to deal with.
 
 One type is reserved words, which we know ahead of time (like “integer” and “float” and
 “variable”).
+1.
+  * For reserved words, we will want to output specific tokens.
+    The other type is words that we don’t know about in advance, like function names or variable
+    names.
 
-* For reserved words, we will want to output specific tokens.
-  The other type is words that we don’t know about in advance, like function names or variable
-  names.
+  * For other words, we will have a generic token (“identifier”).
 
-* For other words, we will have a generic token (“identifier”).
-
-  A super easy way to do this is to make a HashMap  (String, TokenType) of
-  reserved words. When your lexer completes a word, look in the HashMap; if it is in there,
-  create
-  a Token using that TokenType.
-* Otherwise, use the “Identifier” token type.
+    A super easy way to do this is to make a HashMap  (String, TokenType) of
+    reserved words. When your lexer completes a word, look in the HashMap; if it is in there,
+    create
+    a Token using that TokenType.
+  * Otherwise, use the “Identifier” token type.
 
 2)
 
-* Create the token types that we need:
-  Identifier, define, leftParen, rightParen, integer, float, begin, end, semicolon, colon, equal,
-  comma, variables, constants
-* Add integer, real, begin, end, variables, constants to the HashMap with their matching token
-  type.
-* Add the state(s) for “words”. When you find a word, look it up in the hashmap and make a token,
-  as
-  described above.
-* Add comma, colon, equal and semicolon to your lexer as well (these are just
-  characters like plus and minus were).
+  * Create the token types that we need:
+    Identifier, define, leftParen, rightParen, integer, float, begin, end, semicolon, colon, equal,
+    comma, variables, constants
+  * Add integer, real, begin, end, variables, constants to the HashMap with their matching token
+    type.
+  * Add the state(s) for “words”. When you find a word, look it up in the hashmap and make a token,
+    as
+    described above.
+  * Add comma, colon, equal and semicolon to your lexer as well (these are just
+    characters like plus and minus were).
 
 -----------
 
