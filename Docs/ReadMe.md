@@ -1,9 +1,12 @@
 # Language Definition of Shank
 
 ------------------------------------------------------------------------------------------------------------------------
-([Comments](#Comments) | [Variables](#Variables) | [Functions](#Functions)
-| [Built-In Functions](#Built-In-Functions) | [Types](#Types) | [Operators](#Operators)
-| [Examples](#Examples))
+([Comments](#Comments) | [Blocks](#Blocks) | [Variables](#Variables) | [Constants](#Constants)
+| [Types](#Type-limits)
+|  [Functions](#Functions) | [Control Structures and Loops](#control-structures-and-loops)
+| [Loop Examples](#loop-examples)  | [Operators/Comparison](#Operators)
+| [Built-In Functions](#built-in-functions)) | [Overall-Format](#overall-format)
+| [Future](#future))
 
 ## Comments
 
@@ -24,7 +27,7 @@ Example:
 (* this block doesn’t do anything *)
 end`
 
-## Built-in types:
+## Built-in Types
 
 
 * integer (32-bit signed number)
@@ -74,7 +77,9 @@ numberOfCards : integer from 0 to 52
 waterTemperature: real from 0.0 to 100.0
 shortString : string from 0 to 20 (* string has a length limit *)`
 
-## Functions (also known as: Procedures/Methods/Subroutines)
+## Functions
+
+#### (Procedures/Methods/Subroutines)
 
 A function is an (optional) constant section, an (optional) variable section and a block.
 
