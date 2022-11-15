@@ -30,13 +30,13 @@ end`
 ## Built-in Types
 
 
-* integer (32-bit signed number)
-* real (floating point)
-* boolean (constant values: true, false)
-* character (a single number/letter/symbol)
-* string (arbitrarily large string of characters)
-* array of (any of the above)
-* Arrays
+* ###### integer (32-bit signed number)
+* ###### real (floating point)
+* ###### boolean (constant values: true, false)
+* ###### character (a single number/letter/symbol)
+* ###### string (arbitrarily large string of characters)
+* ###### array of (any of the above)
+* ###### Arrays
 
 Arrays are declared much like other variables:
 

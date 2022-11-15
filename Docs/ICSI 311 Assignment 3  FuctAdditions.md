@@ -1,5 +1,8 @@
 # Lexer Changes – Words!
 
+[Previous Assignment](./ICSI%20311%20Assignment%202%20%20Parser.md)
+| [Next Assignment](./ICSI%20311%20Assignment%204%20Comments%20and%20Assignments.md)
+
 We start in the lexer. We will need a new state for “words”.
 
 Be careful about the transition from
@@ -28,7 +31,7 @@ something like this (pseudo-code):
 
 There are two types of words that we need to deal with.
 
-One type is reserved words, which we know ahead of time (like “integer” and “real” and
+One type is reserved words, which we know ahead of time (like “integer” and “float” and
 “variable”).
 
 * For reserved words, we will want to output specific tokens.
@@ -46,7 +49,7 @@ One type is reserved words, which we know ahead of time (like “integer” and 
 2)
 
 * Create the token types that we need:
-  Identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal,
+  Identifier, define, leftParen, rightParen, integer, float, begin, end, semicolon, colon, equal,
   comma, variables, constants
 * Add integer, real, begin, end, variables, constants to the HashMap with their matching token
   type.
@@ -108,7 +111,7 @@ It is just inferred from the value.
   should
   have a name, an “is constant”, an enum for data type (integer and real, for now) and an ASTNode
   for
-  the initial value (which will be a `RealNode` or an `IntNode`, for now).
+  the initial value (which will be a `FloatNode` or an `IntNode`, for now).
 
 Make sure that you add a
 **ToString**() method that prints all of the fields in a readable way – this helps a lot for

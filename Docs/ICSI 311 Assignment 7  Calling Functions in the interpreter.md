@@ -1,3 +1,8 @@
+# Calling Functions In The Interpreter
+
+[Previous Assignment](./ICSI%20311%20Assignment%206%20%20More%20on%20Functions.md)
+| [Next Assignment](./ICSI%20311%20Assignment%208%20%20Adding%20other%20statements.md)
+
 **This assignment is extremely important – (nearly) every assignment after this one uses this one!**
 
 **If you have bugs or missing features in this, you will need to fix them before you can continue on

@@ -1,5 +1,8 @@
 # ICSI 311 Assignment 4 – Comments and Assignments
 
+[Previous Assignment](./ICSI%20311%20Assignment%203%20%20FuctAdditions.md)
+| [Next Assignment](./ICSI%20311%20Assignment%205%20%20More%20Statements.md)
+
 In this assignment, we will add comments and assignment statements. Comments, as you know, are
 ignored by compilers. But that ignoring has to be specifically coded. It doesn’t just happen.
 Assignment statements are of the form:
