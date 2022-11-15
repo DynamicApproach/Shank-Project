@@ -27,6 +27,8 @@ Remember that “var” is the key word that allows us to alter passed in variab
 We need to add an AST node for function calls. This is a new `StatementNode`. A function call has a
 name (of the function) and a list of parameters.
 
+
+
 ----
 
 **A `parameter` needs to be its own ASTNode.**
@@ -68,13 +70,20 @@ So it makes sense to have two different classes with a common base type.
 
 2.[ ] It will have a function name and a list of `VariableNodes` for the parameters – you can move
   this from the existing `functionNode`.
+
 3.[ ]  This class should be abstract.
+
 4.[ ] Then we need to build `BuiltInFunctionNode` and `FunctionNode`.
+
 5.[ ] BuiltInFunctions can do something that user-defined functions cannot (so far) – accept any
   number of
+
 6.[ ] parameters of any type (like read and write do).
+
 7.[ ] This is called **variadic**. C and Java both do this.
+
 8.[ ] Make a `boolean in BuiltInFunctions` to indicate if this built-in is variadic.
+
 9.[ ] FunctionNode needs to now inherit from `CallableNode` and to use the inherited Parameter
   variables.
 
@@ -84,6 +93,21 @@ So it makes sense to have two different classes with a common base type.
 
 Node (parent of) CallableNode (parent of) BuiltInFunctionNode (parent of) FunctionNode AND
 FunctionCallNode
+
+
+------------
+
+#### Note:
+
+functionNode’s parameters have types. It is a good match for variableNode.
+functionCallNode’s parameters have no types. Only names and if it “isVariable”.
+
+ParameterNodes are only used in functionCallNodes, not functionNode.
+
+Why?
+
+- Well, functionNode has type.
+- VariableNodes have types.
 
 -----------------------------------------------------------------------------------------------
 

@@ -1,11 +1,17 @@
-Comments
+# Language Definition of Shank
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Comments
+
 -------------------
+
 Comments can span multiple lines. They start with (* and end with *)
 Example:
 (* This is a comment *)
 
+## Blocks
 
-Blocks
 -------------------
 
 Blocks are one or more statements that are run one after another.
@@ -17,8 +23,8 @@ Example:
 (* this block doesn’t do anything *)
 end`
 
+## Built-in types:
 
-Built-in types:
 -------------------
 
 * integer (32-bit signed number)
@@ -40,8 +46,8 @@ Referencing a variable is done using square brackets:
 `names[0] := “mphipps”
 write names[0]`
 
+## Variables
 
-Variables
 -------------------
 Variable declarations are formed by a list of names, then a “:” and then the data type. A name must
 start with a letter (lower or upper case) and then can have any number of letters and/or numbers.
@@ -50,8 +56,8 @@ variables
 variable1, a, foo9 : integer
 name, address, country : string
 
+## Constants
 
-Constants
 -------------------
 Constants are variables that are set at definition and cannot be changed after definition. They do
 not require a data type since the data type is inferred from the value.
@@ -59,8 +65,8 @@ not require a data type since the data type is inferred from the value.
 myName = “mphipps”
 pi = 3.141`
 
+## Type limits
 
-Type limits
 -------------------
 Types can be limited at declaration time using “from” and “to”. Does not apply to booleans.
 
@@ -71,8 +77,8 @@ numberOfCards : integer from 0 to 52
 waterTemperature: real from 0.0 to 100.0
 shortString : string from 0 to 20 (* string has a length limit *)`
 
+## Functions (also known as: Procedures/Methods/Subroutines)
 
-Functions (also known as: Procedures/Methods/Subroutines)
 -------------------
 A function is an (optional) constant section, an (optional) variable section and a block.
 
@@ -83,7 +89,7 @@ Function parameters are read-only (treated as constant) by default.
 To allow them to be changed, we proceed them by the keyword “var” both in the function declaration
 and in the call to the function.
 
-Example:
+### Example:
 
 `define addTwo(x,y : integer; var sum: integer)
 begin
@@ -108,8 +114,8 @@ can return as many values as you choose.
 
 When the program starts, the function “start” will be called.
 
+## Control structures and Loops
 
-Control structures and Loops
 -------------------
 The only conditional control structure that we support is “if-elsif-else”. Its format is:
 
@@ -117,14 +123,16 @@ The only conditional control structure that we support is “if-elsif-else”. I
 
 Examples:
 
-`if a<5 then
+```
+if a<5 then
 begin
 a := 5
 end
-end if`
+end if
+```
 
-
-`if i mod 15=0 then
+```
+if i mod 15=0 then
 begin
 write “FizzBuzz “
 end
@@ -139,56 +147,70 @@ end
 else
 begin
 write I, “ “
-end`
-
+end
+```
 
 There are three types of loops that we support:
 
-`for integerVariable from value to value
-block`
-
-`while booleanexpression
-block`
-
-`repeat
+```
+for 
+integerVariable from value to value 
 block
-until booleanExpression`
+```
 
+```
+while booleanexpression
+ block
+```
 
-Note:
+```
+repeat
+ block 
+ until booleanExpression
+```
+
+*Note*:
 
 * the control variable in the for loop is not automatically declared – it must be declared
   before the for statement is encountered.
 
-Examples:
+## Examples:
 
-`for i from 1 to 10
+---------------------------
+
+```
+for i from 1 to 10
 begin
 write i
-end`
+end
+```
 
-
-`for j from 10 to 2
+```
+for j from 10 to 2
 begin
 write j
-end`
-`
+end
+```
 
-`while j < 5
+```
+while j < 5
 begin
 j:=j+1
-end`
+end
+```
 
-`repeat
+```
+repeat
 begin
 j:=j-1
 end
-until j = 0`
+until j = 0
+```
 
 Since these are statements, they can be embedded within each other:
 
-
-`if a<5 then
+```
+if a<5 then
 begin
 repeat
 begin
@@ -202,24 +224,24 @@ end
 a := a + 1
 end
 until a=6
-end`
+end
+```
 
+## Operators and comparison
 
-
-
-Operators and comparison
 -------------------
-
-Integers and reals have the following operators: `+,-,*,/, mod`.
+Integers and reals have the following operators: ```+,-,*,/, mod```.
 The order of operations is:
 
 * parenthesis, *,/,mod (left to right), then +,- (also left to right).
 
 Booleans have:
-`not
-and
-or `
-The order of operations is not, and, or.
+
+```
+not   and   or 
+```
+
+The order of operations is `not, and, or.`
 
 Characters have no operators.
 
@@ -231,7 +253,8 @@ Comparison can only take place between the same data types.
 
 = (equals), <> (not equal), <, <=, >, >= (all done from left to right).
 
-Built-in functions
+## Built-in functions
+
 -------------------
 
 I/O Functions
@@ -262,9 +285,12 @@ I/O Functions
 * End var end
 * end = the last index of this array
 
-Overall Format
+## Overall Format
+
 -------------------
-`define start (args : array of string)
+
+```
+define start (args : array of string)
 constants
 pi=3.141
 variables
@@ -273,9 +299,11 @@ begin
 a := 1
 b := 2
 c := 3
-end`
+end
+```
 
-Future:
+## Future:
+
 -------------------
 
 * Enums,
