@@ -404,6 +404,11 @@ public class Lexer {
                             builder.append(c);
                             foundTokState(Type.SEMICOLON, builder.toString());
                         }
+                        case '+' -> { // if plus, then foundTok for an identifier and then a plus eg. "idenNAME+ "
+                            checkReservedVsIden();
+                            builder.append(c);
+                            foundTokState(Type.ADD, builder.toString());
+                        }
                         case ')' -> { // if right bracket, then foundTok for an identifier and then a right bracket eg. "idenNAME) "
                             checkReservedVsIden();
                             builder.append(c);
@@ -432,6 +437,9 @@ public class Lexer {
                         switch (builder.toString()) {
                             case "," ->
                                     foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
+                            case "+" -> {
+                                foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
+                            }
                             case ":" -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                                 // if  input index +1 is = then diff token
                                 // iden : iden
