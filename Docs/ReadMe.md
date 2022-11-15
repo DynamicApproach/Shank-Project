@@ -5,7 +5,7 @@
 | [Types](#Type-limits)
 |  [Functions](#Functions) | [Control Structures and Loops](#control-structures-and-loops)
 | [Loop Examples](#loop-examples)  | [Operators/Comparison](#Operators)
-| [Built-In Functions](#built-in-functions)) | [Overall-Format](#overall-format)
+| [Built-In Functions](#built-in-functions) | [Overall-Format](#overall-format)
 | [Future](#future))
 
 ## Comments
