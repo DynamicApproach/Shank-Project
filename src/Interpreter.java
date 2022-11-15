@@ -28,12 +28,12 @@ public class Interpreter {
             if (statement instanceof FunctionCallNode functionCall) {
                 // If the statement is a function call, implement the process described in the background section,
                 // otherwise we will ignore the statement (for now).
-                // get the function from the hashmap
-                // FunctionNode function = new FunctionNode(stringToFunc.get(functionCall.getName()).toString(), null);
-                // get the parameters from the function call
-                // ArrayList<ParameterNode> parameters = functionCall.getParameters();
-                // create a list of interpreter data types
-                ArrayList<InterpreterDataType> interpreterDataTypes = new ArrayList<>();
+                // We will need to get the function from the hashmap of functions.
+                // We will need to get the parameters from the function call.
+                // We will need to interpret the parameters.
+                // We will need to call InterpretFunction.
+                // We will need to return the result of InterpretFunction.
+
             }
 
         }

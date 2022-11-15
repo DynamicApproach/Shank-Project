@@ -4,9 +4,9 @@ import java.util.ArrayList;
 // A parameter needs to be its own ASTNode because a parameter can be a variable (VariableReferenceNode) or a constant value (an ASTNode).
 public class FunctionCallNode extends StatementNode {
     private String name;
-    private ArrayList<StatementNode> parameters;
+    private ArrayList<ParameterNode> parameters;
 
-    public FunctionCallNode(String name, ArrayList<StatementNode> parameters) {
+    public FunctionCallNode(String name, ArrayList<ParameterNode> parameters) {
         this.name = name;
         this.parameters = parameters;
     }
@@ -15,7 +15,7 @@ public class FunctionCallNode extends StatementNode {
         return name;
     }
 
-    public ArrayList<StatementNode> getParameters() {
+    public ArrayList<ParameterNode> getParameters() {
         return parameters;
     }
 

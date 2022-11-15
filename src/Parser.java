@@ -95,7 +95,7 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
-        // if identifier create variablerefnode
+        // if identifier create variablerefnode/
         Token temp = matchAndRemove(Type.IDENTIFIER);
         return (temp != null) ? new VariableReferenceNode(temp.toString()) : null;
     }
@@ -242,7 +242,7 @@ public class Parser {
                     String nameStr = name.toString();
                 }
                 matchAndRemove(Type.LPAREN);
-                ArrayList<ParameterNode> params = parameters();
+                ArrayList<VariableNode> params = parameters();
                 matchAndRemove(Type.RPAREN);
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<VariableNode> vars = null;
@@ -268,7 +268,7 @@ public class Parser {
         return null;
     }
 
-    private ArrayList<ParameterNode> parameters() {
+    private ArrayList<VariableNode> parameters() {
        /*
         We then make a Variables function that looks for the variables token.
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
@@ -284,7 +284,7 @@ public class Parser {
         // State 4 - INT OR REAL -> 0,5
         // State 5 - SEMI-COLON -> 0
         // State 6 - RPAREN/EOL - end
-        ArrayList<ParameterNode> paramets = new ArrayList<>();
+        ArrayList<VariableNode> paramets = new ArrayList<>();
         try {
             int state = 0;
             boolean isVar = false;
@@ -329,7 +329,7 @@ public class Parser {
                         Token isInt = matchAndRemove(Type.INTEGER);
                         if (isInt != null) {
                             for (Token token : idenList) {
-                                ParameterNode var = new ParameterNode(token.getValue().trim(), Type.INTEGER, null, !(isVar));
+                                VariableNode var = new VariableNode(token.getValue().trim(), null, Type.INTEGER, !(isVar));
                                 paramets.add(var);
                             }
                             isVar = false;
@@ -340,7 +340,7 @@ public class Parser {
                             if (b != null) {
                                 // create a VariableNode for each identifier in the list
                                 for (Token token : idenList) {
-                                    ParameterNode var = new ParameterNode(token.getValue().trim(), Type.REAL, null, !(isVar));
+                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.REAL, !(isVar));
                                     paramets.add(var);
                                     isVar = false;
                                 }
@@ -480,7 +480,7 @@ public class Parser {
             return bod;
         }
 
-        return null;
+        return bod;
     }
 
     public ArrayList<VariableNode> variables() {
@@ -533,6 +533,8 @@ public class Parser {
                         x = matchAndRemove(Type.COLON);
                         if (x != null) {
                             curState = 3;
+                        } else {
+                            curState = 4;
                         }
                     }
                     case 3 -> {
@@ -542,7 +544,7 @@ public class Parser {
                                 constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, isVar));
                             }
                             tokens.clear();
-                            curState = 4;
+                            curState = 1;
                         }
                         x = matchAndRemove(Type.REAL);
                         if (x != null) {
@@ -551,17 +553,17 @@ public class Parser {
                             }
                             // CLEAR LIST
                             tokens.clear();
-                            curState = 4;
+                            curState = 1;
                         }
                     }
                     case 4 -> {
-                        x = matchAndRemove(Type.ENDLINE);
+                        x = matchAndRemove(Type.COMMA);
                         if (x != null) {
-                            curState = 0;
+                            curState = 1;
                         }
                     }
                     case 5 -> System.err.println("Error in processConstants - Invalid state");
-                    default -> curState = 5;
+                    default -> curState = 4;
                 }
             }
         } catch (Exception e) {

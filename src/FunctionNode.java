@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 public class FunctionNode extends CallableNode {
     private String name;
-    private ArrayList<ParameterNode> parameters;
+    private ArrayList<VariableNode> parameters;
     private ArrayList<VariableNode> variables;
-    private ArrayList<StatementNode> body;
     private ArrayList<VariableNode> constant;
+    private ArrayList<StatementNode> body;
 
     public FunctionNode(String name, ArrayList<VariableNode> vars) {
         super(name, vars);
@@ -20,7 +20,7 @@ public class FunctionNode extends CallableNode {
         this.variables = vars;
     }
 
-    public FunctionNode(String value, ArrayList<ParameterNode> params, ArrayList<VariableNode> vars, ArrayList<StatementNode> body) {
+    public FunctionNode(String value, ArrayList<VariableNode> params, ArrayList<VariableNode> vars, ArrayList<StatementNode> body) {
         super(value, vars);
         this.name = value;
         this.parameters = params;
@@ -28,7 +28,7 @@ public class FunctionNode extends CallableNode {
         this.variables = vars;
     }
 
-    public FunctionNode(String value, ArrayList<ParameterNode> params, ArrayList<VariableNode> vars, ArrayList<VariableNode> constant, ArrayList<StatementNode> body) {
+    public FunctionNode(String value, ArrayList<VariableNode> params, ArrayList<VariableNode> vars, ArrayList<VariableNode> constant, ArrayList<StatementNode> body) {
         super(value, vars);
         this.name = value;
         this.parameters = params;
@@ -55,11 +55,11 @@ public class FunctionNode extends CallableNode {
         this.variables = variables;
     }
 
-    public ArrayList<ParameterNode> getParameters() {
+    public ArrayList<VariableNode> getParameters() {
         return parameters;
     }
 
-    public void setParameters(ArrayList<ParameterNode> parameters) {
+    public void setParameters(ArrayList<VariableNode> parameters) {
         this.parameters = parameters;
     }
 
@@ -93,10 +93,13 @@ public class FunctionNode extends CallableNode {
 
     private String printBody() {
         ArrayList<String> toPrint = new ArrayList<>();
-        for (StatementNode statement : body) {
-            toPrint.add(statement.toString());
+        if (body != null) {
+            for (StatementNode statement : body) {
+                toPrint.add(statement.toString());
+            }
+            return toPrint.toString();
         }
-        return toPrint.toString();
+        return null;
     }
 
     public ArrayList<VariableNode> getConstant() {
