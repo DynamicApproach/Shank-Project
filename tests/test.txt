@@ -1,4 +1,4 @@
-define add (x,y:integer, var sum: integer)
+define add (x,y:integer; var sum: integer)
 variables
 	counter : integer
 begin
