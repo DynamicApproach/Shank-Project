@@ -4,7 +4,6 @@
 
 ## Comments
 
--------------------
 
 Comments can span multiple lines. They start with (* and end with *)
 Example:
@@ -12,7 +11,7 @@ Example:
 
 ## Blocks
 
--------------------
+
 
 Blocks are one or more statements that are run one after another.
 
@@ -25,7 +24,6 @@ end`
 
 ## Built-in types:
 
--------------------
 
 * integer (32-bit signed number)
 * real (floating point)
@@ -48,7 +46,6 @@ write names[0]`
 
 ## Variables
 
--------------------
 Variable declarations are formed by a list of names, then a “:” and then the data type. A name must
 start with a letter (lower or upper case) and then can have any number of letters and/or numbers.
 Example:
@@ -58,7 +55,6 @@ name, address, country : string
 
 ## Constants
 
--------------------
 Constants are variables that are set at definition and cannot be changed after definition. They do
 not require a data type since the data type is inferred from the value.
 `constants
@@ -67,7 +63,6 @@ pi = 3.141`
 
 ## Type limits
 
--------------------
 Types can be limited at declaration time using “from” and “to”. Does not apply to booleans.
 
 Example:
@@ -79,7 +74,6 @@ shortString : string from 0 to 20 (* string has a length limit *)`
 
 ## Functions (also known as: Procedures/Methods/Subroutines)
 
--------------------
 A function is an (optional) constant section, an (optional) variable section and a block.
 
 Functions have a name and a set of parameters; this combination must be unique.
@@ -116,12 +110,11 @@ When the program starts, the function “start” will be called.
 
 ## Control structures and Loops
 
--------------------
 The only conditional control structure that we support is “if-elsif-else”. Its format is:
 
-`if booleanExpression then block {elsif booleanExpression then block}[else block]`
+```if booleanExpression then block {elsif booleanExpression then block}[else block]```
 
-Examples:
+#### Examples:
 
 ```
 if a<5 then
@@ -174,7 +167,7 @@ repeat
 * the control variable in the for loop is not automatically declared – it must be declared
   before the for statement is encountered.
 
-## Examples:
+## Loop Examples:
 
 ---------------------------
 
