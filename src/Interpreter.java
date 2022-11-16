@@ -22,17 +22,25 @@ public class Interpreter {
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // InterpretBlock should take the collection of statements and a hashmap of variables.
         // We will loop over the collection of statements.
-        // you are interpreting statements that are part of the function right now the only statement
         // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
         for (StatementNode statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
-                // If the statement is a function call, implement the process described in the background section,
-                // otherwise we will ignore the statement (for now).
-                // We will need to get the function from the hashmap of functions.
-                // We will need to get the parameters from the function call.
-                // We will need to interpret the parameters.
-                // We will need to call InterpretFunction.
-                // We will need to return the result of InterpretFunction.
+                // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
+                // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
+                // Make a collection of values (InterpreterDataType):
+                // if in hashmap of functions, get the built in function
+                // if not, get the user defined function
+                if (Shank.functionNames.containsKey(functionCall.getName())) {
+                    ArrayList<InterpreterDataType> parameters = new ArrayList<>();
+                    for (Node parameter : functionCall.getParameters()) {
+                        //parameters.add();
+                    }
+                    // call the function
+                    //InterpretFunction(function, parameters);
+                } else {
+                    System.err.println("Function not found");
+                }
+
 
             }
 

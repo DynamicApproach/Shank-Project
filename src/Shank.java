@@ -12,11 +12,14 @@ import java.util.List;
  *  parse all lines using the lex method of the Lexer class. If lex throws an exception, you must catch the exception, print that there was an exception. You must
  *  then print each token out (this is a temporary step to show that it works) once the lexing is complete.
  */
+
 public class Shank {
+    public static HashMap<String, CallableNode> functionNames = new HashMap<>();
+
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
-        HashMap<String, CallableNode> functionNames = new HashMap<>();
+
         functionNames.put("read", new Read("read", new ArrayList<>(), false));
         functionNames.put("write", new Write("write", new ArrayList<>(), false));
         functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<>(), false));
