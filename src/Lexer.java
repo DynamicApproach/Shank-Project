@@ -174,7 +174,15 @@ public class Lexer {
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 2;
-                        builder.append(c);
+                        if ("-".equals(builder.toString().trim())) {
+                            foundTok(Type.MINUS, "-");
+                            builder.append(c);
+                        } else if ("+".equals(builder.toString().trim())) {
+                            foundTok(Type.ADD, "+");
+                            builder.append(c);
+                        } else {
+                            builder.append(c);
+                        }
                     }
                     default -> {
                         // EG IDEN + IDEN
