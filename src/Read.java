@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Read extends BuiltInFunctionNode {
     String name;
     ArrayList<FunctionNode> arguments;
-    boolean varadic;
 
     public Read(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);

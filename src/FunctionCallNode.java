@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class FunctionCallNode extends StatementNode {
     private String name;
     private ArrayList<ParameterNode> parameters;
+    private Boolean varadic;
 
-    public FunctionCallNode(String name, ArrayList<ParameterNode> parameters) {
+    public FunctionCallNode(String name, ArrayList<ParameterNode> parameters, Boolean varadic) {
         this.name = name;
         this.parameters = parameters;
+        this.varadic = varadic;
     }
 
     public String getName() {
