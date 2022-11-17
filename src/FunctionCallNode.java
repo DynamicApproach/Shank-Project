@@ -24,4 +24,12 @@ public class FunctionCallNode extends StatementNode {
     public String toString() {
         return name + "(" + parameters + ")";
     }
+
+    public Boolean getVaradic() {
+        return varadic;
+    }
+
+    public void setVaradic(Boolean varadic) {
+        this.varadic = varadic;
+    }
 }
