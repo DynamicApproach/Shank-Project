@@ -19,26 +19,51 @@ public class Interpreter {
     //If the statement is a function call, implement the process described in the background section,
     // otherwise we will ignore the statement (for now).
     // Functions body is a list of statements
+    // InterpretBlock should take the collection of statements and a hashmap of variables.
+    //        // We will loop over the collection of statements.
+    //        // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
+    //        // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
+    //        // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
+    //        // Make a collection of values (InterpreterDataType):
+    //        // if in hashmap of functions, get the built in function
+    //        // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
-        // InterpretBlock should take the collection of statements and a hashmap of variables.
-        // We will loop over the collection of statements.
-        // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
+
         for (StatementNode statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
-                // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
-                // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
-                // Make a collection of values (InterpreterDataType):
-                // if in hashmap of functions, get the built in function
-                // if not, get the user defined function
                 if (Shank.functionNames.containsKey(functionCall.getName())) {
-                    ArrayList<InterpreterDataType> parameters = new ArrayList<>();
-                    for (Node parameter : functionCall.getParameters()) {
-                        //parameters.add();
+                    // is built-in function,
+                    // check if varadic, if not
+                    if (functionCall.getVaradic()) {
+                        // is varadic
+
+                        // make a collection of InterpDataType
+                        functionCall.getParameters().forEach(param -> {
+
+                        });
+                    } else {
+                        // is not varadic
+                        // check if number of parameters matches
+                        if (functionCall.getParameters().size() == stringToFunc.size()) {
+
+                            // make a collection of InterpDataType
+
+                            functionCall.getParameters().forEach(param -> {
+                                // add to collection
+
+                            });
+
+                        } else {
+                            throw new RuntimeException("Number of parameters does not match");
+                        }
                     }
-                    // call the function
-                    //InterpretFunction(function, parameters);
+
+
                 } else {
-                    System.err.println("Function not found");
+                    // not a built-in fuction
+                    // get the function definition
+                    // make sure params match
+                    // make a collection of InterpDataType
                 }
 
 
