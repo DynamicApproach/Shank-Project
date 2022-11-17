@@ -258,6 +258,27 @@ public class Parser {
                 }
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<StatementNode> body = body();
+                if (body == null && consta == null && vars == null) {
+                    return new FunctionNode(name.toString(), params, null, null, null);
+                }
+                if (consta == null && vars == null) {
+                    return new FunctionNode(name.toString(), params, null, null, body);
+                }
+                if (body == null && consta == null) {
+                    return new FunctionNode(name.toString(), params, vars, null, null);
+                }
+                if (body == null && vars == null) {
+                    return new FunctionNode(name.toString(), params, null, consta, null);
+                }
+                if (vars == null) {
+                    return new FunctionNode(name.toString(), params, null, consta, body);
+                }
+                if (body == null) {
+                    return new FunctionNode(name.toString(), params, vars, consta, null);
+                }
+                if (consta == null) {
+                    return new FunctionNode(name.toString(), params, vars, null, body);
+                }
                 return new FunctionNode(name.toString(), params, vars, consta, body);
             }
         } catch (Exception e) {
