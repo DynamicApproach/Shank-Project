@@ -257,33 +257,44 @@ Comparison can only take place between the same data types.
 
 -------------------
 
-I/O Functions
+### I/O Functions
 
-* Read var a, var b, var c (* for example – these are variadic *)
-* Reads (space delimited) values from the user
-* Write a,b,c (* for example – these are variadic *)
-* Writes the values of a,b and c separated by spaces
-* String Functions
-* Left someString, length, var resultString
-* ResultString = first length characters of someString
-* Right someString, length, var resultString
-* ResultString = last length characters of someString
-* Substring someString, index, length, var resultString
-* ResultString = length characters from someString, starting at index
-* Number Functions
-* SquareRoot someFloat, var result
-* Result = square root of someFloat
-* GetRandom var resultInteger
-* resultInteger = some random integer
-* IntegerToReal someInteger, var someReal
-* someReal = someInteger  (so if someInteger = 5, someReal = 5.0)
-* RealToInteger someReal, var someInt
-* someInt = truncate someReal (so if someReal = 5.5, someInt = 5)
-* Array Functions
-* Start var start
-* start = the first index of this array
-* End var end
-* end = the last index of this array
+1. [x] Read var a, var b, var c (* for example – these are variadic *)
+2. [x] Reads (space delimited) values from the user
+3. [x] Write a,b,c (* for example – these are variadic *)
+4. [x] Writes the values of a,b and c separated by spaces
+
+### String Functions
+
+1.[ ] Left someString, length, var resultString
+
+ResultString = first length characters of someString
+
+2.[ ] Right someString, length, var resultString
+
+ResultString = last length characters of someString
+
+3.[ ] Substring someString, index, length, var resultString
+
+ResultString = length characters from someString, starting at index
+
+### Number Functions
+
+1. [x] SquareRoot someFloat, var result
+   Result = square root of someFloat
+2. [x] GetRandom var resultInteger
+   resultInteger = some random integer
+3. [x] IntegerToReal someInteger, var someReal
+   someReal = someInteger  (so if someInteger = 5, someReal = 5.0)
+4. [x] RealToInteger someReal, var someInt
+   someInt = truncate someReal (so if someReal = 5.5, someInt = 5)
+
+### Array Functions
+
+1. [ ] Start var start
+2. [ ] start = the first index of this array
+3. [ ] End var end
+4. [ ] end = the last index of this array
 
 ## Overall Format
 

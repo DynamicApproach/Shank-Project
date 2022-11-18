@@ -61,11 +61,17 @@ little weird – 2+2 seems different from x>2. But, are they? They are both math
 that return a value.
 
 Create a BoolNode like we created `IntNode` and `FloatNode`. Change **Factor**() to return a
-`BoolNode` when
-it finds the true and false tokens. Then merge in from your existing code the boolean operators (
-less than, less than or equal, etc) to ExpressionRightHandSide. Remember that we can’t chain
-booleans like we do addition and subtraction; that is to say 2+3+4 is allowed, but 4>x>9 is not
+`BoolNode` when it finds the true and false tokens.
+
+Then merge in from your existing code the boolean operators (
+less than, less than or equal, etc) to ExpressionRightHandSide.
+Remember that we can’t chain booleans like we do addition and subtraction; that is to say 2+3+4 is
+allowed, but 4>x>9 is not
 allowed.
+
+
+------------------------------------
+
 
 Likewise, create a `CharNode` and a `StringNode` for those data types. Add those to **Factor**() as
 well.
@@ -76,6 +82,9 @@ this allows all sorts of invalid things like:
 
 That is true. But remember that the parser’s job is to build the AST that the user specified. We
 will walk through it to make sure that the types all make sense.
+
+
+--------------------------
 
 ## Semantic Analysis
 
