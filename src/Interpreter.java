@@ -28,7 +28,7 @@ public class Interpreter {
     //        // if in hashmap of functions, get the built in function
     //        // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
-
+        // TODO: INTERPRET BLOCK
         for (StatementNode statement : statements) {
             if (statement instanceof FunctionCallNode functionCall) {
                 if (Shank.functionNames.containsKey(functionCall.getName())) {
@@ -107,6 +107,7 @@ public class Interpreter {
 
     @SuppressWarnings("unused")
     public float Resolve(Node node) {
+        // TODO: Check
         if (node == null) {
             throw new IllegalArgumentException("Node cannot resolve node that's null");
         }

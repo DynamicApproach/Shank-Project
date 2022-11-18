@@ -39,6 +39,8 @@ public class Parser {
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
     public Node expression() {
+
+        // TODO: EXPRESSION MERGE
         Node node = term();
         int a = 0;
         if (node == null) {
@@ -214,7 +216,7 @@ public class Parser {
             if ((matchAndRemove(Type.ELSE) != null) && (matchAndRemove(Type.IF) != null)) {
                 return new IfNode(condition, statements, ifExpression());
             }
-            return new IfNode(condition, statements); // TODO: WTF is this? Double check this.
+            return new IfNode(condition, statements); // TODO:  Double check this.
             // Resulted when ifNode needed to be StatementNode
         }
         return null;
