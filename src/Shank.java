@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Shank {
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
+        // TODO: add string functions
 
         functionNames.put("read", new Read("read", new ArrayList<>(), false));
         functionNames.put("write", new Write("write", new ArrayList<>(), false));
@@ -72,7 +74,10 @@ public class Shank {
                 //functiondef interpret
 
                 System.out.println("Interpreting: ");
-                Interpreter interpreter = new Interpreter();
+                Interpreter interpreter = new Interpreter(functionNames);
+                ArrayList<InterpreterDataType> dataTypes = new ArrayList<>();
+                ArrayList<ParameterNode> parameterNodes = new ArrayList<>();
+                Interpreter.InterpretFunction(new FunctionCallNode("start",parameterNodes,false),dataTypes);
                 //interpreter.printTree(tree);
 
 

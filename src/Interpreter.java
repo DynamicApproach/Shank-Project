@@ -4,15 +4,48 @@ import java.util.HashMap;
 
 @SuppressWarnings("unused")
 public class Interpreter {
-    private static InterpreterDataType InterpretFunction(FunctionNode function, ArrayList<InterpreterDataType> parameters) {
-        // function was just called and have to make the hash map for your local variables and parameters.
-        HashMap<String, InterpreterDataType> stringToFuct = new HashMap<>();
-        for (int i = 0; i < function.getParameters().size(); i++)
-            stringToFuct.put(function.getParameters().get(i).getName(), parameters.get(i));
-        for (int i = 0; i < function.getVariables().size(); i++)
-            stringToFuct.put(function.getVariables().get(i).getName(), parameters.get(i));
+    static HashMap<String , CallableNode> hashmapfuncts;
 
-        return InterpretBlock(function.getBody(), stringToFuct);
+    public Interpreter(HashMap<String, CallableNode> hashmapfuncts ){
+        Interpreter.hashmapfuncts = hashmapfuncts;
+    }
+    public static void InterpretFunction(FunctionCallNode function, ArrayList<InterpreterDataType> parameters) throws Exception {
+        // function was just called and have to make the hash map for your local variables and parameters.
+        HashMap<String, InterpreterDataType> VariableHashMap = new HashMap<>();
+        for (int i = 0; i < function.getParameters().size(); i++)
+            VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
+        if (hashmapfuncts.get(function.getName()) instanceof FunctionNode){
+            FunctionNode no = (FunctionNode) hashmapfuncts.get(function.getName());
+            for(VariableNode var : ((FunctionNode) hashmapfuncts.get(function.getName())).getVariables()){
+                if(var.getValue() instanceof IntegerNode)
+                {
+                    VariableHashMap.put(var.getName(),new IntDataType(var.getValue().toString()));
+                }
+                else if(var.getValue() instanceof FloatNode)
+                {
+                    VariableHashMap.put(var.getName(),new FloatDataType(var.getValue().toString()));
+                }
+                else if(var.getValue() instanceof CharNode)
+                {
+                    VariableHashMap.put(var.getName(),new CharDataType(var.getValue().toString().toCharArray()[0]));
+                }
+                else if(var.getValue() instanceof StringNode)
+                {
+                    VariableHashMap.put(var.getName(),new StringDataType(var.getValue().toString()));
+                }
+                else if(var.getValue() instanceof BooleanNode)
+                {
+                    //This is kinda difficult to implement. Wait until everything else works to implement this.
+//                    VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
+                }
+                else
+                {
+                    throw new Exception("uhh");
+                }
+            }
+        }
+        FunctionNode functionNode = (FunctionNode) hashmapfuncts.get(function.getName());
+        Interpreter.InterpretBlock(functionNode.getBody(),VariableHashMap);
     }
 
     //For now, the only statement type that we will handle is function calls.
@@ -29,68 +62,33 @@ public class Interpreter {
     //        // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // TODO: INTERPRET BLOCK
-        for (StatementNode statement : statements) {
-            if (statement instanceof FunctionCallNode functionCall) {
+        for (StatementNode statement : statements) { // statement is instance of any node
+            if (statement instanceof FunctionCallNode functionCall) { // else function call execute
+                // is it built in? Is in hashmap?
                 if (Shank.functionNames.containsKey(functionCall.getName())) {
-                    // is built-in function,
-                    // check if varadic, if not
-                    if (functionCall.getVaradic()) {
-                        // is varadic
+                    //builtin
+                    FunctionCallNode current;
+                    // check param size of FunctionCall and FunctionNode
+                    // for each param in functioncallnode, check type and create a datatype with the value in the param
+                        // after add all params for each of the data types
+                            // check the passed in params from the functioncallnode matches params required in the functionNode
+                                // if it does, interpretfunction with the types passed in
+                                // iterate over function hashmap
+                }else{
+                    // funcNode
 
-                        // make a collection of InterpDataType
-                        functionCall.getParameters().forEach(param -> {
-                            // Add the constant value or the current value of the variable in the invocation`
-                        });
-
-                        // Now we call the function (either the interpreter or the “execute” of the built-in function),
-                        // passing it our collection.
-
-                        // Finally, we loop over that set of values – the called function might have changed some!
-                        //      For each value, if the called function is variadic or the called function is marked as VAR and
-                        // the invocation is marked as VAR then`
-
-                        // Update the working variable value with the values “passed back” from the function.`
-
-                    } else {
-                        // is not varadic
-                        // check if number of parameters matches
-                        if (functionCall.getParameters().size() == stringToFunc.size()) {
-
-                            // make a collection of InterpDataType
-
-                            functionCall.getParameters().forEach(param -> {
-                                // add to collection
-
-                            });
-
-                        } else {
-                            throw new RuntimeException("Number of parameters does not match");
-                        }
-                    }
-
-
-                } else {
-                    // not a built-in fuction
-                    // get the function definition
-                    // make sure params match
-                    // make a collection of InterpDataType
-                    if (functionCall.getParameters().size() == stringToFunc.size()) {
-
-                        // make a collection of InterpDataType
-
-                        functionCall.getParameters().forEach(param -> {
-                            // add to collection
-
-                        });
-
-                    } else {
-                        throw new RuntimeException("Number of parameters does not match");
-                    }
                 }
+            } else if( statement instanceof ForNode){
 
+            } else if (statement instanceof WhileNode) {
+
+            } else if (statement instanceof RepeatNode) {
+
+            }else if( statement instanceof IfNode){
+
+            }else if (statement instanceof AssignmentNode ) {
 
             }
-
         }
         return null;
     }
@@ -121,6 +119,8 @@ public class Interpreter {
         } else if (node instanceof FloatNode) {
             return ((FloatNode) node).getValue();
         } else if (node instanceof MathOpNode mathOpNode) {
+
+            // TODO: check type of float/int/we
             Float left = Resolve(mathOpNode.getLeft());
             Float right = Resolve(mathOpNode.getRight());
             return switch (mathOpNode.getOp()) {
