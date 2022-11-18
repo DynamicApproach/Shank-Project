@@ -63,7 +63,6 @@ public class Lexer {
         reservedWords.put("LEFTPAREN", Type.LPAREN);
         reservedWords.put("RIGHTPAREN", Type.RPAREN);
         reservedWords.put("INTEGER", Type.INTEGER);
-        reservedWords.put("REAL", Type.REAL);
         reservedWords.put("BEGIN", Type.BEGIN);
         reservedWords.put("END", Type.END);
         reservedWords.put("SEMICOLON", Type.SEMICOLON);
@@ -187,26 +186,13 @@ public class Lexer {
                     default -> {
                         // EG IDEN + IDEN
                         switch (c) {
-                            case '+' -> {
-                                foundTok(Type.ADD, "+");
-                            }
-                            case '-' -> {
-                                foundTok(Type.MINUS, "-");
-                            }
-                            case '*' -> {
-                                foundTok(Type.MULTIPLY, "*");
-                            }
-                            case '/' -> {
-                                foundTok(Type.DIVIDE, "/");
-                            }
+                            case '+' -> foundTok(Type.ADD, "+");
+                            case '-' -> foundTok(Type.MINUS, "-");
+                            case '*' -> foundTok(Type.MULTIPLY, "*");
+                            case '/' -> foundTok(Type.DIVIDE, "/");
                         }
-                        if (reservedWords.containsKey(builder.toString())) {
-                            tokens.add(new Token(reservedWords.get(builder.toString()), builder.toString()));
-                            builder.setLength(0);
-                        } else {
-                            tokens.add(new Token(Type.IDENTIFIER, builder.toString()));
-                            builder.setLength(0);
-                        }
+                        tokens.add(new Token(reservedWords.getOrDefault(builder.toString(), Type.IDENTIFIER), builder.toString()));
+                        builder.setLength(0);
                         /*System.err.println("Error: Invalid character1 " + c);
                         reportErrorAndClear("Invalid character1");*/
                     }
@@ -358,9 +344,7 @@ public class Lexer {
                         builder.append(c);
                     }
                     case ' ' -> builder.append(c);
-                    default -> {
-                        foundTokState(Type.NUMBER, builder.toString());
-                    }
+                    default -> foundTokState(Type.NUMBER, builder.toString());
                 }
             case 6:
                 // if not space or newline, then add to builder
@@ -373,6 +357,37 @@ public class Lexer {
                             builder.append(c);
                             foundTokState(Type.COMMA, builder.toString());
                         }
+                        case '<' ->{
+                            if(input.charAt(index) == '='){
+                              // less than or equal
+                                builder.append(c);
+                                builder.append('=');
+                                skip = true;
+                                foundTokState(Type.LESS_EQUAL , builder.toString());
+                            } else if (input.charAt(index) == '>') {
+                                // not
+                                builder.append(c);
+                                builder.append('>');
+                                skip = true;
+                                foundTokState(Type.NOT_EQUAL , builder.toString());
+                            }
+                            // less
+                            builder.append(c);
+                            foundTokState(Type.LESS, builder.toString());
+                        }
+                        case '>' -> {
+                            if(input.charAt(index) == '='){
+                                // less than or equal
+                                builder.append(c);
+                                builder.append('=');
+                                skip = true;
+                                foundTokState(Type.GREATER_EQUAL , builder.toString());
+                            }
+                            // less
+                            builder.append(c);
+                            foundTokState(Type.LESS, builder.toString());
+                        }
+
                         case ':' -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                             // if  input index +1 is = then diff token
                             if (input.toCharArray().length > index && input.charAt(index) == '=' && notSpaceOrNewLineAndHasLength()) {
@@ -443,11 +458,8 @@ public class Lexer {
                         // if space or newline, then end of word so add to tokens
                         // c : int
                         switch (builder.toString()) {
-                            case "," ->
-                                    foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
-                            case "+" -> {
-                                foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
-                            }
+                            case "," -> foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
+                            case "+" -> foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
                             case ":" -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                                 // if  input index +1 is = then diff token
                                 // iden : iden
@@ -466,6 +478,11 @@ public class Lexer {
                                     notEmpty(c);
                                 }
                             }
+                            // '< '
+                            case "<" -> foundTokState(Type.LESS, builder.toString());
+                            case "<>" -> foundTokState(Type.NOT_EQUAL, builder.toString());
+                            case "<=" -> foundTokState(Type.LESS_EQUAL, builder.toString());
+                            case ">=" -> foundTokState(Type.GREATER_EQUAL, builder.toString());
                             case "=" -> { // if equals, then foundTok for a equals eg. "= "
                                 if (builder.length() > 0 && ":".equals(builder.toString())) {
                                     builder.append(c);
@@ -475,15 +492,14 @@ public class Lexer {
                                     foundTokState(Type.EQUAL, builder.toString());
                                 }
                             }
-                            case ";" -> {
-                                foundTok(Type.SEMICOLON, builder.toString());
-                            }
+                            case ";" -> foundTok(Type.SEMICOLON, builder.toString());
                             case "\n" -> EOLfound(c);
                             case ")" -> {
                                 checkReservedVsIden();
                                 foundTokState(Type.RPAREN, builder.toString());
                                 EOLfound(c);
                             }
+                            case ">" -> foundTokState(Type.GREATER, builder.toString());
                             default -> {
                                 foundTokState(Type.IDENTIFIER, builder.toString());
                                 EOLfound(c);
@@ -521,16 +537,13 @@ public class Lexer {
     }
 
     private void notEmpty(char c) {
-        if (builder.toString().trim().isEmpty() && c == ':') {
-            builder.append(c);
-            foundTokState(Type.COLON, builder.toString());
-        } else {
+        if (!builder.toString().trim().isEmpty() || c != ':') {
             if (!":".equals(builder.toString())) {
                 checkReservedVsIden();
             }
-            builder.append(c);
-            foundTokState(Type.COLON, builder.toString());
         }
+        builder.append(c);
+        foundTokState(Type.COLON, builder.toString());
     }
 
     private boolean notSpaceOrNewLineAndHasLength() {
