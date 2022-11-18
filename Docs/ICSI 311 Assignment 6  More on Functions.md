@@ -85,7 +85,7 @@ So it makes sense to have two different classes with a common base type.
 
 7.[ ] This is called **variadic**. C and Java both do this.
 
-8.[ ] Make a `boolean in BuiltInFunctions` to indicate if this built-in is variadic.
+8.[ ] Make a boolean in `BuiltInFunction` to indicate if this built-in is variadic.
 
 9.[ ] FunctionNode needs to now inherit from `CallableNode` and to use the inherited Parameter
   variables.
