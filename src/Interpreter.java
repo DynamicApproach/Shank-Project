@@ -105,6 +105,11 @@ public class Interpreter {
 
     }
 
+    public boolean EvalBooleanExpression(BooleanExpressionNode boolNode){
+        //TODO: EvalBoolExpression - Assign 8
+        return false;
+    }
+
     @SuppressWarnings("unused")
     public float Resolve(Node node) {
         // TODO: Check
