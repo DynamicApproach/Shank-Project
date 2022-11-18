@@ -96,9 +96,9 @@ enum Type { // Token symbol types
             return "RBRACKET";
         }
     } // ]
-    , REAL {
+    , FLOAT {
         public String toString() {
-            return "REAL";
+            return "FLOAT";
         }
     }, RPAREN {
         public String toString() {

@@ -357,11 +357,11 @@ public class Parser {
                             idenList.clear();
                             state = 5;
                         } else {
-                            Token b = matchAndRemove(Type.REAL);
+                            Token b = matchAndRemove(Type.FLOAT);
                             if (b != null) {
                                 // create a VariableNode for each identifier in the list
                                 for (Token token : idenList) {
-                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.REAL, !(isVar));
+                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.FLOAT, !(isVar));
                                     paramets.add(var);
                                     isVar = false;
                                 }
@@ -455,7 +455,7 @@ public class Parser {
                             state = 3;
                         } else if (isFloat(number)) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), new RealNode(Float.parseFloat(number.getValue())), Type.REAL, false);
+                                VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(Float.parseFloat(number.getValue())), Type.FLOAT, false);
                                 consties.add(var);
                             }
                             idenList.clear();
@@ -567,10 +567,10 @@ public class Parser {
                             tokens.clear();
                             curState = 1;
                         }
-                        x = matchAndRemove(Type.REAL);
+                        x = matchAndRemove(Type.FLOAT);
                         if (x != null) {
                             for (Token t : tokens) {
-                                constants.add(new VariableNode(t.getValue(), null, Type.REAL, isVar));
+                                constants.add(new VariableNode(t.getValue(), null, Type.FLOAT, isVar));
                             }
                             // CLEAR LIST
                             tokens.clear();
