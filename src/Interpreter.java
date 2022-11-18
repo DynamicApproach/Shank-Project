@@ -39,8 +39,18 @@ public class Interpreter {
 
                         // make a collection of InterpDataType
                         functionCall.getParameters().forEach(param -> {
-
+                            // Add the constant value or the current value of the variable in the invocation`
                         });
+
+                        // Now we call the function (either the interpreter or the “execute” of the built-in function),
+                        // passing it our collection.
+
+                        // Finally, we loop over that set of values – the called function might have changed some!
+                        //      For each value, if the called function is variadic or the called function is marked as VAR and
+                        // the invocation is marked as VAR then`
+
+                        // Update the working variable value with the values “passed back” from the function.`
+
                     } else {
                         // is not varadic
                         // check if number of parameters matches
@@ -64,6 +74,18 @@ public class Interpreter {
                     // get the function definition
                     // make sure params match
                     // make a collection of InterpDataType
+                    if (functionCall.getParameters().size() == stringToFunc.size()) {
+
+                        // make a collection of InterpDataType
+
+                        functionCall.getParameters().forEach(param -> {
+                            // add to collection
+
+                        });
+
+                    } else {
+                        throw new RuntimeException("Number of parameters does not match");
+                    }
                 }
 
 
@@ -86,7 +108,7 @@ public class Interpreter {
     @SuppressWarnings("unused")
     public float Resolve(Node node) {
         if (node == null) {
-            throw new IllegalArgumentException("Node cannot be null");
+            throw new IllegalArgumentException("Node cannot resolve node that's null");
         }
         if (node instanceof IntegerNode) {
             return ((IntegerNode) node).getValue();

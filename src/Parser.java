@@ -95,6 +95,17 @@ public class Parser {
             tokens.remove(0);
             return floatNode;
         }
+        if (peek(0).getType() == Type.TRUE) {
+            return new BooleanNode(true);
+        } else if (peek(0).getType() == Type.FALSE) {
+            return new BooleanNode(false);
+        }
+        if (peek(0).getType() == Type.CHAR) {
+            return new CharNode(peek(0).getValue().charAt(0));
+        }
+        if (peek(0).getType() == Type.STRING) {
+            return new StringNode(peek(0).getValue());
+        }
         // if identifier create variablerefnode/
         Token temp = matchAndRemove(Type.IDENTIFIER);
         return (temp != null) ? new VariableReferenceNode(temp.toString()) : null;
@@ -165,15 +176,16 @@ public class Parser {
 
     public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
-        BooleanExpressionNode node;
+        BooleanExpressionNode node = null;
         try {
-            Type token = peek(0).getType();
-            matchAndRemove(token);
-            node = new BooleanExpressionNode(expression(), token, expression());
+            Type token = peek(1).getType();
+            if (token == Type.IF)
+                node = new BooleanExpressionNode(expression(), token, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e);
-        } // TODO: CHECK WITH PROF
+        } // TODO: Ask about moving into expression method
+
         return node;
     }
 

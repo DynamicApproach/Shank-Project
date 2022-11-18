@@ -20,6 +20,6 @@ public class IfNode extends StatementNode {
 
     @Override
     public String toString() {
-        return null;
+        return booleanExpression.toString() + " " + statementNodes.toString() + " " + (ifNode != null ? ifNode.toString() : "");
     }
 }

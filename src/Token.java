@@ -109,8 +109,39 @@ enum Type { // Token symbol types
         public String toString() {
             return "SEMICOLON";
         }
-    },
-
+    }, TRUE {
+        public String toString() {
+            return "TRUE";
+        }
+    }, SINGLEQUOTE {
+        public String toString() {
+            return "SINGLEQUOTE";
+        }
+    }, DOUBLEQUOTE {
+        public String toString() {
+            return "DOUBLEQUOTE";
+        }
+    }, CHARCONTENTS {
+        public String toString() {
+            return "CHARCONTENTS";
+        }
+    }, STRINGCONTENTS {
+        public String toString() {
+            return "STRINGCONTENTS";
+        }
+    }, STRING {
+        public String toString() {
+            return "STRING";
+        }
+    }, CHAR {
+        public String toString() {
+            return "CHAR";
+        }
+    }, FALSE {
+        public String toString() {
+            return "FALSE";
+        }
+    }, // false
     SPACE {
         public String toString() {
             return "SPACE";
@@ -230,7 +261,7 @@ public class Token {
         } else if (type == Type.ENDLINE) {
             return type + "(" + value.replace("\n", "\\n") + ")";
         } else {
-            return type + "(" + value + ")";
+            return type + "(" + value + ")   ";
         }
     }
 }
