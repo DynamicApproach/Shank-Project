@@ -21,12 +21,12 @@ public class Shank {
         long startTime = System.currentTimeMillis();
         // TODO: add string functions
 
-        functionNames.put("read", new Read("read", new ArrayList<>(), false));
-        functionNames.put("write", new Write("write", new ArrayList<>(), false));
+        functionNames.put("Read", new Read("Read", new ArrayList<>(), false));
+        functionNames.put("Write", new Write("Write", new ArrayList<>(), false));
         functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<>(), false));
-        functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<>(), false));
-        functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<>(), false));
-        functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<>(), false));
+        functionNames.put("GetRandom", new GetRandom("GetRandom", new ArrayList<>(), false));
+        functionNames.put("InttoReal", new IntegerToReal("InttoReal", new ArrayList<>(), false));
+        functionNames.put("RealtoInt", new RealToInteger("RealtoInt", new ArrayList<>(), false));
         ArrayList<Token> tokens = new ArrayList<>(10000);
         if (args.length == 1) {
             try {

@@ -82,10 +82,12 @@ public class Lexer {
         reservedWords.put("TO", Type.TO);
         reservedWords.put("WHILE", Type.WHILE);
         reservedWords.put("REPEAT", Type.REPEAT);
+        reservedWords.put("REAL", Type.FLOAT);
         reservedWords.put("UNTIL", Type.UNTIL);
         reservedWords.put("MOD", Type.MOD);
         reservedWords.put("VAR", Type.VAR);
         reservedWords.put("DO", Type.DO);
+
     }
 
     @SuppressWarnings("unused")
@@ -357,31 +359,31 @@ public class Lexer {
                             builder.append(c);
                             foundTokState(Type.COMMA, builder.toString());
                         }
-                        case '<' ->{
-                            if(input.charAt(index) == '='){
-                              // less than or equal
+                        case '<' -> {
+                            if (input.charAt(index) == '=') {
+                                // less than or equal
                                 builder.append(c);
                                 builder.append('=');
                                 skip = true;
-                                foundTokState(Type.LESS_EQUAL , builder.toString());
+                                foundTokState(Type.LESS_EQUAL, builder.toString());
                             } else if (input.charAt(index) == '>') {
                                 // not
                                 builder.append(c);
                                 builder.append('>');
                                 skip = true;
-                                foundTokState(Type.NOT_EQUAL , builder.toString());
+                                foundTokState(Type.NOT_EQUAL, builder.toString());
                             }
                             // less
                             builder.append(c);
                             foundTokState(Type.LESS, builder.toString());
                         }
                         case '>' -> {
-                            if(input.charAt(index) == '='){
+                            if (input.charAt(index) == '=') {
                                 // less than or equal
                                 builder.append(c);
                                 builder.append('=');
                                 skip = true;
-                                foundTokState(Type.GREATER_EQUAL , builder.toString());
+                                foundTokState(Type.GREATER_EQUAL, builder.toString());
                             }
                             // less
                             builder.append(c);
@@ -458,8 +460,10 @@ public class Lexer {
                         // if space or newline, then end of word so add to tokens
                         // c : int
                         switch (builder.toString()) {
-                            case "," -> foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
-                            case "+" -> foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
+                            case "," ->
+                                    foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
+                            case "+" ->
+                                    foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
                             case ":" -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
                                 // if  input index +1 is = then diff token
                                 // iden : iden
