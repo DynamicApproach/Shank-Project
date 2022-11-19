@@ -195,8 +195,6 @@ public class Lexer {
                         }
                         tokens.add(new Token(reservedWords.getOrDefault(builder.toString(), Type.IDENTIFIER), builder.toString()));
                         builder.setLength(0);
-                        /*System.err.println("Error: Invalid character1 " + c);
-                        reportErrorAndClear("Invalid character1");*/
                     }
                 }
                 break;
@@ -326,9 +324,6 @@ public class Lexer {
                     default -> {
                         foundTokState(Type.NUMBER, builder.toString());
                         builder.append(c);
-                       /* System.err.println("Error: Invalid character4 " + c);
-                        System.err.println("\ninput: " + input);
-                        reportErrorAndClear("Invalid character4");*/
                     }
                 }
                 break;
@@ -352,7 +347,7 @@ public class Lexer {
                 // if not space or newline, then add to builder
                 if (c != ' ' && c != '\n') {
                     switch (c) {
-                        case ',' -> { // if comma, then foundTok for an identifier and then a comma eg. "idenNAME, "
+                        case ',' -> { // if comma, then foundTok for an identifier and then a comma e.g. "idenNAME, "
                             if (notSpaceOrNewLineAndHasLength()) {
                                 checkReservedVsIden();
                             }
@@ -390,7 +385,7 @@ public class Lexer {
                             foundTokState(Type.LESS, builder.toString());
                         }
 
-                        case ':' -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
+                        case ':' -> { // if colon, then foundTok for an identifier and then a colon e.g. "idenNAME: "
                             // if  input index +1 is = then diff token
                             if (input.toCharArray().length > index && input.charAt(index) == '=' && notSpaceOrNewLineAndHasLength()) {
                                 // eg. "idenNAME:="
@@ -409,13 +404,13 @@ public class Lexer {
                         }
                         case '=' -> {
                             if (notSpaceOrNewLineAndHasLength()) {
-                                // if equals, with a : before it, then foundTok for an identifier and then a assign eg. "idenNAME:= "
+                                // if equals, with a : before it, then foundTok for an identifier and then A assign e.g. "idenNAME:= "
                                 //if builder has colon then assign
                                 if (":".equals(builder.toString())) {
                                     builder.append(c);
                                     foundTokState(Type.ASSIGN, builder.toString());
                                     skip = true;
-                                } else { // else foundTok for an identifier and then a equals eg. "idenNAME= "
+                                } else { // else foundTok for an identifier and then A equals e.g. "idenNAME= "
                                     foundTok(Type.IDENTIFIER, builder.toString());
                                     builder.append(c);
                                     foundTokState(Type.EQUAL, builder.toString());
@@ -424,23 +419,13 @@ public class Lexer {
                             builder.setLength(0);
                             state = 0;
                         }
-                        case ';' -> { // if semicolon, then foundTok for an identifier and then a semicolon eg. "idenNAME; "
-                            checkReservedVsIden();
-                            builder.append(c);
-                            foundTokState(Type.SEMICOLON, builder.toString());
-                        }
-                        case '+' -> { // if plus, then foundTok for an identifier and then a plus eg. "idenNAME+ "
-                            checkReservedVsIden();
-                            builder.append(c);
-                            foundTokState(Type.ADD, builder.toString());
-                        }
-                        case ')' -> { // if right bracket, then foundTok for an identifier and then a right bracket eg. "idenNAME) "
-                            checkReservedVsIden();
-                            builder.append(c);
-                            foundTokState(Type.RPAREN, builder.toString());
-
-                        }
-                        case '(' -> { // if left bracket, then foundTok for an identifier and then a left bracket eg. "functionNAME( "
+                        // if semicolon, then foundTok for an identifier and then a semicolon e.g. "idenNAME; "
+                        case ';' -> checkReservedAndState(c, Type.SEMICOLON);
+                        // if plus, then foundTok for an identifier and then a plus e.g. "idenNAME+ "
+                        case '+' -> checkReservedAndState(c, Type.ADD);
+                        // if right bracket, then foundTok for an identifier and then a right bracket e.g. "idenNAME) "
+                        case ')' -> checkReservedAndState(c, Type.RPAREN);
+                        case '(' -> { // if left bracket, then foundTok for an identifier and then a left bracket e.g. "functionNAME( "
                             if (notSpaceOrNewLineAndHasLength()) {
                                 foundTok(Type.IDENTIFIER, builder.toString());
                             }
@@ -453,7 +438,7 @@ public class Lexer {
 
                 } else {
                     // check for keyword before token is output
-                    if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+                    if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word e.g. "BEGIN "
                         reservedWordFromBuilder(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
                         EOLfound(c);
                     } else {
@@ -461,10 +446,10 @@ public class Lexer {
                         // c : int
                         switch (builder.toString()) {
                             case "," ->
-                                    foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma eg. ", "
+                                    foundTokState(Type.COMMA, builder.toString()); // if comma, then foundTok for a comma e.g. ", "
                             case "+" ->
-                                    foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus eg. "+ "
-                            case ":" -> { // if colon, then foundTok for an identifier and then a colon eg. "idenNAME: "
+                                    foundTokState(Type.ADD, builder.toString()); // if plus, then foundTok for a plus e.g. "+ "
+                            case ":" -> { // if colon, then foundTok for an identifier and then a colon e.g. "idenNAME: "
                                 // if  input index +1 is = then diff token
                                 // iden : iden
                                 if (input.toCharArray().length > index && input.charAt(index) == '=' && notSpaceOrNewLineAndHasLength()) {
@@ -498,7 +483,7 @@ public class Lexer {
                             }
                             case ";" -> foundTok(Type.SEMICOLON, builder.toString());
                             case "\n" -> EOLfound(c);
-                            case ")" -> {
+                            case ")" -> { // if right bracket, then foundTok for an identifier and then a right bracket e.g. "idenNAME) "
                                 checkReservedVsIden();
                                 foundTokState(Type.RPAREN, builder.toString());
                                 EOLfound(c);
@@ -521,8 +506,14 @@ public class Lexer {
 
     }
 
+    private void checkReservedAndState(char c, Type type) {
+        checkReservedVsIden();
+        builder.append(c);
+        foundTokState(type, builder.toString());
+    }
+
     private void checkReservedVsIden() {
-        if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word eg. "BEGIN "
+        if (reservedWords.containsKey(builder.toString().trim().toUpperCase())) { // if reserved word, then foundTok for a reserved word e.g. "BEGIN "
             reservedWordFromBuilder(reservedWords.get(builder.toString().trim().toUpperCase()), builder.toString().trim().toUpperCase());
         } else if (notSpaceOrNewLineAndHasLength()) {
             foundTok(Type.IDENTIFIER, builder.toString());
