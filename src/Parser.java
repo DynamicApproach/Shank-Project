@@ -217,7 +217,6 @@ public class Parser {
                 return new IfNode(condition, statements, ifExpression());
             }
             return new IfNode(condition, statements); // TODO:  Double check this.
-            // Resulted when ifNode needed to be StatementNode
         }
         return null;
     }
@@ -240,7 +239,7 @@ public class Parser {
         return null;
     }
 
-    public FunctionNode functionDefinition() {
+    public ArrayList<FunctionNode> functionDefinition() {
         /*
             It looks for “define”.
             If it finds that token, it starts building a functionAST node .
@@ -249,8 +248,9 @@ public class Parser {
             We then call the Constants, then Variables, then Body function from below.
             name, (, params, ), constants, variables, body
         */
+        ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
-            if (matchAndRemove(Type.DEFINE) != null) {
+            while (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 if (name.toString() != null) {
                     String nameStr = name.toString();
@@ -273,34 +273,28 @@ public class Parser {
                 matchAndRemove(Type.ENDLINE);
                 ArrayList<StatementNode> body = body();
                 if (body == null && consta == null && vars == null) {
-                    return new FunctionNode(name.toString(), params, null, null, null);
+                    functions.add(new FunctionNode(name.toString(), params, null, null, null));
+                } else if (consta == null && vars == null) {
+                    functions.add(new FunctionNode(name.toString(), params, null, null, body));
+                } else if (body == null && consta == null) {
+                    functions.add(new FunctionNode(name.toString(), params, vars, null, null));
+                } else if (body == null && vars == null) {
+                    functions.add(new FunctionNode(name.toString(), params, null, consta, null));
+                } else if (vars == null) {
+                    functions.add(new FunctionNode(name.toString(), params, null, consta, body));
+                } else if (body == null) {
+                    functions.add(new FunctionNode(name.toString(), params, vars, consta, null));
+                } else if (consta == null) {
+                    functions.add(new FunctionNode(name.toString(), params, vars, null, body));
+                } else {
+                    functions.add(new FunctionNode(name.toString(), params, vars, consta, body));
                 }
-                if (consta == null && vars == null) {
-                    return new FunctionNode(name.toString(), params, null, null, body);
-                }
-                if (body == null && consta == null) {
-                    return new FunctionNode(name.toString(), params, vars, null, null);
-                }
-                if (body == null && vars == null) {
-                    return new FunctionNode(name.toString(), params, null, consta, null);
-                }
-                if (vars == null) {
-                    return new FunctionNode(name.toString(), params, null, consta, body);
-                }
-                if (body == null) {
-                    return new FunctionNode(name.toString(), params, vars, consta, null);
-                }
-                if (consta == null) {
-                    return new FunctionNode(name.toString(), params, vars, null, body);
-                }
-                return new FunctionNode(name.toString(), params, vars, consta, body);
             }
+            return functions;
         } catch (Exception e) {
             System.err.println("Error in FunctionDefinition");
             throw new RuntimeException(e);
         }
-        System.err.println("Error in FunctionDefinition - returned null?");
-        return null;
     }
 
     private ArrayList<VariableNode> parameters() {

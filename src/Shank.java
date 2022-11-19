@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -61,9 +60,11 @@ public class Shank {
                 Parser parsed = new Parser(tokens);
 
                 // for each line of tokens, parse it
-                FunctionNode node = parsed.functionDefinition();
+                ArrayList<FunctionNode> node = parsed.functionDefinition();
                 // add function node to hashmap
-                functionNames.put(node.getName(), node);
+                for (FunctionNode functionNode : node) {
+                    functionNames.put(functionNode.getName(), functionNode);
+                }
 
 
                 // print out the function
@@ -77,7 +78,7 @@ public class Shank {
                 Interpreter interpreter = new Interpreter(functionNames);
                 ArrayList<InterpreterDataType> dataTypes = new ArrayList<>();
                 ArrayList<ParameterNode> parameterNodes = new ArrayList<>();
-                Interpreter.InterpretFunction(new FunctionCallNode("start",parameterNodes,false),dataTypes);
+                Interpreter.InterpretFunction(new FunctionCallNode("start", parameterNodes, false), dataTypes);
                 //interpreter.printTree(tree);
 
 
