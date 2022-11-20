@@ -22,4 +22,16 @@ public class IfNode extends StatementNode {
     public String toString() {
         return booleanExpression.toString() + " " + statementNodes.toString() + " " + (ifNode != null ? ifNode.toString() : "");
     }
+
+    public void setElseStatements(ArrayList<StatementNode> statements) {
+        if (ifNode != null) {
+            ifNode.setStatements(statements);
+        } else {
+            this.ifNode = new IfNode(null, statements);
+        }
+    }
+
+    public void setStatements(ArrayList<StatementNode> statements) {
+        this.statementNodes = statements;
+    }
 }

@@ -35,7 +35,11 @@ public class Parser {
         }
     }
 
-    // TODO: remove endlines in a row
+    public void removeEndlines() {
+        while (tokens.get(0).getType() == Type.ENDLINE) {
+            tokens.remove(0);
+        }
+    }
 
     // expression, term, factor methods
     // Expression is the highest level of the grammar
@@ -149,18 +153,27 @@ public class Parser {
     public ArrayList<StatementNode> statements() {
         ArrayList<StatementNode> statements = new ArrayList<>();
         matchAndRemove(Type.BEGIN);
-        matchAndRemove(Type.ENDLINE);
+        removeEndlines();
         while (peek(0).getType() != Type.END) {
             statements.add(statement());
         }
         matchAndRemove(Type.END);
-        matchAndRemove(Type.ENDLINE);
+        removeEndlines();
         return statements;
     }
 
     public StatementNode statement() {
-        // TODO: Call assignment if null call while
-        return assignment();
+        // TODO: Call assignment if null call while if null call if
+        if (assignment() != null) {
+            return assignment();
+        } else if (whileExpression() != null) {
+            return whileExpression();
+        } else if (ifExpression() != null) {
+            return ifExpression();
+        } else if (forExpression() != null) {
+            return forExpression();
+        }
+        return null;
     }
 
     public AssignmentNode assignment() {
@@ -169,7 +182,7 @@ public class Parser {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
             Node value = expression();
-            matchAndRemove(Type.ENDLINE);
+            removeEndlines();
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
         return null;
@@ -210,16 +223,34 @@ public class Parser {
     // need to chain ifNode together -> ifNode(cond, statements, ifNode)
     public IfNode ifExpression() {
         // if booleanExpression then statements (if booleanExpression then statements)* end
-        if (peek(0).getType() == Type.IF) {
-            matchAndRemove(Type.IF);
+        // check for if or else if or else
+        if (matchAndRemove(Type.IF) != null) {
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = statements();
-            if ((matchAndRemove(Type.ELSE) != null) || (matchAndRemove(Type.ELSIF) != null)) {
-                return new IfNode(condition, statements, ifExpression());
+            IfNode ifNode = new IfNode(condition, statements);
+            if (peek(0).getType() == Type.ELSE) {
+                matchAndRemove(Type.ELSE);
+                ifNode.setElseStatements(statements());
             }
-            return new IfNode(condition, statements); // TODO:  Fix recusion loop and else vs elseif.
+            return ifNode;
+        } else if (matchAndRemove(Type.ELSIF) != null) {
+            matchAndRemove(Type.ELSIF);
+            BooleanExpressionNode condition = booleanExpression();
+            matchAndRemove(Type.THEN);
+            ArrayList<StatementNode> statements = statements();
+            IfNode ifNode = new IfNode(condition, statements);
+            if (peek(0).getType() == Type.ELSE) {
+                matchAndRemove(Type.ELSE);
+                ifNode.setElseStatements(statements());
+            }
+            return ifNode;
+        } else if (matchAndRemove(Type.ELSE) != null) {
+            matchAndRemove(Type.THEN);
+            ArrayList<StatementNode> statements = statements();
+            return new IfNode(null, statements);
         }
+
         return null;
     }
 
@@ -260,19 +291,19 @@ public class Parser {
                 matchAndRemove(Type.LPAREN);
                 ArrayList<VariableNode> params = parameters();
                 matchAndRemove(Type.RPAREN);
-                matchAndRemove(Type.ENDLINE);
+                removeEndlines();
                 ArrayList<VariableNode> vars = null;
                 if (matchAndRemove(Type.VARIABLES) != null) {
-                    matchAndRemove(Type.ENDLINE);
+                    removeEndlines();
                     vars = variables();
                 }
                 ArrayList<VariableNode> consta = null;
                 matchAndRemove(Type.ENDLINE);
                 if (matchAndRemove(Type.CONSTANT) != null) {
-                    matchAndRemove(Type.ENDLINE);
+                    removeEndlines();
                     consta = constants();
                 }
-                matchAndRemove(Type.ENDLINE);
+                removeEndlines();
                 ArrayList<StatementNode> body = body();
                 if (body == null && consta == null && vars == null) {
                     functions.add(new FunctionNode(name.toString(), params, null, null, null));
@@ -437,7 +468,7 @@ public class Parser {
             while (state != 4) {
                 switch (state) {
                     case 0 -> {
-                        matchAndRemove(Type.ENDLINE);
+                        removeEndlines();
                         name = matchAndRemove(Type.IDENTIFIER);
                         if (name != null) {
                             idenList.add(name);
