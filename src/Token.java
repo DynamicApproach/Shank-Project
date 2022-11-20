@@ -249,7 +249,7 @@ public class Token {
     }
 
     public String getValue() {
-        return value.trim();
+        return this.value != null ? this.value : "";
     }
 
     public String toString() {

@@ -35,11 +35,13 @@ public class Parser {
         }
     }
 
+    // TODO: remove endlines in a row
+
     // expression, term, factor methods
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
     public Node expression() {
-
+        // boolean-expression term factor
         // TODO: EXPRESSION MERGE
         Node node = term();
         int a = 0;
@@ -157,15 +159,16 @@ public class Parser {
     }
 
     public StatementNode statement() {
+        // TODO: Call assignment if null call while
         return assignment();
     }
 
     public AssignmentNode assignment() {
         // identifier assignment expression endofline
-        if (peek(1).getType() == Type.ASSIGN) {
+        if (peek(1).getType() == Type.ASSIGN || peek(0).getType() == Type.IDENTIFIER) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
-            MathOpNode value = (MathOpNode) expression();
+            Node value = expression();
             matchAndRemove(Type.ENDLINE);
             return new AssignmentNode(new VariableReferenceNode(name), value);
         }
@@ -181,11 +184,10 @@ public class Parser {
         BooleanExpressionNode node = null;
         try {
             Type token = peek(1).getType();
-            if (token == Type.IF)
-                node = new BooleanExpressionNode(expression(), token, expression());
+            node = new BooleanExpressionNode(expression(), token, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // less, greater, ect lowest priority
         } // TODO: Ask about moving into expression method
 
         return node;
@@ -213,10 +215,10 @@ public class Parser {
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = statements();
-            if ((matchAndRemove(Type.ELSE) != null) && (matchAndRemove(Type.IF) != null)) {
+            if ((matchAndRemove(Type.ELSE) != null) || (matchAndRemove(Type.ELSIF) != null)) {
                 return new IfNode(condition, statements, ifExpression());
             }
-            return new IfNode(condition, statements); // TODO:  Double check this.
+            return new IfNode(condition, statements); // TODO:  Fix recusion loop and else vs elseif.
         }
         return null;
     }

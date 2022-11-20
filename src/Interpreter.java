@@ -27,7 +27,7 @@ public class Interpreter {
                     VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
                 } else if (var.getValue() instanceof BooleanNode) {
                     //This is kinda difficult to implement. Wait until everything else works to implement this.
-//                    VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
+                    //VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
                 } else {
                     throw new Exception("uhh");
                 }
@@ -42,13 +42,13 @@ public class Interpreter {
     // otherwise we will ignore the statement (for now).
     // Functions body is a list of statements
     // InterpretBlock should take the collection of statements and a hashmap of variables.
-    //        // We will loop over the collection of statements.
-    //        // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
-    //        // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
-    //        // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
-    //        // Make a collection of values (InterpreterDataType):
-    //        // if in hashmap of functions, get the built in function
-    //        // if not, get the user defined function
+    // We will loop over the collection of statements.
+    // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
+    // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
+    // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
+    // Make a collection of values (InterpreterDataType):
+    // if in hashmap of functions, get the built in function
+    // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // TODO: INTERPRET BLOCK
         for (StatementNode statement : statements) { // statement is instance of any node
@@ -57,15 +57,17 @@ public class Interpreter {
                 if (Shank.functionNames.containsKey(functionCall.getName())) {
                     //builtin
                     FunctionCallNode current;
+                    // a, b, 2
+                    //just pushing all params
                     // check param size of FunctionCall and FunctionNode
                     // for each param in functioncallnode, check type and create a datatype with the value in the param
                     // after add all params for each of the data types
-                    // check the passed in params from the functioncallnode matches params required in the functionNode
                     // if it does, interpretfunction with the types passed in
                     // iterate over function hashmap
+                    // need to know if both are var or not - do the vars match up between call and definition
                 } else {
                     // funcNode
-
+                    // not in hashmap, so we can add it now
                 }
             } else if (statement instanceof ForNode) {
 
@@ -92,6 +94,18 @@ public class Interpreter {
 
     }
 
+    // resolve boolean ->
+    // resolve float
+    // resolve int
+    // if not int or float, throw exception if not their type
+    // inside try catch
+    // resolve float on right left
+    // if not throw execption
+    // resolve int on right left
+    // if not throw exception
+    // check for true false
+
+
     public boolean EvalBooleanExpression(BooleanExpressionNode boolNode) {
         //TODO: EvalBoolExpression - Assign 8
         return false;
@@ -99,7 +113,8 @@ public class Interpreter {
 
     @SuppressWarnings("unused")
     public String Resolve(Node node) {
-        // TODO: Check FIX
+        // TODO: Change to individual -> ResolveInt, ResolveFloat, ResolveChar, ResolveString, ResolveBoolean - resolve bool has to be recursive to look for the type
+        // resolve just returns the value of the node
         if (node == null) {
             throw new IllegalArgumentException("Node cannot resolve node that's null");
         }
