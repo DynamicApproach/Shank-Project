@@ -111,6 +111,47 @@ public class Interpreter {
         return false;
     }
 
+    public int ResolveInt(Node nodey) {
+        if (nodey instanceof FloatNode) {
+            return (int) Float.parseFloat(nodey.toString());
+        } else {
+            throw new RuntimeException("Not an int or float");
+        }
+    }
+
+    public float ResolveFloat(Node nodey) {
+        if (nodey instanceof FloatNode) {
+            return Float.parseFloat(nodey.toString());
+        } else {
+            throw new RuntimeException("Not an int or float");
+        }
+    }
+
+    public char ResolveChar(Node nodey) {
+        if (nodey instanceof CharNode) {
+            return nodey.toString().toCharArray()[0];
+        } else {
+            throw new RuntimeException("Not a char");
+        }
+    }
+
+    public String ResolveString(Node nodey) {
+        if (nodey instanceof StringNode) {
+            return nodey.toString();
+        } else {
+            throw new RuntimeException("Not a string");
+        }
+    }
+    
+
+    public boolean ResolveBoolean(Node nodey) {
+        if (nodey instanceof BooleanExpressionNode) {
+            return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
+        } else {
+            throw new RuntimeException("Not a boolean");
+        }
+    }
+
     @SuppressWarnings("unused")
     public String Resolve(Node node) {
         // TODO: Change to individual -> ResolveInt, ResolveFloat, ResolveChar, ResolveString, ResolveBoolean - resolve bool has to be recursive to look for the type
