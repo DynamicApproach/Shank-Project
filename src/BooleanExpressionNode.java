@@ -10,6 +10,22 @@ public class BooleanExpressionNode extends Node {
         this.condition = condition;
     }
 
+    public Node getLeft() {
+        return left;
+    }
+
+    public void setLeft(Node left) {
+        this.left = left;
+    }
+
+    public Node getRight() {
+        return right;
+    }
+
+    public Type getCondition() {
+        return condition;
+    }
+
     @Override
     public String toString() {
         return left.toString() + " " + condition.toString() + " " + right.toString();
