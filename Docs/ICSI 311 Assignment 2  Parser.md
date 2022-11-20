@@ -119,7 +119,7 @@ For `FloatNode`, return the value.
 
 Make sure that you test your code. Change your main to instantiate a parser (passing in the tokens
 from the lexer) and then call parse on the parser. Right now, it will only process a single line.
-Print your AST by using the “ToString” that you created. Use several different mathematical
+Print your AST by using the “ToString” that you created. Use several mathematical
 expressions and be sure that order of operations is respected. Then add a call to Resolve() and
 check the math.
 

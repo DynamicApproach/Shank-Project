@@ -57,7 +57,7 @@ But Expression could be int or float. There are a few ways to resolve this; be c
 “**EvaluateBooleanExpression**” which returns a boolean. You will need to pass in the
 `BooleanExpressionNode` and the current variables.
 
-Once you have this working, you can easily implement while, repeat and if. Remember, though, that if
+Once you have this working, you can easily implement while, repeat and if. Remember, though, that if it
 has a linked list chain, so you will need to follow that chain to find the first true condition (or
 else).
 

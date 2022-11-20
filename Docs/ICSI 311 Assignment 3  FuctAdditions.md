@@ -102,10 +102,10 @@ variables section, then a body. The function declaration is required. The consta
 sections may not be in every function. A body is required.
 
 The **function declaration** is the word “define”, then a name, left parenthesis, then a list of
-variable declarations, separated by semi-colons and finally a right parenthesis.
+variable declarations, separated by semicolons and finally a right parenthesis.
 The constants section has one (or more) name/value pairs.
 
-The variables has one (or more) lists of names followed by a colon followed by a data type.
+The variables have one (or more) lists of names followed by a colon followed by a data type.
 One non-obvious element is that constants have a data type, too.
 It is just inferred from the value.
 
@@ -116,7 +116,7 @@ It is just inferred from the value.
   the initial value (which will be a `FloatNode` or an `IntNode`, for now).
 
 Make sure that you add a
-**ToString**() method that prints all of the fields in a readable way – this helps a lot for
+**ToString**() method that prints all the fields in a readable way – this helps a lot for
 debugging.
 
 To build the parser, we follow the description above.
@@ -146,11 +146,11 @@ We then make a Variables function that looks for the variables token. If it find
 for variable declarations and makes `VariableNodes` for each one.
 
 A variable declaration is a list of identifiers (separated by commas) followed by a colon, then the
-data type (integer or real, for now) followed by endOfLine (for variables section) or a semi-colon (
+data type (integer or real, for now) followed by endOfLine (for variables section) or a semicolon (
 for function definitions).
 
 For each variable, we make a `VariableNode` like we did for constants.
-We then make a **BodyFunction** that looks for begin, endOfLiine, end, endOfLine.
+We then make a **BodyFunction** that looks for begin, endOfLine, end, endOfLine.
 Right now, we don’t
 do anything with these. We should now be able to parse function declarations!
 

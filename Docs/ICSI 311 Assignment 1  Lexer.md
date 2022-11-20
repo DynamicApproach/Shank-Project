@@ -49,7 +49,7 @@ and exit.
 That one argument will be considered as a filename (optionally IN THE CURRENT PATH?).
 
 - Your main **
-  must** then use File.ReadAllLines to read all of the lines from the file denoted by filename. Your
+  must** then use File.ReadAllLines to read all the lines from the file denoted by filename. Your
   main **must** instantiate one instance of your Lexer class (to be defined below).
 - You **must** parse
   all lines using the lex method of the Lexer class.

@@ -104,7 +104,7 @@ Next add all the local variables to the hashmap. Remember that we stored the con
 Variable”
 section, so we need to set the initial values of these variables as appropriate.
 
-Finally, we will call a function called “**InterpretBlock**” - this function will process all of the
+Finally, we will call a function called “**InterpretBlock**” - this function will process all the
 code between “begin” and “end”; we will use it later for conditionals and loops.
 
 **InterpretBlock** should take the collection of statements and a hashmap of variables. We will loop

@@ -64,7 +64,7 @@ Create a BoolNode like we created `IntNode` and `FloatNode`. Change **Factor**()
 `BoolNode` when it finds the true and false tokens.
 
 Then merge in from your existing code the boolean operators (
-less than, less than or equal, etc) to ExpressionRightHandSide.
+less than, less than or equal, etc.) to ExpressionRightHandSide.
 Remember that we can’t chain booleans like we do addition and subtraction; that is to say 2+3+4 is
 allowed, but 4>x>9 is not
 allowed.
@@ -88,10 +88,8 @@ will walk through it to make sure that the types all make sense.
 
 ## Semantic Analysis
 
-This is an additional step that is performed once parsing is complete. ![Diagram
-
-]
-In this step, we analyze the AST. In this step, we have all the data of the complete AST so we can
+This is an additional step that is performed once parsing is complete.
+In this step, we analyze the AST. In this step, we have all the data of the complete AST, so we can
 do things like ensure (for example) that all variables are declared. In `Shank`, this is not an
 issue,
 since all variables are at the function scope (and declared at the top), but think about Java where

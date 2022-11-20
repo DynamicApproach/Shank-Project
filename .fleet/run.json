@@ -8,7 +8,7 @@
     },
     {
       "args": [
-        "$PROJECT_DIR$/src/test.txt",
+        "$PROJECT_DIR$/src/test.txt"
       ],
       "dependsOn": [
         "Build"

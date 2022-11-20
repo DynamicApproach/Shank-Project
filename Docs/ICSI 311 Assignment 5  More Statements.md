@@ -25,7 +25,7 @@ We need to make `ASTNodes` for:
 * `While` (booleanExpression and collection of statementNodes)
 * `Repeat` (booleanExpression and collection of statementNodes)
 * `For` (variableReference, start ASTNode, end astNode, collection of statementNodes)
-* `If` is a little bit interesting. How do we model that unlimited length chain of “elsif”?
+* `If` is a little interesting. How do we model that unlimited length chain of “elsif”?
 * A linked list: `If` (booleanExpression, collection of statementNodes, ifNode)
 * For else, you can either use a null boolean expression or make an ElseNode that derives from
   IfNode. One is more work now, one is more work later.

@@ -134,7 +134,7 @@ the AST.
 
 Create a new set of classes: `InterpreterDataType`, `IntDataType`, `FloatDataType`.
 
-The first is an abstract _base_ class. It is _it's own parent_. It declares a ToString and a
+The first is an abstract _base_ class. It is _its own parent_. It declares a ToString and a
 FromString:
 
         public abstract String ToString();
@@ -153,10 +153,10 @@ finds
 a call to “`read`”, for example, it
 has to be able to call your Java code.
 
-eg. Read will take a collection of `InterpreterDataType` objects and set the values of those objects
+e.g. Read will take a collection of `InterpreterDataType` objects and set the values of those objects
 from user input
 (remember that read can take any number of parameters).
-eg. Write will take a collection of `InterpreterDataType` objects and print them to the screen.
+e.g. Write will take a collection of `InterpreterDataType` objects and print them to the screen.
 
 -----------------------------------------------------------------------------------------------
 
