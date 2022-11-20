@@ -51,15 +51,30 @@ public class Interpreter {
     // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // TODO: INTERPRET BLOCK
+
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
-                // is it built in? Is in hashmap?
-                if (Shank.functionNames.containsKey(functionCall.getName())) {
-                    //builtin
+                String name = functionCall.getName();
+                if (hashmapfuncts.containsKey(name)) { // is it built in? Is in hashmap?
                     FunctionCallNode current;
+                    //builtin
                     // a, b, 2
                     //just pushing all params
                     // check param size of FunctionCall and FunctionNode
+                    if (hashmapfuncts.get(name).getArguments().size() == functionCall.getParameters().size()) {
+                        ArrayList<InterpreterDataType> parameters = new ArrayList<>();
+                        for (ParameterNode param : functionCall.getParameters()) {
+                            //parameters.add(param, stringToFunc);
+                        }
+                        try {
+                            CallableNode x = hashmapfuncts.get(functionCall.getName());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        throw new RuntimeException("Error: Incorrect number of parameters for function " + functionCall.getName());
+                    }
                     // for each param in functioncallnode, check type and create a datatype with the value in the param
                     // after add all params for each of the data types
                     // if it does, interpretfunction with the types passed in
@@ -114,6 +129,18 @@ public class Interpreter {
     public int ResolveInt(Node nodey) {
         if (nodey instanceof FloatNode) {
             return (int) Float.parseFloat(nodey.toString());
+        } else if (nodey instanceof MathOpNode) {
+            return switch (((MathOpNode) nodey).getOperator()) {
+                case "+" -> ResolveInt(((MathOpNode) nodey).getLeft()) + ResolveInt(((MathOpNode) nodey).getRight());
+                case "-" -> ResolveInt(((MathOpNode) nodey).getLeft()) - ResolveInt(((MathOpNode) nodey).getRight());
+                case "*" -> ResolveInt(((MathOpNode) nodey).getLeft()) * ResolveInt(((MathOpNode) nodey).getRight());
+                case "/" -> ResolveInt(((MathOpNode) nodey).getLeft()) / ResolveInt(((MathOpNode) nodey).getRight());
+                case "%" -> ResolveInt(((MathOpNode) nodey).getLeft()) % ResolveInt(((MathOpNode) nodey).getRight());
+                case "^" ->
+                        (int) Math.pow(ResolveInt(((MathOpNode) nodey).getLeft()), ResolveInt(((MathOpNode) nodey).getRight()));
+                default -> throw new RuntimeException("Error: Invalid operator in math expression");
+            };
+
         } else {
             throw new RuntimeException("Not an int or float");
         }
@@ -184,8 +211,7 @@ public class Interpreter {
                     case "*" -> String.valueOf(Integer.parseInt(left) * Integer.parseInt(right));
                     case "/" -> String.valueOf(Integer.parseInt(left) / Integer.parseInt(right));
                     case "%" -> String.valueOf(Integer.parseInt(left) % Integer.parseInt(right));
-                    case "^" ->
-                            String.valueOf(Math.pow(Integer.parseInt(left), Integer.parseInt(right)));
+                    case "^" -> String.valueOf(Math.pow(Integer.parseInt(left), Integer.parseInt(right)));
                     // new IntegerNode(Integer.parseInt(String.valueOf(Integer.parseInt(left) % Integer.parseInt(right))));
                     default -> throw new IllegalArgumentException("Invalid operator");
                 };
