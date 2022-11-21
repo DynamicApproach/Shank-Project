@@ -9,7 +9,8 @@ public class Interpreter {
     public Interpreter(HashMap<String, CallableNode> hashmapfuncts) {
         Interpreter.hashmapfuncts = hashmapfuncts;
     }
- // gets handed a function node and a list of params
+
+    // gets handed a function node and a list of params
     // makes space for the local variables
     // match the parameters to names
     // e.g. Take a,b and 1,2 -> both are now local variables
@@ -55,7 +56,7 @@ public class Interpreter {
     // Make a collection of values (InterpreterDataType):
     // if in hashmap of functions, get the built-in function
     // if not, get the user defined function
-    private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
+    private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> VariableHashMap) {
         // TODO: INTERPRET BLOCK
         //
         // Passes a collection of statements and a hashmap of variables
@@ -89,7 +90,12 @@ public class Interpreter {
                             }
                         }
                         try {
-                            InterpretFunction(functionCall, parameters);
+                            // if in hashmap, call execute
+                            if (hashmapfuncts.containsKey(name)) {
+                                executeFunction(hashmapfuncts.get(name), parameters);
+                            } else {
+                                InterpretFunction(functionCall, parameters);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -103,8 +109,9 @@ public class Interpreter {
                     // need to know if both are var or not - do the vars match up between call and definition
                 } else {
                     // funcNode
-                    // not in hashmap, so we can add it now
-                    ArrayList<ParameterNode> parameters = functionCall.getParameters();
+                    // not in hashmap
+                    throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
+                    /*ArrayList<ParameterNode> parameters = functionCall.getParameters();
                     for (int i = 0; i < parameters.size(); i++) {
                         ParameterNode param = parameters.get(i);
                         // check if both have is var or not
@@ -127,7 +134,7 @@ public class Interpreter {
                             stringToFunc.put(param.getName(), new StringDataType(param.toString()));
                         }
                     }
-                    // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),
+                    // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),*/
                 }
             } else if (statement instanceof ForNode) {
 
@@ -142,21 +149,54 @@ public class Interpreter {
             } else if (statement instanceof AssignmentNode) {
                 // we get a variable, and we know it's an assignment node
                 // look up var ref node in the hash map
+                if (VariableHashMap.containsKey(((AssignmentNode) statement).getTarget().toString())) {
+                    // if it's in the hashmap, we know it's a variable
+                    // get the value of the assignment node
+                    var value = ((AssignmentNode) statement).getExpression();
+                    // get the type of the value
+                    if (value instanceof IntegerNode) {
+                        // if it's an integer, we know it's an int
+                        // get the value of the integer node
+                        int val = ((IntegerNode) value).getValue();
+                        // put the value in the hashmap
+                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new IntDataType(val));
+                    } else if (value instanceof FloatNode) {
+                        // if it's a float, we know it's a float
+                        // get the value of the float node
+                        float val = ((FloatNode) value).getValue();
+                        // put the value in the hashmap
+                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new FloatDataType(val));
+                    } else if (value instanceof CharNode) {
+                        // if it's a char, we know it's a char
+                        // get the value of the char node
+                        char val = ((CharNode) value).getValue();
+                        // put the value in the hashmap
+                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new CharDataType(val));
+                    } else if (value instanceof StringNode) {
+                        // if it's a string, we know it's a string
+                        // get the value of the string node
+                        String val = ((StringNode) value).getValue();
+                        // put the value in the hashmap
+                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new StringDataType(val));
+                    }
+                    // set the value of the variable in the hashmap to the value of the assignment node
+                } else {
+                    // if it's not in the hashmap, we know it's a constant
+                    // throw an error
+                    throw new RuntimeException("Error: Cannot assign to constant " + statement);
+                }
                 // throw except if not exsist
                 // if it does, get the type
                 // resolve the right hand side
                 // update the value of the variable
-
             }
         }
         return null;
     }
 
-    public static void executeFunction(String functionName, ArrayList<InterpreterDataType> parameters) {
-        // get function from function name
-        // execute function
-        // pass in parameters
-        // return value
+    public static void executeFunction(CallableNode functionName, ArrayList<InterpreterDataType> parameters) throws Exception {
+        BuiltInFunctionNode exe = (BuiltInFunctionNode) functionName;
+        exe.execute(parameters);
     }
 
     // resolve boolean ->
@@ -222,11 +262,16 @@ public class Interpreter {
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
             return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
+        } else if (nodey instanceof MathOpNode) {
+            // call resolvebool on left and right
+            // call resolveint on left and right
+            // call resolvefloat
         } else {
             throw new RuntimeException("Not a boolean");
 
 
         }
+        return false;
     }
 
     @SuppressWarnings("unused")

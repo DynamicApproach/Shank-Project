@@ -7,9 +7,18 @@ public class AssignmentNode extends StatementNode {
     private VariableReferenceNode target;
     private Node expression;
 
+    // target = expression
     public AssignmentNode(VariableReferenceNode statement, Node expression) {
         this.target = statement;
         this.expression = expression;
+    }
+
+    public VariableReferenceNode getTarget() {
+        return target;
+    }
+
+    public Node getExpression() {
+        return expression;
     }
 
     //tostring

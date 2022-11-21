@@ -8,6 +8,9 @@ public class IntDataType extends InterpreterDataType {
         this.value = Integer.parseInt(value);
     }
 
+    public IntDataType(int value) {
+        this.value = value;
+    }
 
     @Override
     public String toString(String input) {
