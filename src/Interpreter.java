@@ -67,7 +67,7 @@ public class Interpreter {
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
                 String name = functionCall.getName();
-                if (hashmapfuncts.containsKey(name)) { // is it built in? Is in hashmap?
+                if (hashmapfuncts.containsKey(name)) { // is it built in? Is in hashmap? IF NOT THROW EXCEPTION
                     FunctionCallNode current;
                     //builtin
                     // a, b, 2
@@ -86,9 +86,11 @@ public class Interpreter {
                                 parameters.add(new CharDataType(param.toString().toCharArray()[0]));
                             } else if (parType == Type.STRING) {
                                 parameters.add(new StringDataType(param.toString()));
-                            }
+                            }// if var look up in local var hashmap
+                            // if not there throw an exception
                         }
                         try {
+                            // look at type of callable if it's built in call execute else call interpret function on it
                             InterpretFunction(functionCall, parameters);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -146,7 +148,6 @@ public class Interpreter {
                 // if it does, get the type
                 // resolve the right hand side
                 // update the value of the variable
-
             }
         }
         return null;
