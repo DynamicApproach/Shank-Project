@@ -9,9 +9,15 @@ public class Interpreter {
     public Interpreter(HashMap<String, CallableNode> hashmapfuncts) {
         Interpreter.hashmapfuncts = hashmapfuncts;
     }
-
+ // gets handed a function node and a list of params
+    // makes space for the local variables
+    // match the parameters to names
+    // e.g. Take a,b and 1,2 -> both are now local variables
+    // once we have that done, the env is set up
+    // now we can call interp block -> Which will be reused
     public static void InterpretFunction(FunctionCallNode function, ArrayList<InterpreterDataType> parameters) throws Exception {
         // function was just called and have to make the hash map for your local variables and parameters.
+
         HashMap<String, InterpreterDataType> VariableHashMap = new HashMap<>();
         for (int i = 0; i < function.getParameters().size(); i++)
             VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
@@ -51,6 +57,13 @@ public class Interpreter {
     // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // TODO: INTERPRET BLOCK
+        //
+        // Passes a collection of statements and a hashmap of variables
+        // walk the list of statements and do each one
+        // check what type of statement it is
+        //
+
+
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
                 String name = functionCall.getName();
@@ -125,7 +138,14 @@ public class Interpreter {
 
             } else if (statement instanceof IfNode) {
 
+
             } else if (statement instanceof AssignmentNode) {
+                // we get a variable, and we know it's an assignment node
+                // look up var ref node in the hash map
+                // throw except if not exsist
+                // if it does, get the type
+                // resolve the right hand side
+                // update the value of the variable
 
             }
         }
