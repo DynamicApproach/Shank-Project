@@ -47,11 +47,10 @@ public class Interpreter {
     // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
     // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
     // Make a collection of values (InterpreterDataType):
-    // if in hashmap of functions, get the built in function
+    // if in hashmap of functions, get the built-in function
     // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
         // TODO: INTERPRET BLOCK
-
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
                 String name = functionCall.getName();
@@ -63,28 +62,62 @@ public class Interpreter {
                     // check param size of FunctionCall and FunctionNode
                     if (hashmapfuncts.get(name).getArguments().size() == functionCall.getParameters().size()) {
                         ArrayList<InterpreterDataType> parameters = new ArrayList<>();
-                        for (ParameterNode param : functionCall.getParameters()) {
-                            //parameters.add(param, stringToFunc);
+                        for (var param : functionCall.getParameters()) {
+                            // for each param in functioncallnode, check type and create a datatype with the value in the param
+                            Type parType = param.getType();
+                            if (parType == Type.INTEGER) {
+                                parameters.add(new IntDataType(param.toString()));
+                            } else if (parType == Type.FLOAT) {
+                                parameters.add(new FloatDataType(param.toString()));
+                            } else if (parType == Type.CHAR) {
+                                parameters.add(new CharDataType(param.toString().toCharArray()[0]));
+                            } else if (parType == Type.STRING) {
+                                parameters.add(new StringDataType(param.toString()));
+                            }
                         }
                         try {
-                            CallableNode x = hashmapfuncts.get(functionCall.getName());
-
+                            InterpretFunction(functionCall, parameters);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
                         throw new RuntimeException("Error: Incorrect number of parameters for function " + functionCall.getName());
                     }
-                    // for each param in functioncallnode, check type and create a datatype with the value in the param
-                    // after add all params for each of the data types
-                    // if it does, interpretfunction with the types passed in
+
+                    // after adding all the params for each of the data types
+                    // interpretfunction with the types passed in
                     // iterate over function hashmap
                     // need to know if both are var or not - do the vars match up between call and definition
                 } else {
                     // funcNode
                     // not in hashmap, so we can add it now
+                    ArrayList<ParameterNode> parameters = functionCall.getParameters();
+                    for (int i = 0; i < parameters.size(); i++) {
+                        ParameterNode param = parameters.get(i);
+                        // check if both have is var or not
+                        // if both are var is ok, else throw error
+                        boolean functparam = hashmapfuncts.get(name).getArguments().get(i).isConstant();
+                        boolean callparam = param.isVariable();
+                        if (functparam != callparam) {
+                            throw new RuntimeException("Error: Mismatch of parameters for function " + functionCall.getName());
+                        }
+                    }
+                    for (var param : functionCall.getParameters()) {
+                        Type parType = param.getType();
+                        if (parType == Type.INTEGER) {
+                            stringToFunc.put(param.getName(), new IntDataType(param.toString()));
+                        } else if (parType == Type.FLOAT) {
+                            stringToFunc.put(param.getName(), new FloatDataType(param.toString()));
+                        } else if (parType == Type.CHAR) {
+                            stringToFunc.put(param.getName(), new CharDataType(param.toString().toCharArray()[0]));
+                        } else if (parType == Type.STRING) {
+                            stringToFunc.put(param.getName(), new StringDataType(param.toString()));
+                        }
+                    }
+                    // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),
                 }
             } else if (statement instanceof ForNode) {
+
 
             } else if (statement instanceof WhileNode) {
 
@@ -104,9 +137,6 @@ public class Interpreter {
         // execute function
         // pass in parameters
         // return value
-        functionName = functionName.toLowerCase();
-
-
     }
 
     // resolve boolean ->
@@ -119,8 +149,6 @@ public class Interpreter {
     // resolve int on right left
     // if not throw exception
     // check for true false
-
-
     public boolean EvalBooleanExpression(BooleanExpressionNode boolNode) {
         //TODO: EvalBoolExpression - Assign 8
         return false;
@@ -169,13 +197,15 @@ public class Interpreter {
             throw new RuntimeException("Not a string");
         }
     }
-    
+
 
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
             return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
         } else {
             throw new RuntimeException("Not a boolean");
+
+
         }
     }
 
@@ -200,8 +230,7 @@ public class Interpreter {
                     case "*" -> String.valueOf(Float.parseFloat(left) * Float.parseFloat(right));
                     case "/" -> String.valueOf(Float.parseFloat(left) / Float.parseFloat(right));
                     case "%" -> String.valueOf(Float.parseFloat(left) % Float.parseFloat(right));
-                    case "^" ->
-                            String.valueOf(Math.pow(Float.parseFloat(left), Float.parseFloat(right)));
+                    case "^" -> String.valueOf(Math.pow(Float.parseFloat(left), Float.parseFloat(right)));
                     default -> throw new IllegalArgumentException("Invalid operator");
                 };
             } else if (mathOpNode.getLeft() instanceof IntegerNode || mathOpNode.getRight() instanceof IntegerNode) {
@@ -217,7 +246,7 @@ public class Interpreter {
                 };
             } else if (mathOpNode.getLeft() instanceof StringNode || mathOpNode.getRight() instanceof StringNode) {
                 if ("+".equals(mathOpNode.getOperator())) {
-                    return (right.concat(left));
+                    return (right + left);
                 }
             } else {
                 throw new IllegalArgumentException("Invalid operator");

@@ -1,6 +1,6 @@
 //implement 'VariableNode' - is constant class, enum for int, real and ast node for the init value of real/intnode
 public class VariableNode extends Node {
-    boolean isConstant;
+    private boolean isConstant;
     private String name;
     private Node value;
     private Type type;
@@ -10,6 +10,10 @@ public class VariableNode extends Node {
         this.value = value;
         this.type = type;
         this.isConstant = isConstant;
+    }
+
+    public boolean isConstant() {
+        return isConstant;
     }
 
     public String getName() {

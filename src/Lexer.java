@@ -379,10 +379,11 @@ public class Lexer {
                                 builder.append('=');
                                 skip = true;
                                 foundTokState(Type.GREATER_EQUAL, builder.toString());
+                            } else {
+                                // less
+                                builder.append(c);
+                                foundTokState(Type.LESS, builder.toString());
                             }
-                            // less
-                            builder.append(c);
-                            foundTokState(Type.LESS, builder.toString());
                         }
 
                         case ':' -> { // if colon, then foundTok for an identifier and then a colon e.g. "idenNAME: "
@@ -431,7 +432,6 @@ public class Lexer {
                             }
                             builder.append(c);
                             foundTokState(Type.LPAREN, builder.toString());
-
                         }
                         default -> builder.append(c);
                     }
@@ -477,9 +477,7 @@ public class Lexer {
                                     builder.append(c);
                                     foundTokState(Type.ASSIGN, builder.toString());
                                     skip = true;
-                                } else {
-                                    foundTokState(Type.EQUAL, builder.toString());
-                                }
+                                } else foundTokState(Type.EQUAL, builder.toString());
                             }
                             case ";" -> foundTok(Type.SEMICOLON, builder.toString());
                             case "\n" -> EOLfound(c);

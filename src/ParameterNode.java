@@ -16,6 +16,10 @@ public class ParameterNode extends Node {
         this.isVariable = isVariable;
     }
 
+    public boolean isVariable() {
+        return isVariable;
+    }
+
     public String getName() {
         return name;
     }
