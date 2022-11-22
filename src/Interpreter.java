@@ -136,59 +136,46 @@ public class Interpreter {
                     }
                     // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),*/
                 }
-            } else if (statement instanceof ForNode) {
-
+            } else if (statement instanceof ForNode forNode) {
+                // we have a fornode with an expression and a block
+                // we need to evaluate the expression
+                // if it is true, we need to interpret the block
 
             } else if (statement instanceof WhileNode) {
-
+                // we have a while node with an expression and a block
+                // we need to evaluate the expression
+                // if it is true, we need to interpret the block in a loop, based on the condition
+                // if it is false, we need to break out of the loop
             } else if (statement instanceof RepeatNode) {
-
+                // we have a repeat node with an expression and a block
+                // we need to evaluate the expression
+                // if true, we need to interpret the block
+                // if false, we need to break out of the loop
             } else if (statement instanceof IfNode) {
-
-
+                // we have an ifnode with an expression and a block
+                // we need to evaluate the expression
+                // if true, we need to interpret the block
+                // if false, we need to break out of the loop
             } else if (statement instanceof AssignmentNode) {
-                // we get a variable, and we know it's an assignment node
-                // look up var ref node in the hash map
                 if (VariableHashMap.containsKey(((AssignmentNode) statement).getTarget().toString())) {
-                    // if it's in the hashmap, we know it's a variable
-                    // get the value of the assignment node
                     var value = ((AssignmentNode) statement).getExpression();
-                    // get the type of the value
                     if (value instanceof IntegerNode) {
-                        // if it's an integer, we know it's an int
-                        // get the value of the integer node
                         int val = ((IntegerNode) value).getValue();
-                        // put the value in the hashmap
                         VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new IntDataType(val));
                     } else if (value instanceof FloatNode) {
-                        // if it's a float, we know it's a float
-                        // get the value of the float node
                         float val = ((FloatNode) value).getValue();
-                        // put the value in the hashmap
                         VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new FloatDataType(val));
                     } else if (value instanceof CharNode) {
-                        // if it's a char, we know it's a char
-                        // get the value of the char node
                         char val = ((CharNode) value).getValue();
-                        // put the value in the hashmap
                         VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new CharDataType(val));
                     } else if (value instanceof StringNode) {
-                        // if it's a string, we know it's a string
-                        // get the value of the string node
                         String val = ((StringNode) value).getValue();
-                        // put the value in the hashmap
                         VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new StringDataType(val));
                     }
-                    // set the value of the variable in the hashmap to the value of the assignment node
                 } else {
-                    // if it's not in the hashmap, we know it's a constant
-                    // throw an error
+                    // if it's not in the hashmap throw an error
                     throw new RuntimeException("Error: Cannot assign to constant " + statement);
                 }
-                // throw except if not exsist
-                // if it does, get the type
-                // resolve the right hand side
-                // update the value of the variable
             }
         }
         return null;
