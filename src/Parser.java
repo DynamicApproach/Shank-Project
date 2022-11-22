@@ -41,6 +41,30 @@ public class Parser {
         }
     }
 
+
+    public BooleanExpressionNode booleanExpression() {
+        // check for expression operator expression and make a new booleanExpressionNode
+        BooleanExpressionNode node = null;
+        try {
+            Type token = peek(1).getType();
+            node = new BooleanExpressionNode(expression(), token, expression());
+        } catch (Exception e) {
+            System.out.println("Not an expression");
+            throw new RuntimeException(e); // less, greater, ect lowest priority
+        } // TODO: Ask about moving into expression method
+
+        return node;
+    }
+    // merge boolean into regular expression
+    // if a = 5+3
+    // a = b>3
+    // < > = <= >= != <>
+    // lower prio then + - * /
+    // all the same prio
+    // eval left to right with prio
+    // dont have to chain like w +/-
+
+
     // expression, term, factor methods
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
@@ -192,19 +216,6 @@ public class Parser {
         return tokens.get(x);
     }
 
-    public BooleanExpressionNode booleanExpression() {
-        // check for expression operator expression and make a new booleanExpressionNode
-        BooleanExpressionNode node = null;
-        try {
-            Type token = peek(1).getType();
-            node = new BooleanExpressionNode(expression(), token, expression());
-        } catch (Exception e) {
-            System.out.println("Not an expression");
-            throw new RuntimeException(e); // less, greater, ect lowest priority
-        } // TODO: Ask about moving into expression method
-
-        return node;
-    }
 
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
