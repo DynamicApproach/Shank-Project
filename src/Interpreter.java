@@ -57,14 +57,9 @@ public class Interpreter {
     // if in hashmap of functions, get the built-in function
     // if not, get the user defined function
     private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> VariableHashMap) {
-        // TODO: INTERPRET BLOCK
-        //
         // Passes a collection of statements and a hashmap of variables
         // walk the list of statements and do each one
         // check what type of statement it is
-        //
-
-
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
                 String name = functionCall.getName();
@@ -102,7 +97,6 @@ public class Interpreter {
                     } else {
                         throw new RuntimeException("Error: Incorrect number of parameters for function " + functionCall.getName());
                     }
-
                     // after adding all the params for each of the data types
                     // interpretfunction with the types passed in
                     // iterate over function hashmap
@@ -136,16 +130,17 @@ public class Interpreter {
                     }
                     // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),*/
                 }
-            } else if (statement instanceof ForNode forNode) {
+            } else if (statement instanceof ForNode) {
                 // we have a fornode with an expression and a block
                 // we need to evaluate the expression
                 // if it is true, we need to interpret the block
-
             } else if (statement instanceof WhileNode) {
                 // we have a while node with an expression and a block
                 // we need to evaluate the expression
                 // if it is true, we need to interpret the block in a loop, based on the condition
                 // if it is false, we need to break out of the loop
+
+                // basically while(condition != false) {interpret block} but need to do bool evaluation first
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
@@ -156,25 +151,26 @@ public class Interpreter {
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
-            } else if (statement instanceof AssignmentNode) {
-                if (VariableHashMap.containsKey(((AssignmentNode) statement).getTarget().toString())) {
-                    var value = ((AssignmentNode) statement).getExpression();
-                    if (value instanceof IntegerNode) {
-                        int val = ((IntegerNode) value).getValue();
-                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new IntDataType(val));
-                    } else if (value instanceof FloatNode) {
-                        float val = ((FloatNode) value).getValue();
-                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new FloatDataType(val));
-                    } else if (value instanceof CharNode) {
-                        char val = ((CharNode) value).getValue();
-                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new CharDataType(val));
-                    } else if (value instanceof StringNode) {
-                        String val = ((StringNode) value).getValue();
-                        VariableHashMap.put(((AssignmentNode) statement).getTarget().toString(), new StringDataType(val));
-                    }
-                } else {
+            } else if (statement instanceof AssignmentNode curStatement) {
+                // cast to assignment node
+                if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
                     // if it's not in the hashmap throw an error
                     throw new RuntimeException("Error: Cannot assign to constant " + statement);
+                } else {
+                    var value = curStatement.getExpression();
+                    if (value instanceof IntegerNode) {
+                        int val = ((IntegerNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new IntDataType(val));
+                    } else if (value instanceof FloatNode) {
+                        float val = ((FloatNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new FloatDataType(val));
+                    } else if (value instanceof CharNode) {
+                        char val = ((CharNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new CharDataType(val));
+                    } else if (value instanceof StringNode) {
+                        String val = ((StringNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new StringDataType(val));
+                    }
                 }
             }
         }
@@ -186,9 +182,15 @@ public class Interpreter {
         exe.execute(parameters);
     }
 
+
+    // a > b
+    // have to resolve both side
+    // try to resolve both to float or int
     // resolve boolean ->
     // resolve float
     // resolve int
+    // resolve true or false
+
     // if not int or float, throw exception if not their type
     // inside try catch
     // resolve float on right left
@@ -196,8 +198,31 @@ public class Interpreter {
     // resolve int on right left
     // if not throw exception
     // check for true false
-    public boolean EvalBooleanExpression(BooleanExpressionNode boolNode) {
-        //TODO: EvalBoolExpression - Assign 8
+
+    public boolean resolveBoolean(BooleanExpressionNode boolNode) {
+        try {
+            try {
+                ResolveInt(boolNode.getLeft());
+                ResolveInt(boolNode.getRight());
+            } catch (Exception e) {
+                try {
+                    ResolveFloat(boolNode.getLeft());
+                    ResolveFloat(boolNode.getRight());
+                } catch (Exception f) {
+                    try {
+                        if ("t".equals(boolNode.getLeft().toString())) {
+                            return true;
+                        } else if ("f".equals(boolNode.getLeft().toString())) {
+                            return false;
+                        }
+                    } catch (Exception g) {
+                        throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+        }
         return false;
     }
 
@@ -255,58 +280,8 @@ public class Interpreter {
             // call resolvefloat
         } else {
             throw new RuntimeException("Not a boolean");
-
-
         }
         return false;
-    }
-
-    @SuppressWarnings("unused")
-    public String Resolve(Node node) {
-        // TODO: Change to individual -> ResolveInt, ResolveFloat, ResolveChar, ResolveString, ResolveBoolean - resolve bool has to be recursive to look for the type
-        // resolve just returns the value of the node
-        if (node == null) {
-            throw new IllegalArgumentException("Node cannot resolve node that's null");
-        }
-        if (node instanceof IntegerNode) {
-            return String.valueOf(((IntegerNode) node).getValue());
-        } else if (node instanceof FloatNode) {
-            return String.valueOf(((FloatNode) node).getValue());
-        } else if (node instanceof MathOpNode mathOpNode) {
-            String left = Resolve(mathOpNode.getLeft());
-            String right = Resolve(mathOpNode.getRight());
-            if (mathOpNode.getLeft() instanceof FloatNode || mathOpNode.getRight() instanceof FloatNode) {
-                return switch (mathOpNode.getOperator()) {
-                    case "+" -> String.valueOf(Float.parseFloat(left) + Float.parseFloat(right));
-                    case "-" -> String.valueOf(Float.parseFloat(left) - Float.parseFloat(right));
-                    case "*" -> String.valueOf(Float.parseFloat(left) * Float.parseFloat(right));
-                    case "/" -> String.valueOf(Float.parseFloat(left) / Float.parseFloat(right));
-                    case "%" -> String.valueOf(Float.parseFloat(left) % Float.parseFloat(right));
-                    case "^" -> String.valueOf(Math.pow(Float.parseFloat(left), Float.parseFloat(right)));
-                    default -> throw new IllegalArgumentException("Invalid operator");
-                };
-            } else if (mathOpNode.getLeft() instanceof IntegerNode || mathOpNode.getRight() instanceof IntegerNode) {
-                return switch (mathOpNode.getOperator()) {
-                    case "+" -> String.valueOf(Integer.parseInt(left) + Integer.parseInt(right));
-                    case "-" -> String.valueOf(Integer.parseInt(left) - Integer.parseInt(right));
-                    case "*" -> String.valueOf(Integer.parseInt(left) * Integer.parseInt(right));
-                    case "/" -> String.valueOf(Integer.parseInt(left) / Integer.parseInt(right));
-                    case "%" -> String.valueOf(Integer.parseInt(left) % Integer.parseInt(right));
-                    case "^" -> String.valueOf(Math.pow(Integer.parseInt(left), Integer.parseInt(right)));
-                    // new IntegerNode(Integer.parseInt(String.valueOf(Integer.parseInt(left) % Integer.parseInt(right))));
-                    default -> throw new IllegalArgumentException("Invalid operator");
-                };
-            } else if (mathOpNode.getLeft() instanceof StringNode || mathOpNode.getRight() instanceof StringNode) {
-                if ("+".equals(mathOpNode.getOperator())) {
-                    return (right + left);
-                }
-            } else {
-                throw new IllegalArgumentException("Invalid operator");
-            }
-        } else {
-            throw new RuntimeException("Unknown node type: " + node.getClass().getName());
-        }
-        throw new RuntimeException("Unknown node type: " + node.getClass().getName() + "LEFT: " + ((MathOpNode) node).getLeft() + "RIGHT: " + ((MathOpNode) node).getRight());
     }
 
 

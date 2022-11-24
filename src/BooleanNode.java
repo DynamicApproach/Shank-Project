@@ -8,10 +8,9 @@ public class BooleanNode extends Node {
     public boolean getValue() {
         return value;
     }
-    
+
     @Override
     public String toString() {
         return Boolean.toString(value);
     }
-
 }

@@ -55,14 +55,6 @@ public class Parser {
 
         return node;
     }
-    // merge boolean into regular expression
-    // if a = 5+3
-    // a = b>3
-    // < > = <= >= != <>
-    // lower prio then + - * /
-    // all the same prio
-    // eval left to right with prio
-    // dont have to chain like w +/-
 
 
     // expression, term, factor methods
@@ -87,6 +79,24 @@ public class Parser {
             }
             a++;
         }
+        // merge boolean into regular expression
+        // if a = 5+3
+        // a = b>3
+        // < > = <= >= == <>
+        // lower prio then + - * /
+        // all the same prio
+        // eval left to right with prio
+        // dont have to chain like w +/-
+
+        //BooleanExpressionNode node = null;
+        //        try {
+        //            Type token = peek(1).getType();
+        //            node = new BooleanExpressionNode(expression(), token, expression());
+        //        } catch (Exception e) {
+        //            System.out.println("Not an expression");
+        //            throw new RuntimeException(e); // less, greater, ect lowest priority
+        //        }
+
         return node;
     }
 
