@@ -4,7 +4,7 @@
 -------------------------------------------
 ---------------------------------------------------
 
-![](C:\Users\lloyd\Desktop\Homework\311\images\diagram.png "Diagram of file outline")
+![](/images/diagram.png "Diagram of file outline")
 
 -----------------------------------------------------------------
 
