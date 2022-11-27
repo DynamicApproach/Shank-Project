@@ -105,52 +105,34 @@ public class Interpreter {
                     // funcNode
                     // not in hashmap
                     throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
-                    /*ArrayList<ParameterNode> parameters = functionCall.getParameters();
-                    for (int i = 0; i < parameters.size(); i++) {
-                        ParameterNode param = parameters.get(i);
-                        // check if both have is var or not
-                        // if both are var is ok, else throw error
-                        boolean functparam = hashmapfuncts.get(name).getArguments().get(i).isConstant();
-                        boolean callparam = param.isVariable();
-                        if (functparam != callparam) {
-                            throw new RuntimeException("Error: Mismatch of parameters for function " + functionCall.getName());
-                        }
-                    }
-                    for (var param : functionCall.getParameters()) {
-                        Type parType = param.getType();
-                        if (parType == Type.INTEGER) {
-                            stringToFunc.put(param.getName(), new IntDataType(param.toString()));
-                        } else if (parType == Type.FLOAT) {
-                            stringToFunc.put(param.getName(), new FloatDataType(param.toString()));
-                        } else if (parType == Type.CHAR) {
-                            stringToFunc.put(param.getName(), new CharDataType(param.toString().toCharArray()[0]));
-                        } else if (parType == Type.STRING) {
-                            stringToFunc.put(param.getName(), new StringDataType(param.toString()));
-                        }
-                    }
-                    // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),*/
                 }
             } else if (statement instanceof ForNode) {
                 // we have a fornode with an expression and a block
                 // we need to evaluate the expression
                 // if it is true, we need to interpret the block
-            } else if (statement instanceof WhileNode) {
-                // we have a while node with an expression and a block
-                // we need to evaluate the expression
-                // if it is true, we need to interpret the block in a loop, based on the condition
-                // if it is false, we need to break out of the loop
+                // (if a = b+3)
+                // need to creat a fornode with an expression and a block
+                // need to evaluate the expression
+                // if it is true, we need to interpret the block
+                if (((ForNode) statement).getVariableReference() instanceof IfNode expression) {
 
-                // basically while(condition != false) {interpret block} but need to do bool evaluation first
+                }
+
+            } else if (statement instanceof WhileNode) {
+                if (((WhileNode) statement).getBooleanExpression() instanceof WhileNode expression) {
+                }
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
+
             } else if (statement instanceof IfNode) {
                 // we have an ifnode with an expression and a block
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
+
             } else if (statement instanceof AssignmentNode curStatement) {
                 // cast to assignment node
                 if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
