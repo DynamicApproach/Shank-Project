@@ -22,7 +22,7 @@ public class BooleanExpressionNode extends Node {
         return right;
     }
 
-    public Type getCondition() {
+    public Type getOperator() {
         return condition;
     }
 

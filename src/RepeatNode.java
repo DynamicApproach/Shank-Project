@@ -14,7 +14,7 @@ public class RepeatNode extends StatementNode {
         return booleanExpression;
     }
 
-    public ArrayList<StatementNode> getStatementNodes() {
+    public ArrayList<StatementNode> getBlock() {
         return statementNodes;
     }
 

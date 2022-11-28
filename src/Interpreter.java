@@ -119,20 +119,23 @@ public class Interpreter {
                 }
 
             } else if (statement instanceof WhileNode) {
-                if (((WhileNode) statement).getBooleanExpression() instanceof WhileNode expression) {
-                }
+                BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
+                ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
+                BooleanExpressionNode express = (BooleanExpressionNode) ((RepeatNode) statement).getBooleanExpression();
+                ArrayList<StatementNode> block = ((RepeatNode) statement).getBlock();
 
             } else if (statement instanceof IfNode) {
                 // we have an ifnode with an expression and a block
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
-
+                BooleanExpressionNode express = ((IfNode) statement).getBooleanExpression();
+                ArrayList<StatementNode> block = ((IfNode) statement).getStatementNodes();
             } else if (statement instanceof AssignmentNode curStatement) {
                 // cast to assignment node
                 if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
@@ -183,13 +186,42 @@ public class Interpreter {
 
     public boolean resolveBoolean(BooleanExpressionNode boolNode) {
         try {
+            // TODO: Add string and char
             try {
-                ResolveInt(boolNode.getLeft());
-                ResolveInt(boolNode.getRight());
+                int left = ResolveInt(boolNode.getLeft());
+                int right = ResolveInt(boolNode.getRight());
+                if (boolNode.getOperator() == Type.GREATER) {
+                    return left > right;
+                } else if (boolNode.getOperator() == Type.LESS) {
+                    return left < right;
+                } else if (boolNode.getOperator() == Type.GREATER_EQUAL) {
+                    return left >= right;
+                } else if (boolNode.getOperator() == Type.LESS_EQUAL) {
+                    return left <= right;
+                } else if (boolNode.getOperator() == Type.EQUAL) {
+                    return left == right;
+                } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
+                    return left != right;
+                }
             } catch (Exception e) {
                 try {
-                    ResolveFloat(boolNode.getLeft());
-                    ResolveFloat(boolNode.getRight());
+                    float left = ResolveFloat(boolNode.getLeft());
+                    float right = ResolveFloat(boolNode.getRight());
+                    if (boolNode.getOperator() == null) {
+                        return false;
+                    } else if (boolNode.getOperator() == Type.LESS) {
+                        return left < right;
+                    } else if (boolNode.getOperator() == Type.GREATER_EQUAL) {
+                        return left >= right;
+                    } else if (boolNode.getOperator() == Type.LESS_EQUAL) {
+                        return left <= right;
+                    } else if (boolNode.getOperator() == Type.EQUAL) {
+                        return left == right;
+                    } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
+                        return left != right;
+                    } else if (boolNode.getOperator() == Type.GREATER) {
+                        return left > right;
+                    }
                 } catch (Exception f) {
                     try {
                         if ("t".equals(boolNode.getLeft().toString())) {
@@ -209,6 +241,7 @@ public class Interpreter {
     }
 
     public int ResolveInt(Node nodey) {
+        // TODO: make sure its not doing float
         if (nodey instanceof FloatNode) {
             return (int) Float.parseFloat(nodey.toString());
         } else if (nodey instanceof MathOpNode) {
@@ -255,6 +288,7 @@ public class Interpreter {
 
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
+
             return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
         } else if (nodey instanceof MathOpNode) {
             // call resolvebool on left and right

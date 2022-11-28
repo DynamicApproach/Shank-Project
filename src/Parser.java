@@ -47,12 +47,17 @@ public class Parser {
         BooleanExpressionNode node;
         try {
             Type token = peek(1).getType();
+            if (token == Type.EQUAL || token == Type.NOT_EQUAL || token == Type.LESS || token == Type.GREATER || token == Type.LESS_EQUAL || token == Type.GREATER_EQUAL) {
+                Type condition = matchAndRemove(token).getType();
+                node = new BooleanExpressionNode(expression(), condition, expression());
+            } else {
+                throw new Exception("Invalid boolean expression");
+            }
             node = new BooleanExpressionNode(expression(), token, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e); // less, greater, ect lowest priority
-        } // TODO: Ask about moving into expression method
-
+        } // TODO: fix token
         return node;
     }
 
@@ -62,7 +67,6 @@ public class Parser {
     // Expression is a list of terms separated by + or -
     public Node expression() {
         // boolean-expression term factor
-        // TODO: EXPRESSION MERGE
         Node node = term();
         int a = 0;
         if (node == null) {
@@ -72,6 +76,8 @@ public class Parser {
             if (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
                 while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
                     Type token = peek(0).getType();
+                    // 5 < 3 < 7
+                    // TODO: Move to new a function and call from expression
                     switch (token) {
                         case ADD -> {
                             matchAndRemove(token);
@@ -88,7 +94,7 @@ public class Parser {
                 // eg. a > b or 1 < 2
                 // read a then get here and check for > or < then read b
                 switch (peek(0).getType()) {
-                    case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, NOT_EQUAL, EQUAL_EQUAL -> {
+                    case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, GREATER, NOT_EQUAL, EQUAL_EQUAL -> {
                         Type token = peek(0).getType();
                         matchAndRemove(token);
                         node = new BooleanExpressionNode(node, token, expression());
@@ -118,6 +124,7 @@ public class Parser {
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
+        // TODO: Add a while to loop until not */%
         Node node = factor();
         if (node == null) {
             return null;
@@ -126,18 +133,16 @@ public class Parser {
         switch (token) {
             case MULTIPLY -> {
                 matchAndRemove(token);
-                node = new MathOpNode(node, factor(), Type.MULTIPLY);
+                node = new MathOpNode(node, term(), Type.MULTIPLY);
             }
             case DIVIDE -> {
                 matchAndRemove(token);
-                node = new MathOpNode(node, factor(), Type.DIVIDE);
+                node = new MathOpNode(node, term(), Type.DIVIDE);
             }
             case MOD -> {
                 matchAndRemove(token);
-                node = new MathOpNode(node, factor(), Type.MOD);
+                node = new MathOpNode(node, term(), Type.MOD);
             }
-            case LESS -> node = new MathOpNode(node, factor(), Type.LESS);
-            case GREATER -> node = new MathOpNode(node, factor(), Type.GREATER);
         }
         return node;
     }
@@ -145,6 +150,7 @@ public class Parser {
 
     // Factor is a number or a parenthesized expression.
     public Node factor() {
+        // TODO: Check if number first && swap to match / remove && add paren -> find paren and call expression
         if (isInteger(tokens.get(0))) {
             IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
             tokens.remove(0);
@@ -297,8 +303,7 @@ public class Parser {
     // for
     public ForNode forExpression() {
         // for identifier assignment expression to expression do statements end
-        if (peek(0).getType() == Type.FOR) {
-            matchAndRemove(Type.FOR);
+        if (matchAndRemove(Type.FOR) != null) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
             Node start = expression();
@@ -378,6 +383,7 @@ public class Parser {
         or a semicolon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA/COLON    DATA-TYPE   EOL OR ; IDEN    COMMA/COLON    DATA-TYPE     )/EOL
         */// STATES:
+        // TODO : FIX ->
         // State 0 - Var -> 1
         // State 1 - IDEN -> 2, 3
         // State 2 - COMMA -> 0

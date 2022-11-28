@@ -10,11 +10,11 @@ public class WhileNode extends StatementNode {
         this.statementNodes = statementNodes;
     }
 
-    public Node getBooleanExpression() {
-        return booleanExpression;
+    public BooleanExpressionNode getBooleanExpression() {
+        return (BooleanExpressionNode) booleanExpression;
     }
 
-    public ArrayList<StatementNode> getStatementNodes() {
+    public ArrayList<StatementNode> getBlock() {
         return statementNodes;
     }
 
