@@ -72,20 +72,27 @@ public class Parser {
             if (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
                 while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
                     Type token = peek(0).getType();
-                    if (token == Type.ADD) {
-                        matchAndRemove(token);
-                        node = new MathOpNode(node, factor(), Type.ADD);
-                    } else if (token == Type.MINUS) {
-                        matchAndRemove(token);
-                        node = new MathOpNode(node, factor(), Type.MINUS);
+                    switch (token) {
+                        case ADD -> {
+                            matchAndRemove(token);
+                            node = new MathOpNode(node, factor(), Type.ADD);
+                        }
+                        case MINUS -> {
+                            matchAndRemove(token);
+                            node = new MathOpNode(node, factor(), Type.MINUS);
+                        }
                     }
                     a++;
                 }
-            } else {
-                if (peek(0).getType() == Type.EQUAL) {
-                    Type token = peek(0).getType();
-                    matchAndRemove(token);
-                    node = new BooleanExpressionNode(node, token, expression());
+            } else { // take care of boolean expression here
+                // eg. a > b or 1 < 2
+                // read a then get here and check for > or < then read b
+                switch (peek(0).getType()) {
+                    case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, NOT_EQUAL, EQUAL_EQUAL -> {
+                        Type token = peek(0).getType();
+                        matchAndRemove(token);
+                        node = new BooleanExpressionNode(node, token, expression());
+                    }
                 }
             }
         } catch (Exception e) {
@@ -116,19 +123,21 @@ public class Parser {
             return null;
         }
         Type token = peek(0).getType();
-        if (token == Type.MULTIPLY) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.MULTIPLY);
-        } else if (token == Type.DIVIDE) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.DIVIDE);
-        } else if (token == Type.MOD) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.MOD);
-        } else if (token == Type.LESS) {
-            node = new MathOpNode(node, factor(), Type.LESS);
-        } else if (token == Type.GREATER) {
-            node = new MathOpNode(node, factor(), Type.GREATER);
+        switch (token) {
+            case MULTIPLY -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.MULTIPLY);
+            }
+            case DIVIDE -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.DIVIDE);
+            }
+            case MOD -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.MOD);
+            }
+            case LESS -> node = new MathOpNode(node, factor(), Type.LESS);
+            case GREATER -> node = new MathOpNode(node, factor(), Type.GREATER);
         }
         return node;
     }
@@ -207,15 +216,15 @@ public class Parser {
 
     public StatementNode statement() {
         // TODO: Call assignment if null call while if null call if
-        if (assignment() != null) {
+        if (assignment() != null)
             return assignment();
-        } else if (whileExpression() != null) {
+        else if (whileExpression() != null)
             return whileExpression();
-        } else if (ifExpression() != null) {
+        else if (ifExpression() != null)
             return ifExpression();
-        } else if (forExpression() != null) {
+        else if (forExpression() != null)
             return forExpression();
-        }
+
         return null;
     }
 
