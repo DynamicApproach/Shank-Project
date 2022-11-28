@@ -4,7 +4,7 @@
 -------------------------------------------
 ---------------------------------------------------
 
-![](C:\Users\lloyd\Desktop\Homework\311\images\diagram.png "Diagram of file outline")
+![](/images/diagram.png "Diagram of file outline")
 
 -----------------------------------------------------------------
 
@@ -60,7 +60,7 @@
 
 ----------------------------------------------------------------
 
-- [➡️] 7 - Calling Functions in the interpreter
+- [x] 7 - Calling Functions in the interpreter
 
   - Attached Files:
     - File 7 - Calling Functions in the interpreter.docx 7 - Calling Functions in the
@@ -68,14 +68,14 @@
 
 ----------------------------------------------------------------
 
-- [ ] 8 - Adding Other Statements
+- [➡️] 8 - Adding Other Statements
 
   - Attached Files:
     - File 8 - Adding Other Statements.docx 8 - Adding Other Statements.docx
 
 ----------------------------------------------------------------
 
-- [ ] 9 – Adding more data types
+- [➡️] 9 – Adding more data types
 
   - Attached Files:
     - File 9 – Adding more data types.docx 9 – Adding more data types.docx 
