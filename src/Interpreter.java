@@ -183,6 +183,7 @@ public class Interpreter {
 
     public boolean resolveBoolean(BooleanExpressionNode boolNode) {
         try {
+            // TODO: Add string and char
             try {
                 ResolveInt(boolNode.getLeft());
                 ResolveInt(boolNode.getRight());
@@ -209,6 +210,7 @@ public class Interpreter {
     }
 
     public int ResolveInt(Node nodey) {
+        // TODO: make sure its not doing float
         if (nodey instanceof FloatNode) {
             return (int) Float.parseFloat(nodey.toString());
         } else if (nodey instanceof MathOpNode) {
