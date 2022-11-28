@@ -5,9 +5,6 @@ public class CharDataType extends InterpreterDataType {
         this.value = value;
     }
 
-    public CharDataType() {
-        this.value = ' ';
-    }
 
     public String toString() {
         return Character.toString(value);

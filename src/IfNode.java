@@ -17,6 +17,17 @@ public class IfNode extends StatementNode {
         this.ifNode = ifNode;
     }
 
+    public BooleanExpressionNode getBooleanExpression() {
+        return booleanExpression;
+    }
+
+    public ArrayList<StatementNode> getStatementNodes() {
+        return statementNodes;
+    }
+
+    public IfNode getIfNode() {
+        return ifNode;
+    }
 
     @Override
     public String toString() {

@@ -9,7 +9,8 @@ public class Interpreter {
     public Interpreter(HashMap<String, CallableNode> hashmapfuncts) {
         Interpreter.hashmapfuncts = hashmapfuncts;
     }
- // gets handed a function node and a list of params
+
+    // gets handed a function node and a list of params
     // makes space for the local variables
     // match the parameters to names
     // e.g. Take a,b and 1,2 -> both are now local variables
@@ -55,19 +56,14 @@ public class Interpreter {
     // Make a collection of values (InterpreterDataType):
     // if in hashmap of functions, get the built-in function
     // if not, get the user defined function
-    private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> stringToFunc) {
-        // TODO: INTERPRET BLOCK
-        //
+    private static InterpreterDataType InterpretBlock(ArrayList<StatementNode> statements, HashMap<String, InterpreterDataType> VariableHashMap) {
         // Passes a collection of statements and a hashmap of variables
         // walk the list of statements and do each one
         // check what type of statement it is
-        //
-
-
         for (StatementNode statement : statements) { // statement is instance of any node
             if (statement instanceof FunctionCallNode functionCall) { // else function call execute
                 String name = functionCall.getName();
-                if (hashmapfuncts.containsKey(name)) { // is it built in? Is in hashmap? IF NOT THROW EXCEPTION
+                if (hashmapfuncts.containsKey(name)) { // is it built in? Is in hashmap?
                     FunctionCallNode current;
                     //builtin
                     // a, b, 2
@@ -86,83 +82,97 @@ public class Interpreter {
                                 parameters.add(new CharDataType(param.toString().toCharArray()[0]));
                             } else if (parType == Type.STRING) {
                                 parameters.add(new StringDataType(param.toString()));
-                            }// if var look up in local var hashmap
-                            // if not there throw an exception
+                            }
                         }
                         try {
-                            // look at type of callable if it's built in call execute else call interpret function on it
-                            InterpretFunction(functionCall, parameters);
+                            // if in hashmap, call execute
+                            if (hashmapfuncts.containsKey(name)) {
+                                executeFunction(hashmapfuncts.get(name), parameters);
+                            } else {
+                                InterpretFunction(functionCall, parameters);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
                         throw new RuntimeException("Error: Incorrect number of parameters for function " + functionCall.getName());
                     }
-
                     // after adding all the params for each of the data types
                     // interpretfunction with the types passed in
                     // iterate over function hashmap
                     // need to know if both are var or not - do the vars match up between call and definition
                 } else {
                     // funcNode
-                    // not in hashmap, so we can add it now
-                    ArrayList<ParameterNode> parameters = functionCall.getParameters();
-                    for (int i = 0; i < parameters.size(); i++) {
-                        ParameterNode param = parameters.get(i);
-                        // check if both have is var or not
-                        // if both are var is ok, else throw error
-                        boolean functparam = hashmapfuncts.get(name).getArguments().get(i).isConstant();
-                        boolean callparam = param.isVariable();
-                        if (functparam != callparam) {
-                            throw new RuntimeException("Error: Mismatch of parameters for function " + functionCall.getName());
-                        }
-                    }
-                    for (var param : functionCall.getParameters()) {
-                        Type parType = param.getType();
-                        if (parType == Type.INTEGER) {
-                            stringToFunc.put(param.getName(), new IntDataType(param.toString()));
-                        } else if (parType == Type.FLOAT) {
-                            stringToFunc.put(param.getName(), new FloatDataType(param.toString()));
-                        } else if (parType == Type.CHAR) {
-                            stringToFunc.put(param.getName(), new CharDataType(param.toString().toCharArray()[0]));
-                        } else if (parType == Type.STRING) {
-                            stringToFunc.put(param.getName(), new StringDataType(param.toString()));
-                        }
-                    }
-                    // hashmapfuncts.put(functionCall.getName(), new FunctionNode(functionCall.getName(),
+                    // not in hashmap
+                    throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
                 }
             } else if (statement instanceof ForNode) {
+                // we have a fornode with an expression and a block
+                // we need to evaluate the expression
+                // if it is true, we need to interpret the block
+                // (if a = b+3)
+                // need to creat a fornode with an expression and a block
+                // need to evaluate the expression
+                // if it is true, we need to interpret the block
+                if (((ForNode) statement).getVariableReference() instanceof IfNode expression) {
 
+                }
 
             } else if (statement instanceof WhileNode) {
-
+                if (((WhileNode) statement).getBooleanExpression() instanceof WhileNode expression) {
+                }
             } else if (statement instanceof RepeatNode) {
+                // we have a repeat node with an expression and a block
+                // we need to evaluate the expression
+                // if true, we need to interpret the block
+                // if false, we need to break out of the loop
 
             } else if (statement instanceof IfNode) {
+                // we have an ifnode with an expression and a block
+                // we need to evaluate the expression
+                // if true, we need to interpret the block
+                // if false, we need to break out of the loop
 
-
-            } else if (statement instanceof AssignmentNode) {
-                // we get a variable, and we know it's an assignment node
-                // look up var ref node in the hash map
-                // throw except if not exsist
-                // if it does, get the type
-                // resolve the right hand side
-                // update the value of the variable
+            } else if (statement instanceof AssignmentNode curStatement) {
+                // cast to assignment node
+                if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
+                    // if it's not in the hashmap throw an error
+                    throw new RuntimeException("Error: Cannot assign to constant " + statement);
+                } else {
+                    var value = curStatement.getExpression();
+                    if (value instanceof IntegerNode) {
+                        int val = ((IntegerNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new IntDataType(val));
+                    } else if (value instanceof FloatNode) {
+                        float val = ((FloatNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new FloatDataType(val));
+                    } else if (value instanceof CharNode) {
+                        char val = ((CharNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new CharDataType(val));
+                    } else if (value instanceof StringNode) {
+                        String val = ((StringNode) value).getValue();
+                        VariableHashMap.put((curStatement).getTarget().toString(), new StringDataType(val));
+                    }
+                }
             }
         }
         return null;
     }
 
-    public static void executeFunction(String functionName, ArrayList<InterpreterDataType> parameters) {
-        // get function from function name
-        // execute function
-        // pass in parameters
-        // return value
+    public static void executeFunction(CallableNode functionName, ArrayList<InterpreterDataType> parameters) throws Exception {
+        BuiltInFunctionNode exe = (BuiltInFunctionNode) functionName;
+        exe.execute(parameters);
     }
 
+
+    // a > b
+    // have to resolve both side
+    // try to resolve both to float or int
     // resolve boolean ->
     // resolve float
     // resolve int
+    // resolve true or false
+
     // if not int or float, throw exception if not their type
     // inside try catch
     // resolve float on right left
@@ -170,8 +180,31 @@ public class Interpreter {
     // resolve int on right left
     // if not throw exception
     // check for true false
-    public boolean EvalBooleanExpression(BooleanExpressionNode boolNode) {
-        //TODO: EvalBoolExpression - Assign 8
+
+    public boolean resolveBoolean(BooleanExpressionNode boolNode) {
+        try {
+            try {
+                ResolveInt(boolNode.getLeft());
+                ResolveInt(boolNode.getRight());
+            } catch (Exception e) {
+                try {
+                    ResolveFloat(boolNode.getLeft());
+                    ResolveFloat(boolNode.getRight());
+                } catch (Exception f) {
+                    try {
+                        if ("t".equals(boolNode.getLeft().toString())) {
+                            return true;
+                        } else if ("f".equals(boolNode.getLeft().toString())) {
+                            return false;
+                        }
+                    } catch (Exception g) {
+                        throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+        }
         return false;
     }
 
@@ -223,59 +256,14 @@ public class Interpreter {
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
             return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
+        } else if (nodey instanceof MathOpNode) {
+            // call resolvebool on left and right
+            // call resolveint on left and right
+            // call resolvefloat
         } else {
             throw new RuntimeException("Not a boolean");
-
-
         }
-    }
-
-    @SuppressWarnings("unused")
-    public String Resolve(Node node) {
-        // TODO: Change to individual -> ResolveInt, ResolveFloat, ResolveChar, ResolveString, ResolveBoolean - resolve bool has to be recursive to look for the type
-        // resolve just returns the value of the node
-        if (node == null) {
-            throw new IllegalArgumentException("Node cannot resolve node that's null");
-        }
-        if (node instanceof IntegerNode) {
-            return String.valueOf(((IntegerNode) node).getValue());
-        } else if (node instanceof FloatNode) {
-            return String.valueOf(((FloatNode) node).getValue());
-        } else if (node instanceof MathOpNode mathOpNode) {
-            String left = Resolve(mathOpNode.getLeft());
-            String right = Resolve(mathOpNode.getRight());
-            if (mathOpNode.getLeft() instanceof FloatNode || mathOpNode.getRight() instanceof FloatNode) {
-                return switch (mathOpNode.getOperator()) {
-                    case "+" -> String.valueOf(Float.parseFloat(left) + Float.parseFloat(right));
-                    case "-" -> String.valueOf(Float.parseFloat(left) - Float.parseFloat(right));
-                    case "*" -> String.valueOf(Float.parseFloat(left) * Float.parseFloat(right));
-                    case "/" -> String.valueOf(Float.parseFloat(left) / Float.parseFloat(right));
-                    case "%" -> String.valueOf(Float.parseFloat(left) % Float.parseFloat(right));
-                    case "^" -> String.valueOf(Math.pow(Float.parseFloat(left), Float.parseFloat(right)));
-                    default -> throw new IllegalArgumentException("Invalid operator");
-                };
-            } else if (mathOpNode.getLeft() instanceof IntegerNode || mathOpNode.getRight() instanceof IntegerNode) {
-                return switch (mathOpNode.getOperator()) {
-                    case "+" -> String.valueOf(Integer.parseInt(left) + Integer.parseInt(right));
-                    case "-" -> String.valueOf(Integer.parseInt(left) - Integer.parseInt(right));
-                    case "*" -> String.valueOf(Integer.parseInt(left) * Integer.parseInt(right));
-                    case "/" -> String.valueOf(Integer.parseInt(left) / Integer.parseInt(right));
-                    case "%" -> String.valueOf(Integer.parseInt(left) % Integer.parseInt(right));
-                    case "^" -> String.valueOf(Math.pow(Integer.parseInt(left), Integer.parseInt(right)));
-                    // new IntegerNode(Integer.parseInt(String.valueOf(Integer.parseInt(left) % Integer.parseInt(right))));
-                    default -> throw new IllegalArgumentException("Invalid operator");
-                };
-            } else if (mathOpNode.getLeft() instanceof StringNode || mathOpNode.getRight() instanceof StringNode) {
-                if ("+".equals(mathOpNode.getOperator())) {
-                    return (right + left);
-                }
-            } else {
-                throw new IllegalArgumentException("Invalid operator");
-            }
-        } else {
-            throw new RuntimeException("Unknown node type: " + node.getClass().getName());
-        }
-        throw new RuntimeException("Unknown node type: " + node.getClass().getName() + "LEFT: " + ((MathOpNode) node).getLeft() + "RIGHT: " + ((MathOpNode) node).getRight());
+        return false;
     }
 
 

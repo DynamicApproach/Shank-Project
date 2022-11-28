@@ -10,6 +10,13 @@ public class WhileNode extends StatementNode {
         this.statementNodes = statementNodes;
     }
 
+    public Node getBooleanExpression() {
+        return booleanExpression;
+    }
+
+    public ArrayList<StatementNode> getStatementNodes() {
+        return statementNodes;
+    }
 
     @Override
     public String toString() {

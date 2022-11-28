@@ -6,8 +6,7 @@ public class Left extends BuiltInFunctionNode {
     public Left(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
     }
-
-
+    
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         try {

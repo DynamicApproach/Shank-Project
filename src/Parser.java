@@ -41,6 +41,22 @@ public class Parser {
         }
     }
 
+
+    public BooleanExpressionNode booleanExpression() {
+        // check for expression operator expression and make a new booleanExpressionNode
+        BooleanExpressionNode node;
+        try {
+            Type token = peek(1).getType();
+            node = new BooleanExpressionNode(expression(), token, expression());
+        } catch (Exception e) {
+            System.out.println("Not an expression");
+            throw new RuntimeException(e); // less, greater, ect lowest priority
+        } // TODO: Ask about moving into expression method
+
+        return node;
+    }
+
+
     // expression, term, factor methods
     // Expression is the highest level of the grammar
     // Expression is a list of terms separated by + or -
@@ -52,19 +68,53 @@ public class Parser {
         if (node == null) {
             return null;
         }
-        while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
-            Type token = peek(0).getType();
-            if (token == Type.ADD) {
-                matchAndRemove(token);
-                node = new MathOpNode(node, factor(), Type.ADD);
-            } else if (token == Type.MINUS) {
-                matchAndRemove(token);
-                node = new MathOpNode(node, factor(), Type.MINUS);
+        try {
+            if (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
+                while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
+                    Type token = peek(0).getType();
+                    switch (token) {
+                        case ADD -> {
+                            matchAndRemove(token);
+                            node = new MathOpNode(node, factor(), Type.ADD);
+                        }
+                        case MINUS -> {
+                            matchAndRemove(token);
+                            node = new MathOpNode(node, factor(), Type.MINUS);
+                        }
+                    }
+                    a++;
+                }
+            } else { // take care of boolean expression here
+                // eg. a > b or 1 < 2
+                // read a then get here and check for > or < then read b
+                switch (peek(0).getType()) {
+                    case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, NOT_EQUAL, EQUAL_EQUAL -> {
+                        Type token = peek(0).getType();
+                        matchAndRemove(token);
+                        node = new BooleanExpressionNode(node, token, expression());
+                    }
+                }
             }
-            a++;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return node;
     }
+    // if a = 5+3
+    // a = b>3
+    // < > = <= >= == <>
+    // lower prio then + - * /
+    // all the same prio
+    // eval left to right with prio
+    // don't have to chain like w +/-
+    //BooleanExpressionNode node = null;
+    //        try {
+    //            Type token = peek(1).getType();
+    //            node = new BooleanExpressionNode(expression(), token, expression());
+    //        } catch (Exception e) {
+    //            System.out.println("Not an expression");
+    //            throw new RuntimeException(e); // less, greater, ect lowest priority
+    //        }
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
@@ -73,19 +123,21 @@ public class Parser {
             return null;
         }
         Type token = peek(0).getType();
-        if (token == Type.MULTIPLY) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.MULTIPLY);
-        } else if (token == Type.DIVIDE) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.DIVIDE);
-        } else if (token == Type.MOD) {
-            matchAndRemove(token);
-            node = new MathOpNode(node, factor(), Type.MOD);
-        } else if (token == Type.LESS) {
-            node = new MathOpNode(node, factor(), Type.LESS);
-        } else if (token == Type.GREATER) {
-            node = new MathOpNode(node, factor(), Type.GREATER);
+        switch (token) {
+            case MULTIPLY -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.MULTIPLY);
+            }
+            case DIVIDE -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.DIVIDE);
+            }
+            case MOD -> {
+                matchAndRemove(token);
+                node = new MathOpNode(node, factor(), Type.MOD);
+            }
+            case LESS -> node = new MathOpNode(node, factor(), Type.LESS);
+            case GREATER -> node = new MathOpNode(node, factor(), Type.GREATER);
         }
         return node;
     }
@@ -164,15 +216,15 @@ public class Parser {
 
     public StatementNode statement() {
         // TODO: Call assignment if null call while if null call if
-        if (assignment() != null) {
+        if (assignment() != null)
             return assignment();
-        } else if (whileExpression() != null) {
+        else if (whileExpression() != null)
             return whileExpression();
-        } else if (ifExpression() != null) {
+        else if (ifExpression() != null)
             return ifExpression();
-        } else if (forExpression() != null) {
+        else if (forExpression() != null)
             return forExpression();
-        }
+
         return null;
     }
 
@@ -192,19 +244,6 @@ public class Parser {
         return tokens.get(x);
     }
 
-    public BooleanExpressionNode booleanExpression() {
-        // check for expression operator expression and make a new booleanExpressionNode
-        BooleanExpressionNode node = null;
-        try {
-            Type token = peek(1).getType();
-            node = new BooleanExpressionNode(expression(), token, expression());
-        } catch (Exception e) {
-            System.out.println("Not an expression");
-            throw new RuntimeException(e); // less, greater, ect lowest priority
-        } // TODO: Ask about moving into expression method
-
-        return node;
-    }
 
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
@@ -336,7 +375,7 @@ public class Parser {
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
         A variable declaration is a list of identifiers (separated by commas) followed by a colon,
         then the data type (integer or real, for now) followed by endOfLine (for variables section)
-        or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
+        or a semicolon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA/COLON    DATA-TYPE   EOL OR ; IDEN    COMMA/COLON    DATA-TYPE     )/EOL
         */// STATES:
         // State 0 - Var -> 1
@@ -398,8 +437,8 @@ public class Parser {
                             idenList.clear();
                             state = 5;
                         } else {
-                            Token b = matchAndRemove(Type.FLOAT);
-                            if (b != null) {
+                            Token floaty = matchAndRemove(Type.FLOAT);
+                            if (floaty != null) {
                                 // create a VariableNode for each identifier in the list
                                 for (Token token : idenList) {
                                     VariableNode var = new VariableNode(token.getValue().trim(), null, Type.FLOAT, !(isVar));
@@ -414,8 +453,8 @@ public class Parser {
                         }
                     }
                     case 5 -> {
-                        Token c = matchAndRemove(Type.SEMICOLON);
-                        if (c != null) {
+                        Token semi = matchAndRemove(Type.SEMICOLON);
+                        if (semi != null) {
                             state = 0;
                         } else {
                             state = 6;
@@ -551,7 +590,7 @@ public class Parser {
         If it finds it, it then looks for variable declarations and makes VariableNodes for each one.
         A variable declaration is a list of identifiers (separated by commas) followed by a colon,
         then the data type (integer or real, for now) followed by endOfLine (for variables section)
-        or a semi-colon (for function definitions). For each variable, we make a VariableNode like we did for constants.
+        or a semicolon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA  COLON    DATA-TYPE   EOL OR ;
         For each variable, we make a VariableNode like we did for constants.*/
         // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
