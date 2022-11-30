@@ -46,16 +46,17 @@ public class Parser {
         // check for expression operator expression and make a new booleanExpressionNode
         BooleanExpressionNode node;
         try {
-            Type token = peek(1).getType();
+            Node express = expression();
+            Type token = peek(0).getType();
             if (token == Type.EQUAL || token == Type.NOT_EQUAL || token == Type.LESS || token == Type.GREATER || token == Type.LESS_EQUAL || token == Type.GREATER_EQUAL) {
-                return new BooleanExpressionNode(expression(), matchAndRemove(token).getType(), expression());
+                return new BooleanExpressionNode(express, matchAndRemove(token).getType(), expression());
             } else {
                 throw new Exception("Invalid boolean expression");
             }
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e); // less, greater, ect lowest priority
-        } // TODO: fix token
+        }
     }
 
 
@@ -588,10 +589,16 @@ public class Parser {
             while (matchAndRemove(Type.END) == null) {
                 matchAndRemove(Type.ENDLINE);
                 StatementNode statement = statement();
-                if (statement.toString() != null) {
-                    matchAndRemove(Type.ENDLINE);
-                    bod.add(statement);
+                try {
+                    if (statement.toString() != null) {
+                        matchAndRemove(Type.ENDLINE);
+                        bod.add(statement);
+                    }
+                } catch (Exception ep) {
+                    System.err.println("Error in Body - Token expected but not found.");
+                    throw new RuntimeException(ep);
                 }
+
             }
             return bod;
         }
