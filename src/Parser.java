@@ -211,7 +211,7 @@ public class Parser {
     @SuppressWarnings("unused")
     public Node parse() {
         Node node = expression();
-        matchAndRemove(Type.ENDLINE);
+        removeEndlines();
         if (node == null) {
             System.err.println("Node cannot be made.");
             return null;
@@ -351,7 +351,7 @@ public class Parser {
                     vars = variables();
                 }
                 ArrayList<VariableNode> consta = null;
-                matchAndRemove(Type.ENDLINE);
+                removeEndlines();
                 if (matchAndRemove(Type.CONSTANT) != null) {
                     removeEndlines();
                     consta = constants();
@@ -587,11 +587,11 @@ public class Parser {
         if (matchAndRemove(Type.BEGIN) != null) {
             // while not at the end token, keep adding statements
             while (matchAndRemove(Type.END) == null) {
-                matchAndRemove(Type.ENDLINE);
+                removeEndlines();
                 StatementNode statement = statement();
                 try {
                     if (statement.toString() != null) {
-                        matchAndRemove(Type.ENDLINE);
+                        removeEndlines();
                         bod.add(statement);
                     }
                 } catch (Exception ep) {
@@ -605,6 +605,7 @@ public class Parser {
 
         return bod;
     }
+
 
     public ArrayList<VariableNode> variables() {
        /*
