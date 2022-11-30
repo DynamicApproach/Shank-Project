@@ -105,7 +105,7 @@ public class Interpreter {
                     // funcNode
                     // not in hashmap
                     throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
-                }
+                } // TODO: interpret different nodes
             } else if (statement instanceof ForNode) {
                 // we have a fornode with an expression and a block
                 // we need to evaluate the expression
@@ -293,19 +293,29 @@ public class Interpreter {
         }
     }
 
-    // TODO: resovle
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
-
-            return Boolean.parseBoolean(nodey.toString()); // TODO: change from inbuilt parser
+            return resolveBoolean((BooleanExpressionNode) nodey);
         } else if (nodey instanceof MathOpNode) {
             // call resolvebool on left and right
-            // call resolveint on left and right
-            // call resolvefloat
+            try {
+                return ResolveBoolean(((MathOpNode) nodey).getLeft()) && ResolveBoolean(((MathOpNode) nodey).getRight());
+            } catch (Exception e) {
+                // call resolveint on left and right
+                try {
+                    return ResolveInt(((MathOpNode) nodey).getLeft()) == ResolveInt(((MathOpNode) nodey).getRight());
+                } catch (Exception ex) {
+                    // call resolvefloat
+                    try {
+                        return ResolveFloat(((MathOpNode) nodey).getLeft()) == ResolveFloat(((MathOpNode) nodey).getRight());
+                    } catch (Exception resolve) {
+                        throw new RuntimeException("Error: Cannot resolve boolean expression " + nodey);
+                    }
+                }
+            }
         } else {
             throw new RuntimeException("Not a boolean");
         }
-        return false;
     }
 
 
