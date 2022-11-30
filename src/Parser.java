@@ -48,17 +48,14 @@ public class Parser {
         try {
             Type token = peek(1).getType();
             if (token == Type.EQUAL || token == Type.NOT_EQUAL || token == Type.LESS || token == Type.GREATER || token == Type.LESS_EQUAL || token == Type.GREATER_EQUAL) {
-                Type condition = matchAndRemove(token).getType();
-                node = new BooleanExpressionNode(expression(), condition, expression());
+                return new BooleanExpressionNode(expression(), matchAndRemove(token).getType(), expression());
             } else {
                 throw new Exception("Invalid boolean expression");
             }
-            node = new BooleanExpressionNode(expression(), token, expression());
         } catch (Exception e) {
             System.out.println("Not an expression");
             throw new RuntimeException(e); // less, greater, ect lowest priority
         } // TODO: fix token
-        return node;
     }
 
 
@@ -73,29 +70,14 @@ public class Parser {
             return null;
         }
         try {
-            if (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
-                while (peek(0).getType() == Type.ADD || peek(0).getType() == Type.MINUS) {
-                    Type token = peek(0).getType();
-                    // 5 < 3 < 7
-                    // TODO: Move to new a function and call from expression
-                    switch (token) {
-                        case ADD -> {
-                            matchAndRemove(token);
-                            node = new MathOpNode(node, factor(), Type.ADD);
-                        }
-                        case MINUS -> {
-                            matchAndRemove(token);
-                            node = new MathOpNode(node, factor(), Type.MINUS);
-                        }
-                    }
-                    a++;
-                }
+            if (quickPeek() == Type.ADD || quickPeek() == Type.MINUS) {
+                node = addOrMinus(node, a);
             } else { // take care of boolean expression here
                 // eg. a > b or 1 < 2
                 // read a then get here and check for > or < then read b
-                switch (peek(0).getType()) {
+                switch (quickPeek()) {
                     case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, GREATER, NOT_EQUAL, EQUAL_EQUAL -> {
-                        Type token = peek(0).getType();
+                        Type token = quickPeek();
                         matchAndRemove(token);
                         node = new BooleanExpressionNode(node, token, expression());
                     }
@@ -103,6 +85,25 @@ public class Parser {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        return node;
+    }
+
+    private Node addOrMinus(Node node, int a) {
+        while (quickPeek() == Type.ADD || quickPeek() == Type.MINUS) {
+            Type token = quickPeek();
+            // 5 < 3 < 7
+            switch (token) {
+                case ADD -> {
+                    matchAndRemove(token);
+                    node = new MathOpNode(node, factor(), Type.ADD);
+                }
+                case MINUS -> {
+                    matchAndRemove(token);
+                    node = new MathOpNode(node, factor(), Type.MINUS);
+                }
+            }
+            a++;
         }
         return node;
     }
@@ -124,25 +125,27 @@ public class Parser {
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
-        // TODO: Add a while to loop until not */%
         Node node = factor();
         if (node == null) {
             return null;
         }
-        Type token = peek(0).getType();
-        switch (token) {
-            case MULTIPLY -> {
-                matchAndRemove(token);
-                node = new MathOpNode(node, term(), Type.MULTIPLY);
+        Type token = quickPeek();
+        while (token == Type.MULTIPLY || token == Type.DIVIDE || token == Type.MOD) {
+            switch (token) {
+                case MULTIPLY -> {
+                    matchAndRemove(token);
+                    node = new MathOpNode(node, term(), Type.MULTIPLY);
+                }
+                case DIVIDE -> {
+                    matchAndRemove(token);
+                    node = new MathOpNode(node, term(), Type.DIVIDE);
+                }
+                case MOD -> {
+                    matchAndRemove(token);
+                    node = new MathOpNode(node, term(), Type.MOD);
+                }
             }
-            case DIVIDE -> {
-                matchAndRemove(token);
-                node = new MathOpNode(node, term(), Type.DIVIDE);
-            }
-            case MOD -> {
-                matchAndRemove(token);
-                node = new MathOpNode(node, term(), Type.MOD);
-            }
+            token = quickPeek();
         }
         return node;
     }
@@ -150,31 +153,39 @@ public class Parser {
 
     // Factor is a number or a parenthesized expression.
     public Node factor() {
-        // TODO: Check if number first && swap to match / remove && add paren -> find paren and call expression
-        if (isInteger(tokens.get(0))) {
-            IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
-            tokens.remove(0);
-            return intNode;
-        }
-        if (isFloat(tokens.get(0))) {
-            FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
-            tokens.remove(0);
-            return floatNode;
-        }
-        if (peek(0).getType() == Type.TRUE) {
+        if (quickPeek() == Type.NUMBER) {
+            if (isInteger(tokens.get(0))) {
+                IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
+                tokens.remove(0);
+                return intNode;
+            }
+            if (isFloat(tokens.get(0))) {
+                FloatNode floatNode = new FloatNode(Float.parseFloat(tokens.get(0).getValue()));
+                tokens.remove(0);
+                return floatNode;
+            }
+        } else if (matchAndRemove(Type.LPAREN) != null) {
+            Node node = expression();
+            matchAndRemove(Type.RPAREN);
+            return node;
+        } else if (quickPeek() == Type.TRUE) {
             return new BooleanNode(true);
-        } else if (peek(0).getType() == Type.FALSE) {
+        } else if (quickPeek() == Type.FALSE) {
             return new BooleanNode(false);
-        }
-        if (peek(0).getType() == Type.CHAR) {
+        } else if (quickPeek() == Type.CHAR) {
             return new CharNode(peek(0).getValue().charAt(0));
-        }
-        if (peek(0).getType() == Type.STRING) {
+        } else if (quickPeek() == Type.STRING) {
             return new StringNode(peek(0).getValue());
+        } else {
+            // if identifier create variablerefnode/
+            Token temp = matchAndRemove(Type.IDENTIFIER);
+            return (temp != null) ? new VariableReferenceNode(temp.toString()) : null;
         }
-        // if identifier create variablerefnode/
-        Token temp = matchAndRemove(Type.IDENTIFIER);
-        return (temp != null) ? new VariableReferenceNode(temp.toString()) : null;
+        return null;
+    }
+
+    private Type quickPeek() {
+        return peek(0).getType();
     }
 
 
@@ -212,7 +223,7 @@ public class Parser {
         ArrayList<StatementNode> statements = new ArrayList<>();
         matchAndRemove(Type.BEGIN);
         removeEndlines();
-        while (peek(0).getType() != Type.END) {
+        while (quickPeek() != Type.END) {
             statements.add(statement());
         }
         matchAndRemove(Type.END);
@@ -221,22 +232,20 @@ public class Parser {
     }
 
     public StatementNode statement() {
-        // TODO: Call assignment if null call while if null call if
         if (assignment() != null)
             return assignment();
         else if (whileExpression() != null)
             return whileExpression();
-        else if (ifExpression() != null)
-            return ifExpression();
         else if (forExpression() != null)
             return forExpression();
-
+        else if (ifExpression() != null)
+            return ifExpression();
         return null;
     }
 
     public AssignmentNode assignment() {
         // identifier assignment expression endofline
-        if (peek(1).getType() == Type.ASSIGN || peek(0).getType() == Type.IDENTIFIER) {
+        if (peek(1).getType() == Type.ASSIGN && quickPeek() == Type.IDENTIFIER) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
             matchAndRemove(Type.ASSIGN);
             Node value = expression();
@@ -255,8 +264,7 @@ public class Parser {
     // If not, make sure that we haven’t taken any tokens and return null.
     public WhileNode whileExpression() {
         // while booleanExpression do statements end
-        if (peek(0).getType() == Type.WHILE) {
-            matchAndRemove(Type.WHILE);
+        if (matchAndRemove(Type.WHILE) != null) {
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.DO);
             ArrayList<StatementNode> statements = statements();
@@ -274,7 +282,7 @@ public class Parser {
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = statements();
             IfNode ifNode = new IfNode(condition, statements);
-            if (peek(0).getType() == Type.ELSE) {
+            if (quickPeek() == Type.ELSE) {
                 matchAndRemove(Type.ELSE);
                 ifNode.setElseStatements(statements());
             }
@@ -285,7 +293,7 @@ public class Parser {
             matchAndRemove(Type.THEN);
             ArrayList<StatementNode> statements = statements();
             IfNode ifNode = new IfNode(condition, statements);
-            if (peek(0).getType() == Type.ELSE) {
+            if (quickPeek() == Type.ELSE) {
                 matchAndRemove(Type.ELSE);
                 ifNode.setElseStatements(statements());
             }
@@ -383,13 +391,12 @@ public class Parser {
         or a semicolon (for function definitions). For each variable, we make a VariableNode like we did for constants.
         IDEN     COMMA/COLON    DATA-TYPE   EOL OR ; IDEN    COMMA/COLON    DATA-TYPE     )/EOL
         */// STATES:
-        // TODO : FIX ->
         // State 0 - Var -> 1
-        // State 1 - IDEN -> 2, 3
-        // State 2 - COMMA -> 0
-        // State 3 - COLON -> 4
-        // State 4 - INT OR REAL -> 0,5
-        // State 5 - SEMI-COLON -> 0
+        // State 1 - IDEN -> 2 or  3
+        // State 2 - COMMA -> 0 or 3
+        // State 3 - COLON -> 4 or 6
+        // State 4 - INT OR REAL -> 0,5 or 6
+        // State 5 - SEMI-COLON -> 0 or 6
         // State 6 - RPAREN/EOL - end
         ArrayList<VariableNode> paramets = new ArrayList<>();
         try {
@@ -466,6 +473,9 @@ public class Parser {
                             state = 6;
                         }
                     }
+                    case 6 -> {
+                        throw new RuntimeException("Error in Parameters");
+                    }
                     default -> state = 6;
                 }
             }
@@ -507,7 +517,6 @@ public class Parser {
             int state = 0;
             boolean isVar = false;
             Token name;
-
             Token number;
             ArrayList<Token> idenList = new ArrayList<>();
             while (state != 4) {
@@ -552,7 +561,7 @@ public class Parser {
 
                     }
                     case 3 -> {
-                        if (peek(0).getType() == Type.ENDLINE || peek(0).getType() == Type.IDENTIFIER) {
+                        if (quickPeek() == Type.ENDLINE || quickPeek() == Type.IDENTIFIER) {
                             state = 0;
                         } else {
                             return consties;

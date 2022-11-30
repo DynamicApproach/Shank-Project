@@ -186,7 +186,6 @@ public class Interpreter {
 
     public boolean resolveBoolean(BooleanExpressionNode boolNode) {
         try {
-            // TODO: Add string and char
             try {
                 int left = ResolveInt(boolNode.getLeft());
                 int right = ResolveInt(boolNode.getRight());
@@ -224,13 +223,25 @@ public class Interpreter {
                     }
                 } catch (Exception f) {
                     try {
-                        if ("t".equals(boolNode.getLeft().toString())) {
-                            return true;
-                        } else if ("f".equals(boolNode.getLeft().toString())) {
-                            return false;
+                        char left = ResolveChar(boolNode.getLeft());
+                        char right = ResolveChar(boolNode.getRight());
+                        if (boolNode.getOperator() == Type.EQUAL) {
+                            return left == right;
+                        } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
+                            return left != right;
                         }
                     } catch (Exception g) {
-                        throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+                        try {
+                            String left = ResolveString(boolNode.getLeft());
+                            String right = ResolveString(boolNode.getRight());
+                            if (boolNode.getOperator() == Type.EQUAL) {
+                                return left.equals(right);
+                            } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
+                                return !left.equals(right);
+                            }
+                        } catch (Exception h) {
+                            throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
+                        }
                     }
                 }
             }
@@ -241,9 +252,8 @@ public class Interpreter {
     }
 
     public int ResolveInt(Node nodey) {
-        // TODO: make sure its not doing float
         if (nodey instanceof FloatNode) {
-            return (int) Float.parseFloat(nodey.toString());
+            return Integer.parseInt(nodey.toString());
         } else if (nodey instanceof MathOpNode) {
             return switch (((MathOpNode) nodey).getOperator()) {
                 case "+" -> ResolveInt(((MathOpNode) nodey).getLeft()) + ResolveInt(((MathOpNode) nodey).getRight());
@@ -251,8 +261,6 @@ public class Interpreter {
                 case "*" -> ResolveInt(((MathOpNode) nodey).getLeft()) * ResolveInt(((MathOpNode) nodey).getRight());
                 case "/" -> ResolveInt(((MathOpNode) nodey).getLeft()) / ResolveInt(((MathOpNode) nodey).getRight());
                 case "%" -> ResolveInt(((MathOpNode) nodey).getLeft()) % ResolveInt(((MathOpNode) nodey).getRight());
-                case "^" ->
-                        (int) Math.pow(ResolveInt(((MathOpNode) nodey).getLeft()), ResolveInt(((MathOpNode) nodey).getRight()));
                 default -> throw new RuntimeException("Error: Invalid operator in math expression");
             };
 
@@ -285,7 +293,7 @@ public class Interpreter {
         }
     }
 
-
+    // TODO: resovle
     public boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
 
