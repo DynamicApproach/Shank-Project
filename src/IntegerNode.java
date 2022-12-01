@@ -10,7 +10,7 @@ public class IntegerNode extends Node {
     }
 
     public String toString() {
-        return value + "   ";
+        return Integer.toString(value);
         // if (!"null".equals(Integer.toString(value)))  ____  else return "0";
     }
 }

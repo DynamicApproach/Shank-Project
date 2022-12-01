@@ -23,8 +23,8 @@ public class AssignmentNode extends StatementNode {
 
     //tostring
     public String toString() {
-        if (target.toString() != null && expression.toString() != null)
-            return target.toString() + " = " + expression.toString() + "   ";
+        if (target != null && expression != null)
+            return target + " = " + expression + "   ";
         return "Assignment";
     }
 
