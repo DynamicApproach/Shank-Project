@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public class Parser {
+    ArrayList<StatementNode> statements = new ArrayList<>();
+    ArrayList<StatementNode> bod = new ArrayList<>();
     private ArrayList<Token> tokens;
 
     public Parser(ArrayList<Token> tokens) {
@@ -41,7 +43,6 @@ public class Parser {
         }
     }
 
-
     public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
         Node curnode = null;
@@ -60,7 +61,21 @@ public class Parser {
             throw new RuntimeException(e); // less, greater, ect lowest priority
         }
     }
-
+    // if a = 5+3
+    // a = b>3
+    // < > = <= >= == <>
+    // lower prio then + - * /
+    // all the same prio
+    // eval left to right with prio
+    // don't have to chain like w +/-
+    //BooleanExpressionNode node = null;
+    //        try {
+    //            Type token = peek(1).getType();
+    //            node = new BooleanExpressionNode(expression(), token, expression());
+    //        } catch (Exception e) {
+    //            System.out.println("Not an expression");
+    //            throw new RuntimeException(e); // less, greater, ect lowest priority
+    //        }
 
     // expression, term, factor methods
     // Expression is the highest level of the grammar
@@ -111,21 +126,6 @@ public class Parser {
         }
         return node;
     }
-    // if a = 5+3
-    // a = b>3
-    // < > = <= >= == <>
-    // lower prio then + - * /
-    // all the same prio
-    // eval left to right with prio
-    // don't have to chain like w +/-
-    //BooleanExpressionNode node = null;
-    //        try {
-    //            Type token = peek(1).getType();
-    //            node = new BooleanExpressionNode(expression(), token, expression());
-    //        } catch (Exception e) {
-    //            System.out.println("Not an expression");
-    //            throw new RuntimeException(e); // less, greater, ect lowest priority
-    //        }
 
     // Term is a factor followed by zero or more * or / operators followed by another factor.
     public Node term() {
@@ -153,7 +153,6 @@ public class Parser {
         }
         return node;
     }
-
 
     // Factor is a number or a parenthesized expression.
     public Node factor() {
@@ -193,7 +192,6 @@ public class Parser {
         return peek(0).getType();
     }
 
-
     private boolean isFloat(Token token) {
         try {
             Float.parseFloat(token.getValue());
@@ -225,7 +223,6 @@ public class Parser {
     }
 
     public ArrayList<StatementNode> statements() {
-        ArrayList<StatementNode> statements = new ArrayList<>();
         removeEndlines();
         matchAndRemove(Type.BEGIN);
         removeEndlines();
@@ -264,7 +261,6 @@ public class Parser {
     public Token peek(int x) {
         return tokens.get(x);
     }
-
 
     //  Look for keywords to check if a while is possible
     // If not, make sure that we haven’t taken any tokens and return null.
@@ -315,7 +311,6 @@ public class Parser {
 
         return null;
     }
-
 
     // for
     public ForNode forExpression() {
@@ -496,7 +491,6 @@ public class Parser {
         return paramets;
     }
 
-
     private ArrayList<VariableNode> constants() {
         //looks for the constants token.
         // If it finds it, it calls a “processConstants” function that looks for token
@@ -591,7 +585,6 @@ public class Parser {
     }
 
     public ArrayList<StatementNode> body() {
-        ArrayList<StatementNode> bod = new ArrayList<>();
 
         removeEndlines();
         if (matchAndRemove(Type.BEGIN) != null) {
