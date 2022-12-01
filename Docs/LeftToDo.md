@@ -65,7 +65,8 @@ Remember that string + character and character + string are allowable (both crea
 
 It’s OK to assume that char and string are interchangeable for this check. 
 Also remember that operands can be variables or constants. 
-You may need to make several functions to implement this – I did. Call this method from “`main`” before you call the `interpreter`
+You may need to make several functions to implement this – I did. Call this method from “`main`” before you call
+the `interpreter`
 
 1. [ ] Implement the built-in functions for strings (refer to the Language Definition document).
 
@@ -75,4 +76,12 @@ You may need to make several functions to implement this – I did. Call this me
 
 3. [ ] Add string, boolean and character types to function calls.
 
+---------------------------------
+
+
+![img.png](../images/img.png)
+
+Current issue. I'm cycling back through after creating a booleanNode, looking for more. so I create the node but don't
+ever send it back
+in Parser -> BooleanExpression 
 
