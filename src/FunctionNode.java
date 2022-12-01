@@ -85,7 +85,7 @@ public class FunctionNode extends CallableNode {
             returnedStr += consts;
         }
         if (printBody() != null) {
-            returnedStr += printBody();
+            returnedStr += body;
         }
         return returnedStr;
 

@@ -593,7 +593,9 @@ public class Parser {
     public ArrayList<StatementNode> body() {
         ArrayList<StatementNode> bod = new ArrayList<>();
 
-        if (matchAndRemove(Type.BEGIN) == null) {
+        removeEndlines();
+        if (matchAndRemove(Type.BEGIN) != null) {
+            removeEndlines();
             // while not at the end token, keep adding statements
             while (matchAndRemove(Type.END) == null) {
                 removeEndlines();
@@ -605,7 +607,11 @@ public class Parser {
                     }
                 } catch (Exception ep) {
                     System.err.println("Error in Body - Token expected but not found.");
-                    return bod;
+                    if (bod == null) {
+                        throw new RuntimeException(ep);
+                    } else {
+                        return bod;
+                    }
                     // TODO: figure out if we should be throwing an error here
                     //  throw new RuntimeException(ep);
                 }
