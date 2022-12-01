@@ -3,6 +3,6 @@ public abstract class StatementNode extends Node {
 
 
     public String toString() {
-        return (statement != null) ? "Statement:" + statement : "Statement";
+        return (statement != null) ? "Statement: " + statement : "Statement ";
     }
 }

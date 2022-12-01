@@ -22,7 +22,7 @@ public class FunctionCallNode extends StatementNode {
     }
 
     public String toString() {
-        return name + "(" + parameters + ")";
+        return name + "      (" + parameters + ")                 ";
     }
 
     public Boolean getVaradic() {

@@ -118,24 +118,20 @@ public class Lexer {
                 switch (c) {
                     case '(' -> {
                         // check if next char in input is a *
-                        if (input.toCharArray().length > index && input.toCharArray()[index] == '*') {
+                        if (input.toCharArray().length > index && input.charAt(index) == '*') {
                             state = 7;
                         } else {
-                            builder.append(c);
-                            tokens.add(new Token(Type.LPAREN, "("));
-                            builder.setLength(0);
+                            foundTokState(Type.LPAREN, "(");
                         }
                     }
                     case ')' -> {
-                        if (input.toCharArray().length > index && input.toCharArray()[index] == '*') {
+                        if (input.toCharArray().length > index && input.charAt(index) == '*') {
                             state = 7;
                         } else {
-                            builder.append(c);
                             foundTok(Type.RPAREN, ")");
                         }
                     }
                     case '\n' -> {
-                        builder.append(c);
                         foundTok(Type.ENDLINE, ")");
                     }
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
@@ -430,8 +426,11 @@ public class Lexer {
                             if (notSpaceOrNewLineAndHasLength()) {
                                 foundTok(Type.IDENTIFIER, builder.toString());
                             }
-                            builder.append(c);
-                            foundTokState(Type.LPAREN, builder.toString());
+                            if (input.toCharArray().length > index && input.charAt(index) == '*') {
+                                state = 7;
+                            } else {
+                                foundTokState(Type.LPAREN, "(");
+                            }
                         }
                         default -> builder.append(c);
                     }
@@ -498,6 +497,7 @@ public class Lexer {
             case 7:
                 // do nothing until end of comment *)
                 if (input.toCharArray().length > index && c == '*' && input.charAt(index) == ')') {
+                    skip = true;
                     state = 0;
                 }
         }
@@ -564,8 +564,8 @@ public class Lexer {
     }
 
     // found a token that ends curstate, so add it to the list and reset builder and state
-    private void foundTokState(Type ttype, String c) {
-        tokens.add(new Token(ttype, c.trim()));
+    private void foundTokState(Type ttype, String newitem) {
+        tokens.add(new Token(ttype, newitem.trim()));
         builder.setLength(0);
         state = 0;
     }

@@ -66,11 +66,11 @@ public class Shank {
                 // add function node to hashmap
                 for (FunctionNode functionNode : node) {
                     functionNames.put(functionNode.getName(), functionNode);
+                    System.out.println(functionNode);
                 }
 
 
                 // print out the function
-                System.out.println(node);
                 System.out.println("Parsing complete");
 
                 // print the tree

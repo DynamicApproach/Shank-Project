@@ -235,15 +235,16 @@ public class Parser {
     }
 
     public StatementNode statement() {
-        if (assignment() != null)
-            return assignment();
-        else if (whileExpression() != null)
-            return whileExpression();
-        else if (forExpression() != null)
-            return forExpression();
-        else if (ifExpression() != null)
-            return ifExpression();
-        return null;
+        AssignmentNode as = assignment();
+        if (as != null)
+            return as;
+        WhileNode wh = whileExpression();
+        if (wh != null)
+            return wh;
+        ForNode forNode = forExpression();
+        if (forNode != null)
+            return forNode;
+        return ifExpression();
     }
 
     public AssignmentNode assignment() {
@@ -339,11 +340,12 @@ public class Parser {
         */
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
+            removeEndlines();
             while (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 String namestr = "";
                 if (name != null) {
-                    String nameStr = name.toString();
+                    namestr = name.getValue();
                 }
                 matchAndRemove(Type.LPAREN);
                 ArrayList<VariableNode> params = parameters();
@@ -594,9 +596,10 @@ public class Parser {
                 removeEndlines();
                 StatementNode statement = statement();
                 try {
-                    if (statement != null) {
+                    while (statement != null) {
                         removeEndlines();
                         bod.add(statement);
+                        statement = statement();
                     }
                 } catch (Exception ep) {
                     System.err.println("Error in Body - Token expected but not found.");
