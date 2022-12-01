@@ -46,6 +46,7 @@ public class Parser {
         // check for expression operator expression and make a new booleanExpressionNode
         Node curnode = null;
         try {
+            removeEndlines();
             Node express = expression();
             Type token = peek(0).getType();
             if (token == Type.EQUAL || token == Type.NOT_EQUAL || token == Type.LESS || token == Type.GREATER || token == Type.LESS_EQUAL || token == Type.GREATER_EQUAL) {
@@ -66,6 +67,7 @@ public class Parser {
     // Expression is a list of terms separated by + or -
     public Node expression() {
         // boolean-expression term factor
+        removeEndlines();
         Node node = term();
         int a = 0;
         if (node == null) {
@@ -155,6 +157,7 @@ public class Parser {
 
     // Factor is a number or a parenthesized expression.
     public Node factor() {
+        removeEndlines();
         if (quickPeek() == Type.NUMBER) {
             if (isInteger(tokens.get(0))) {
                 IntegerNode intNode = new IntegerNode(Integer.parseInt(tokens.get(0).getValue()));
@@ -589,19 +592,22 @@ public class Parser {
     public ArrayList<StatementNode> body() {
         ArrayList<StatementNode> bod = new ArrayList<>();
 
-        if (matchAndRemove(Type.BEGIN) != null) {
+        if (matchAndRemove(Type.BEGIN) == null) {
             // while not at the end token, keep adding statements
             while (matchAndRemove(Type.END) == null) {
                 removeEndlines();
                 StatementNode statement = statement();
                 try {
-                    if (statement.toString() != null) {
+                    if (statement != null) {
                         removeEndlines();
                         bod.add(statement);
                     }
                 } catch (Exception ep) {
                     System.err.println("Error in Body - Token expected but not found.");
-                    throw new RuntimeException(ep);
+                    return bod;
+                    // TODO: figure out if we should be throwing an error here
+
+                    //  throw new RuntimeException(ep);
                 }
 
             }
