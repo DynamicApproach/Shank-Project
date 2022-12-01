@@ -346,7 +346,8 @@ public class Parser {
         try {
             while (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
-                if (name.toString() != null) {
+                String namestr = "";
+                if (name != null) {
                     String nameStr = name.toString();
                 }
                 matchAndRemove(Type.LPAREN);
@@ -367,21 +368,21 @@ public class Parser {
                 removeEndlines();
                 ArrayList<StatementNode> body = body();
                 if (body == null && consta == null && vars == null) {
-                    functions.add(new FunctionNode(name.toString(), params, null, null, null));
+                    functions.add(new FunctionNode(namestr, params, null, null, null));
                 } else if (consta == null && vars == null) {
-                    functions.add(new FunctionNode(name.toString(), params, null, null, body));
+                    functions.add(new FunctionNode(namestr, params, null, null, body));
                 } else if (body == null && consta == null) {
-                    functions.add(new FunctionNode(name.toString(), params, vars, null, null));
+                    functions.add(new FunctionNode(namestr, params, vars, null, null));
                 } else if (body == null && vars == null) {
-                    functions.add(new FunctionNode(name.toString(), params, null, consta, null));
+                    functions.add(new FunctionNode(namestr, params, null, consta, null));
                 } else if (vars == null) {
-                    functions.add(new FunctionNode(name.toString(), params, null, consta, body));
+                    functions.add(new FunctionNode(namestr, params, null, consta, body));
                 } else if (body == null) {
-                    functions.add(new FunctionNode(name.toString(), params, vars, consta, null));
+                    functions.add(new FunctionNode(namestr, params, vars, consta, null));
                 } else if (consta == null) {
-                    functions.add(new FunctionNode(name.toString(), params, vars, null, body));
+                    functions.add(new FunctionNode(namestr, params, vars, null, body));
                 } else {
-                    functions.add(new FunctionNode(name.toString(), params, vars, consta, body));
+                    functions.add(new FunctionNode(namestr, params, vars, consta, body));
                 }
             }
             return functions;
@@ -606,7 +607,6 @@ public class Parser {
                     System.err.println("Error in Body - Token expected but not found.");
                     return bod;
                     // TODO: figure out if we should be throwing an error here
-
                     //  throw new RuntimeException(ep);
                 }
 
