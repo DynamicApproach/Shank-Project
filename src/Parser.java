@@ -293,12 +293,13 @@ public class Parser {
                 ifNode.setElseStatements(statements());
             }
             return ifNode;
+            // TODO: Fix ElseIF
         } else if (matchAndRemove(Type.ELSIF) != null) {
             matchAndRemove(Type.ELSIF);
             BooleanExpressionNode condition = booleanExpression();
             matchAndRemove(Type.THEN);
-            ArrayList<StatementNode> statements = statements();
-            IfNode ifNode = new IfNode(condition, statements);
+            ArrayList<StatementNode> statements2 = statements();
+            IfNode ifNode = new IfNode(condition, statements2);
             if (quickPeek() == Type.ELSE) {
                 matchAndRemove(Type.ELSE);
                 ifNode.setElseStatements(statements());
@@ -306,8 +307,8 @@ public class Parser {
             return ifNode;
         } else if (matchAndRemove(Type.ELSE) != null) {
             matchAndRemove(Type.THEN);
-            ArrayList<StatementNode> statements = statements();
-            return new IfNode(null, statements);
+            ArrayList<StatementNode> statements3 = statements();
+            return new IfNode(null, statements3);
         }
 
         return null;
@@ -338,6 +339,7 @@ public class Parser {
             We then call the Constants, then Variables, then Body function from below.
             name, (, params, ), constants, variables, body
         */
+        // TODO: Make sure multiple functions can be added, not just first
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
             removeEndlines();

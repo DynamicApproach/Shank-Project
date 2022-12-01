@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class Interpreter {
     static HashMap<String, CallableNode> hashmapfuncts;
 
+
     public Interpreter(HashMap<String, CallableNode> hashmapfuncts) {
         Interpreter.hashmapfuncts = hashmapfuncts;
     }
@@ -107,6 +108,7 @@ public class Interpreter {
                     throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
                 } // TODO: interpret different nodes
             } else if (statement instanceof ForNode) {
+                // TODO: fix
                 // we have a fornode with an expression and a block
                 // we need to evaluate the expression
                 // if it is true, we need to interpret the block
@@ -114,9 +116,10 @@ public class Interpreter {
                 // need to creat a fornode with an expression and a block
                 // need to evaluate the expression
                 // if it is true, we need to interpret the block
-                if (((ForNode) statement).getVariableReference() instanceof IfNode expression) {
-
-                }
+                //if (((ForNode) statement).getVariableReference() != null) {
+                //    var ref = ((ForNode) statement).getVariableReference();
+                // VarRefNode has a name of var
+                // }
 
             } else if (statement instanceof WhileNode) {
                 BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
