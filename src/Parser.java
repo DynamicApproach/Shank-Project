@@ -44,14 +44,15 @@ public class Parser {
 
     public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
-        BooleanExpressionNode node;
+        Node curnode = null;
         try {
             Node express = expression();
             Type token = peek(0).getType();
             if (token == Type.EQUAL || token == Type.NOT_EQUAL || token == Type.LESS || token == Type.GREATER || token == Type.LESS_EQUAL || token == Type.GREATER_EQUAL) {
-                return new BooleanExpressionNode(express, matchAndRemove(token).getType(), expression());
+                curnode = expression();
+                return new BooleanExpressionNode(express, token, curnode);
             } else {
-                throw new Exception("Invalid boolean expression");
+                return (BooleanExpressionNode) express;
             }
         } catch (Exception e) {
             System.out.println("Not an expression");
@@ -222,6 +223,7 @@ public class Parser {
 
     public ArrayList<StatementNode> statements() {
         ArrayList<StatementNode> statements = new ArrayList<>();
+        removeEndlines();
         matchAndRemove(Type.BEGIN);
         removeEndlines();
         while (quickPeek() != Type.END) {
@@ -266,8 +268,11 @@ public class Parser {
     public WhileNode whileExpression() {
         // while booleanExpression do statements end
         if (matchAndRemove(Type.WHILE) != null) {
+            removeEndlines();
             BooleanExpressionNode condition = booleanExpression();
-            matchAndRemove(Type.DO);
+            removeEndlines();
+            matchAndRemove(Type.BEGIN);
+            removeEndlines();
             ArrayList<StatementNode> statements = statements();
             return new WhileNode(condition, statements);
         }
