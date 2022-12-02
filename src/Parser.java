@@ -296,17 +296,16 @@ public class Parser {
                 removeEndlines();
                 return ifNode;
             } else if (matchAndRemove(Type.ELSIF) != null) {
-                matchAndRemove(Type.ELSIF);
-                BooleanExpressionNode condition2 = booleanExpression();
+                BooleanExpressionNode childcondition = booleanExpression();
                 matchAndRemove(Type.THEN);
-                ArrayList<StatementNode> statements2 = statements();
-                IfNode elspart = new IfNode(condition2, statements2);
-                IfNode ifNode2 = new IfNode(condition, statements, elspart);
+                ArrayList<StatementNode> childStatements = statements();
+                IfNode ifNodeChild = new IfNode(childcondition, childStatements);
+                IfNode ifNodeParent = new IfNode(condition, statements, ifNodeChild);
                 if (quickPeek() == Type.ELSE) {
                     matchAndRemove(Type.ELSE);
-                    ifNode2.setElseStatements(statements());
+                    ifNodeParent.setElseStatements(statements());
                 }
-                return ifNode2;
+                return ifNodeParent;
             } else {
                 IfNode ifNode = new IfNode(condition, statements);
                 removeEndlines();
