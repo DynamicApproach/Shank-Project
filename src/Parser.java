@@ -299,13 +299,15 @@ public class Parser {
                 BooleanExpressionNode childcondition = booleanExpression();
                 matchAndRemove(Type.THEN);
                 ArrayList<StatementNode> childStatements = statements();
-                IfNode ifNodeChild = new IfNode(childcondition, childStatements);
-                IfNode ifNodeParent = new IfNode(condition, statements, ifNodeChild);
+                IfNode nestedIf = new IfNode(condition, statements);
+                nestedIf.setIfNode(new IfNode(childcondition, childStatements));
+                //  IfNode ifNodeChild = new IfNode(childcondition, childStatements);
+                //   IfNode ifNodeParent = new IfNode(condition, statements, ifNodeChild);
                 if (quickPeek() == Type.ELSE) {
                     matchAndRemove(Type.ELSE);
-                    ifNodeParent.setElseStatements(statements());
+                    nestedIf.setElseStatements(statements());
                 }
-                return ifNodeParent;
+                return nestedIf;
             } else {
                 IfNode ifNode = new IfNode(condition, statements);
                 removeEndlines();

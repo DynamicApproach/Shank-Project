@@ -3,6 +3,9 @@ import java.util.ArrayList;
 public class IfNode extends StatementNode {
     // (booleanExpressionNode, collection of statementNodes, ifNode)
     private BooleanExpressionNode booleanExpression;
+    private BooleanExpressionNode booleanExpressionnested;
+
+    private ArrayList<StatementNode> children2;
     private ArrayList<StatementNode> statementNodes;
     private IfNode ifNode;
 
@@ -12,6 +15,8 @@ public class IfNode extends StatementNode {
     }
 
     public IfNode(BooleanExpressionNode statement2, ArrayList<StatementNode> children2, IfNode ifNode) {
+        this.booleanExpressionnested = statement2;
+        this.children2 = children2;
         this.ifNode = ifNode;
     }
 
@@ -25,6 +30,10 @@ public class IfNode extends StatementNode {
 
     public IfNode getIfNode() {
         return ifNode;
+    }
+
+    public void setIfNode(IfNode ifNode) {
+        this.ifNode = ifNode;
     }
 
     @Override
@@ -41,11 +50,7 @@ public class IfNode extends StatementNode {
 
 
     public void setElseStatements(ArrayList<StatementNode> statements) {
-        if (ifNode != null) {
-            ifNode.setStatements(statements);
-        } else {
-            this.ifNode = new IfNode(null, statements);
-        }
+        ifNode.setStatements(statements);
     }
 
     public void setStatements(ArrayList<StatementNode> statements) {
