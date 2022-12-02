@@ -6,14 +6,12 @@ public class IfNode extends StatementNode {
     private ArrayList<StatementNode> statementNodes;
     private IfNode ifNode;
 
-    public IfNode(BooleanExpressionNode statement, ArrayList<StatementNode> children) {
-        this.booleanExpression = statement;
-        this.statementNodes = children;
+    public IfNode(BooleanExpressionNode boolexpress, ArrayList<StatementNode> childrenToExe) {
+        this.booleanExpression = boolexpress;
+        this.statementNodes = childrenToExe;
     }
 
-    public IfNode(BooleanExpressionNode statement, ArrayList<StatementNode> children, IfNode ifNode) {
-        this.booleanExpression = statement;
-        this.statementNodes = children;
+    public IfNode(BooleanExpressionNode statement2, ArrayList<StatementNode> children2, IfNode ifNode) {
         this.ifNode = ifNode;
     }
 
@@ -31,8 +29,16 @@ public class IfNode extends StatementNode {
 
     @Override
     public String toString() {
-        return booleanExpression.toString() + " " + statementNodes.toString() + " " + (ifNode != null ? ifNode.toString() : "");
+        StringBuilder sb = new StringBuilder();
+        for (StatementNode statementNode : statementNodes) {
+            if (statementNode != null) {
+                sb.append(statementNode);
+            }
+        }
+
+        return (booleanExpression != null ? booleanExpression.toString() : "") + " " + (sb);
     }
+
 
     public void setElseStatements(ArrayList<StatementNode> statements) {
         if (ifNode != null) {

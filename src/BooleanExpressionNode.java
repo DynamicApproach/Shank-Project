@@ -28,6 +28,6 @@ public class BooleanExpressionNode extends Node {
 
     @Override
     public String toString() {
-        return left.toString() + " " + condition.toString() + " " + right.toString() + "   ";
+        return left.toString() + " " + condition.toString() + " " + right.toString();
     }
 }

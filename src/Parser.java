@@ -96,9 +96,8 @@ public class Parser {
                 // read a then get here and check for > or < then read b
                 switch (quickPeek()) {
                     case EQUAL, LESS, LESS_EQUAL, GREATER_EQUAL, GREATER, NOT_EQUAL, EQUAL_EQUAL -> {
-                        Type token = quickPeek();
-                        matchAndRemove(token);
-                        node = new BooleanExpressionNode(node, token, expression());
+                        Token token = matchAndRemove(quickPeek());
+                        node = new BooleanExpressionNode(node, token.getType(), expression());
                     }
                 }
             }
@@ -285,32 +284,36 @@ public class Parser {
         // check for if or else if or else
         if (matchAndRemove(Type.IF) != null) {
             BooleanExpressionNode condition = booleanExpression();
+            removeEndlines();
             matchAndRemove(Type.THEN);
+            removeEndlines();
             ArrayList<StatementNode> statements = statements();
-            IfNode ifNode = new IfNode(condition, statements);
-            if (quickPeek() == Type.ELSE) {
-                matchAndRemove(Type.ELSE);
-                ifNode.setElseStatements(statements());
-            }
-            return ifNode;
-            // TODO: Fix ElseIF
-        } else if (matchAndRemove(Type.ELSIF) != null) {
-            matchAndRemove(Type.ELSIF);
-            BooleanExpressionNode condition = booleanExpression();
-            matchAndRemove(Type.THEN);
-            ArrayList<StatementNode> statements2 = statements();
-            IfNode ifNode = new IfNode(condition, statements2);
-            if (quickPeek() == Type.ELSE) {
-                matchAndRemove(Type.ELSE);
-                ifNode.setElseStatements(statements());
-            }
-            return ifNode;
-        } else if (matchAndRemove(Type.ELSE) != null) {
-            matchAndRemove(Type.THEN);
-            ArrayList<StatementNode> statements3 = statements();
-            return new IfNode(null, statements3);
-        }
 
+            if (matchAndRemove(Type.ELSE) != null) {
+                System.out.println("else");
+                IfNode ifNode = new IfNode(condition, statements);
+                ifNode.setElseStatements(statements());
+                removeEndlines();
+                return ifNode;
+            } else if (matchAndRemove(Type.ELSIF) != null) {
+                matchAndRemove(Type.ELSIF);
+                BooleanExpressionNode condition2 = booleanExpression();
+                matchAndRemove(Type.THEN);
+                ArrayList<StatementNode> statements2 = statements();
+                IfNode elspart = new IfNode(condition2, statements2);
+                IfNode ifNode2 = new IfNode(condition, statements, elspart);
+                if (quickPeek() == Type.ELSE) {
+                    matchAndRemove(Type.ELSE);
+                    ifNode2.setElseStatements(statements());
+                }
+                return ifNode2;
+            } else {
+                IfNode ifNode = new IfNode(condition, statements);
+                removeEndlines();
+                return ifNode;
+            }
+            // TODO: Fix ElseIF printing
+        }
         return null;
     }
 
@@ -602,6 +605,7 @@ public class Parser {
                         removeEndlines();
                         bod.add(statement);
                         statement = statement();
+                        removeEndlines();
                     }
                 } catch (Exception ep) {
                     System.err.println("Error in Body - Token expected but not found.");
@@ -613,7 +617,6 @@ public class Parser {
                     // TODO: figure out if we should be throwing an error here
                     //  throw new RuntimeException(ep);
                 }
-
             }
             return bod;
         }
