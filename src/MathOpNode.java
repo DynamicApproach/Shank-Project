@@ -25,7 +25,8 @@ public class MathOpNode extends Node {
     }
 
     public String toString() {
-        return getLeft().toString() + op.toString() + getRight().toString();
+        return (getLeft() != null ? getLeft().toString() : "") + " " + op + " " + (getRight() != null ? getRight().toString() : "");
+
     }
 
     public String getOperator() {

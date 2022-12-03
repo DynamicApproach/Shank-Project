@@ -50,7 +50,7 @@ public class IfNode extends StatementNode {
 
 
     public void setElseStatements(ArrayList<StatementNode> statements) {
-        ifNode.setStatements(statements);
+        this.setStatements(statements);
     }
 
     public void setStatements(ArrayList<StatementNode> statements) {
