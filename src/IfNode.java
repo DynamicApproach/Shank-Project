@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 
 public class IfNode extends StatementNode {
+
+    StringBuilder sb = new StringBuilder();
     // (booleanExpressionNode, collection of statementNodes, ifNode)
     private BooleanExpressionNode booleanExpression;
     private BooleanExpressionNode booleanExpressionnested;
-
     private ArrayList<StatementNode> children2;
     private ArrayList<StatementNode> statementNodes;
     private IfNode ifNode;
@@ -15,8 +16,8 @@ public class IfNode extends StatementNode {
     }
 
     public IfNode(BooleanExpressionNode statement2, ArrayList<StatementNode> children2, IfNode ifNode) {
-        this.booleanExpressionnested = statement2;
-        this.children2 = children2;
+        this.booleanExpression = statement2;
+        this.statementNodes = children2;
         this.ifNode = ifNode;
     }
 
@@ -38,10 +39,22 @@ public class IfNode extends StatementNode {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+
         for (StatementNode statementNode : statementNodes) {
             if (statementNode != null) {
-                sb.append(statementNode);
+                if (statementNode instanceof IfNode) {
+                } else if (statementNode instanceof ForNode) {
+                    sb.append("FOR: ").append(((ForNode) statementNode).getStart()).append(" Then: ").append(((ForNode) statementNode).getVariableReference()).append(((ForNode) statementNode).getEnd());
+                } else if (statementNode instanceof WhileNode) {
+                    sb.append("WHILE: ").append(((WhileNode) statementNode).getBooleanExpression()).append(" Then: ").append(((WhileNode) statementNode).getBlock());
+                } else if (statementNode instanceof FunctionCallNode) {
+                    sb.append("FUNCTIONCALL: ").append(((FunctionCallNode) statementNode).getName()).append(" Then: ").append(((FunctionCallNode) statementNode).getParameters());
+                } else if (statementNode instanceof AssignmentNode) {
+                    sb.append("ASSIGN: ").append(((AssignmentNode) statementNode).getTarget().toString()).append(" Then: ").append(((AssignmentNode) statementNode).getExpression().toString());
+                } else if (statementNode instanceof RepeatNode) {
+                    sb.append("Repeat: ").append(((RepeatNode) statementNode).getBooleanExpression()).append(" Then: ").append(((RepeatNode) statementNode).getBlock());
+                } else {
+                }
             }
         }
 

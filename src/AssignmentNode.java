@@ -23,9 +23,7 @@ public class AssignmentNode extends StatementNode {
 
     //tostring
     public String toString() {
-        if (target != null && expression != null)
-            return target + " = " + expression + "   ";
-        return "Assignment";
+        return (target != null ? target : "") + " = " + (expression != null ? expression : "") + "   ";
     }
 
 }
