@@ -39,11 +39,6 @@ public class Shank {
                 for (String line : text) {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
-                    /*
-                    // add newline token for the end of each line
-                    tokens.add(new Token(Type.ENDLINE, "\n"));
-                    */
-
                 }
                 for (Token token : tokens) {
                     if (token != null) {
@@ -58,7 +53,6 @@ public class Shank {
                 System.out.println("\n \n \n Parsing:\n ");
 
                 //create new parser and parse tokens
-
                 Parser parsed = new Parser(tokens);
 
                 // for each line of tokens, parse it
@@ -72,17 +66,27 @@ public class Shank {
 
                 // print out the function
                 System.out.println("Parsing complete");
-
                 // print the tree
                 //functiondef interpret
-
                 System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter(functionNames);
                 ArrayList<InterpreterDataType> dataTypes = new ArrayList<>();
                 ArrayList<ParameterNode> parameterNodes = new ArrayList<>();
-                Interpreter.InterpretFunction(new FunctionCallNode("start", parameterNodes, false), dataTypes);
-                //interpreter.printTree(tree);
+                // create new function call node for each funct
+                ArrayList<FunctionCallNode> functionCallNodes = new ArrayList<>();
+                for (FunctionNode functionNode : node) {
+                    FunctionCallNode functionCallNode = new FunctionCallNode(functionNode.getName(), parameterNodes, false);
+                    functionCallNodes.add(functionCallNode);
+                }
 
+                Interpreter.InterpretFunction(new FunctionCallNode("start", parameterNodes, false), dataTypes);
+
+                // TODO: decide on this
+               /* for (FunctionCallNode functionCallNode : functionCallNodes) {
+                    if (!"start".equals(functionCallNode.getName())) {
+                        Interpreter.InterpretFunction(functionCallNode, dataTypes);
+                    }
+                }*/
 
                 //float fintree = interpreter.Resolve(tree);
                 System.out.println("Interpreting complete");

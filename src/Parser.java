@@ -38,7 +38,7 @@ public class Parser {
     }
 
     public void removeEndlines() {
-        while (tokens.get(0).getType() == Type.ENDLINE) {
+        while (!tokens.isEmpty() && tokens.get(0).getType() == Type.ENDLINE) {
             tokens.remove(0);
         }
     }
@@ -390,7 +390,11 @@ public class Parser {
                 } else {
                     functions.add(new FunctionNode(namestr, params, vars, consta, body));
                 }
-                removeEndlines();
+                if (tokens.isEmpty()) {
+                    break;
+                } else {
+                    removeEndlines();
+                }
             }
             return functions;
         } catch (Exception e) {
