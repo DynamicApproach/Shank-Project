@@ -235,6 +235,7 @@ public class Parser {
     }
 
     public StatementNode statement() {
+        // assign, while, for, repeat, if, functioncall
         AssignmentNode as = assignment();
         if (as != null)
             return as;
@@ -244,7 +245,24 @@ public class Parser {
         ForNode forNode = forExpression();
         if (forNode != null)
             return forNode;
+        RepeatNode repeatNode = repeatExpression();
+        if (repeatNode != null)
+            return repeatNode;
+        IfNode ifNode = ifExpression();
+        if (ifNode != null)
+            return ifNode;
+
         return ifExpression();
+    }
+
+    private RepeatNode repeatExpression() {
+        if (matchAndRemove(Type.REPEAT) != null) {
+            ArrayList<StatementNode> statements = statements();
+            matchAndRemove(Type.UNTIL);
+            Node node = expression();
+            return new RepeatNode(node, statements);
+        }
+        return null;
     }
 
     public AssignmentNode assignment() {
@@ -300,10 +318,13 @@ public class Parser {
                 BooleanExpressionNode childcondition = booleanExpression();
                 matchAndRemove(Type.THEN);
                 ArrayList<StatementNode> childStatements = statements();
+
+                removeEndlines();
                 IfNode nestedIf = new IfNode(condition, statements);
                 nestedIf.setIfNode(new IfNode(childcondition, childStatements));
                 //  IfNode ifNodeChild = new IfNode(childcondition, childStatements);
                 //   IfNode ifNodeParent = new IfNode(condition, statements, ifNodeChild);
+                removeEndlines();
                 if (quickPeek() == Type.ELSE) {
                     matchAndRemove(Type.ELSE);
                     nestedIf.setElseStatements(statements());
