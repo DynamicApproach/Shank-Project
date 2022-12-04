@@ -222,6 +222,7 @@ public class Parser {
     }
 
     public ArrayList<StatementNode> statements() {
+        ArrayList<StatementNode> statements = new ArrayList<>();
         removeEndlines();
         matchAndRemove(Type.BEGIN);
         removeEndlines();
@@ -323,7 +324,7 @@ public class Parser {
         // for identifier assignment expression to expression do statements end
         if (matchAndRemove(Type.FOR) != null) {
             String name = matchAndRemove(Type.IDENTIFIER).getValue().trim();
-            matchAndRemove(Type.ASSIGN);
+            matchAndRemove(Type.FROM);
             Node start = expression();
             matchAndRemove(Type.TO);
             Node end = expression();
