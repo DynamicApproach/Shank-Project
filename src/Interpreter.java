@@ -35,10 +35,9 @@ public class Interpreter {
                     } else if (var.getValue() instanceof StringNode) {
                         VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
                     } else if (var.getValue() instanceof BooleanNode) {
-                        //This is kinda difficult to implement. Wait until everything else works to implement this.
-                        //VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
+                        VariableHashMap.put(var.getName(), new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
                     } else {
-                        throw new Exception("uhh");
+                        throw new Exception("InterpretFunction: Variable type not found");
                     }
                 }
             }
