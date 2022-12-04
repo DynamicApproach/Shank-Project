@@ -5,7 +5,7 @@
     <output_file path="$ContentRoot$/debug/" />
     <option name="MAIN_CLASS_NAME" value="Shank" />
     <module name="LexerProject" />
-    <option name="PROGRAM_PARAMETERS" value="C:\Users\lloyd\Desktop\Homework\311\tests\test.txt" />
+    <option name="PROGRAM_PARAMETERS" value="C:\Users\lloyd\Desktop\Homework\311\tests\test.shank" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
     <method v="2">
       <option name="Make" enabled="true" />
