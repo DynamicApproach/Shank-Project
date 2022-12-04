@@ -38,8 +38,13 @@ public class Parser {
     }
 
     public void removeEndlines() {
-        while (tokens.get(0).getType() == Type.ENDLINE) {
-            tokens.remove(0);
+        if (!tokens.isEmpty()) {
+            while (tokens.get(0).getType() == Type.ENDLINE) {
+                tokens.remove(0);
+            }
+        } else {
+            System.err.println("Error: No tokens to parse");
+            System.exit(1);
         }
     }
 
@@ -299,7 +304,7 @@ public class Parser {
 
     // need to chain ifNode together -> ifNode(cond, statements, ifNode)
     public IfNode ifExpression() {
-        // if booleanExpression then statements (if booleanExpression then statements)* end
+        // if booleanExpression then statements (if booleanExpression then begin statements end end)
         // check for if or else if or else
         if (matchAndRemove(Type.IF) != null) {
             BooleanExpressionNode condition = booleanExpression();
@@ -308,37 +313,39 @@ public class Parser {
             removeEndlines();
             ArrayList<StatementNode> statements = statements();
 
-            if (matchAndRemove(Type.ELSE) != null) {
-                System.out.println("else");
-                IfNode ifNode = new IfNode(condition, statements);
-                ifNode.setElseStatements(statements());
-                removeEndlines();
-                return ifNode;
-            } else if (matchAndRemove(Type.ELSIF) != null) {
-                BooleanExpressionNode childcondition = booleanExpression();
+            // Create the initial IfNode with the first condition and statements
+            IfNode ifNode = new IfNode(condition, statements);
+            removeEndlines();
+
+            // Check for additional elsif statements
+            while (matchAndRemove(Type.ELSIF) != null) {
+                // Parse the next condition and statements for the elsif
+                BooleanExpressionNode childCondition = booleanExpression();
                 matchAndRemove(Type.THEN);
                 ArrayList<StatementNode> childStatements = statements();
 
+                // Create a new IfNode for the elsif and set it as the next if node
+                // in the current IfNode
+                IfNode nestedIf = new IfNode(childCondition, childStatements);
+                ifNode.setIfNode(nestedIf);
+
+                // Set the current IfNode to the new nested IfNode, so that it
+                // can be used as the else branch for the next elsif statement
+                ifNode = nestedIf;
+
                 removeEndlines();
-                IfNode nestedIf = new IfNode(condition, statements);
-                nestedIf.setIfNode(new IfNode(childcondition, childStatements));
-                //  IfNode ifNodeChild = new IfNode(childcondition, childStatements);
-                //   IfNode ifNodeParent = new IfNode(condition, statements, ifNodeChild);
-                removeEndlines();
-                if (quickPeek() == Type.ELSE) {
-                    matchAndRemove(Type.ELSE);
-                    nestedIf.setElseStatements(statements());
-                }
-                return nestedIf;
-            } else {
-                IfNode ifNode = new IfNode(condition, statements);
-                removeEndlines();
-                return ifNode;
             }
-            // TODO: Fix ElseIF printing
+
+            // Check for an else statement
+            if (matchAndRemove(Type.ELSE) != null) {
+                ifNode.setElseStatements(statements());
+            }
+
+            return ifNode;
         }
         return null;
     }
+
 
     // for
     public ForNode forExpression() {
@@ -369,7 +376,7 @@ public class Parser {
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
             removeEndlines();
-            while (matchAndRemove(Type.DEFINE) != null) {
+            while (matchAndRemove(Type.DEFINE) != null && !tokens.isEmpty()) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 String namestr = "";
                 if (name != null) {
@@ -409,7 +416,7 @@ public class Parser {
                 } else {
                     functions.add(new FunctionNode(namestr, params, vars, consta, body));
                 }
-                removeEndlines();
+
             }
             return functions;
         } catch (Exception e) {
