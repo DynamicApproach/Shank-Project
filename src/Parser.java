@@ -38,13 +38,8 @@ public class Parser {
     }
 
     public void removeEndlines() {
-        if (!tokens.isEmpty()) {
-            while (tokens.get(0).getType() == Type.ENDLINE) {
-                tokens.remove(0);
-            }
-        } else {
-            System.err.println("Error: No tokens to parse");
-            System.exit(1);
+        while (tokens.get(0).getType() == Type.ENDLINE) {
+            tokens.remove(0);
         }
     }
 
@@ -240,7 +235,6 @@ public class Parser {
     }
 
     public StatementNode statement() {
-        // assign, while, for, repeat, if, functioncall
         AssignmentNode as = assignment();
         if (as != null)
             return as;
@@ -250,24 +244,7 @@ public class Parser {
         ForNode forNode = forExpression();
         if (forNode != null)
             return forNode;
-        RepeatNode repeatNode = repeatExpression();
-        if (repeatNode != null)
-            return repeatNode;
-        IfNode ifNode = ifExpression();
-        if (ifNode != null)
-            return ifNode;
-
         return ifExpression();
-    }
-
-    private RepeatNode repeatExpression() {
-        if (matchAndRemove(Type.REPEAT) != null) {
-            ArrayList<StatementNode> statements = statements();
-            matchAndRemove(Type.UNTIL);
-            Node node = expression();
-            return new RepeatNode(node, statements);
-        }
-        return null;
     }
 
     public AssignmentNode assignment() {
@@ -304,8 +281,6 @@ public class Parser {
 
     // need to chain ifNode together -> ifNode(cond, statements, ifNode)
     public IfNode ifExpression() {
-        // if booleanExpression then statements (if booleanExpression then begin statements end end)
-        // check for if or else if or else
         if (matchAndRemove(Type.IF) != null) {
             BooleanExpressionNode condition = booleanExpression();
             removeEndlines();
@@ -346,7 +321,6 @@ public class Parser {
         return null;
     }
 
-
     // for
     public ForNode forExpression() {
         // for identifier assignment expression to expression do statements end
@@ -376,7 +350,7 @@ public class Parser {
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
             removeEndlines();
-            while (matchAndRemove(Type.DEFINE) != null && !tokens.isEmpty()) {
+            while (matchAndRemove(Type.DEFINE) != null) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 String namestr = "";
                 if (name != null) {
@@ -416,7 +390,7 @@ public class Parser {
                 } else {
                     functions.add(new FunctionNode(namestr, params, vars, consta, body));
                 }
-
+                removeEndlines();
             }
             return functions;
         } catch (Exception e) {
