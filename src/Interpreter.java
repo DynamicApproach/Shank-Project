@@ -24,20 +24,22 @@ public class Interpreter {
         for (int i = 0; i < function.getParameters().size(); i++)
             VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
         if (hashmapfuncts.get(function.getName()) instanceof FunctionNode no) {
-            for (VariableNode var : ((FunctionNode) hashmapfuncts.get(function.getName())).getVariables()) {
-                if (var.getValue() instanceof IntegerNode) {
-                    VariableHashMap.put(var.getName(), new IntDataType(var.getValue().toString()));
-                } else if (var.getValue() instanceof FloatNode) {
-                    VariableHashMap.put(var.getName(), new FloatDataType(var.getValue().toString()));
-                } else if (var.getValue() instanceof CharNode) {
-                    VariableHashMap.put(var.getName(), new CharDataType(var.getValue().toString().toCharArray()[0]));
-                } else if (var.getValue() instanceof StringNode) {
-                    VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
-                } else if (var.getValue() instanceof BooleanNode) {
-                    //This is kinda difficult to implement. Wait until everything else works to implement this.
-                    //VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
-                } else {
-                    throw new Exception("uhh");
+            if (((FunctionNode) hashmapfuncts.get(function.getName())).getVariablesAvalible()) {
+                for (VariableNode var : ((FunctionNode) hashmapfuncts.get(function.getName())).getVariables()) {
+                    if (var.getValue() instanceof IntegerNode) {
+                        VariableHashMap.put(var.getName(), new IntDataType(var.getValue().toString()));
+                    } else if (var.getValue() instanceof FloatNode) {
+                        VariableHashMap.put(var.getName(), new FloatDataType(var.getValue().toString()));
+                    } else if (var.getValue() instanceof CharNode) {
+                        VariableHashMap.put(var.getName(), new CharDataType(var.getValue().toString().toCharArray()[0]));
+                    } else if (var.getValue() instanceof StringNode) {
+                        VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
+                    } else if (var.getValue() instanceof BooleanNode) {
+                        //This is kinda difficult to implement. Wait until everything else works to implement this.
+                        //VariableHashMap.put(var.getName(),new BooleanDataType(var.getValue().toString()));
+                    } else {
+                        throw new Exception("uhh");
+                    }
                 }
             }
         }

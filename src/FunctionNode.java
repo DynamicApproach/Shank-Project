@@ -109,4 +109,8 @@ public class FunctionNode extends CallableNode {
     public void setConstant(ArrayList<VariableNode> constant) {
         this.constant = constant;
     }
+
+    public boolean getVariablesAvalible() {
+        return variables != null;
+    }
 }
