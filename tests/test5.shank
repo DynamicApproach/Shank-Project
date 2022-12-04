@@ -1,18 +1,27 @@
-(* Recursive *)
-define add (x,y : integer; var sum : integer)
+define fib (n : integer; var ans: integer)
 variables
-	yMinusOne, xPlusOne, newSum : integer
+    z : integer
 begin
-	(* in here, x and y are constant *)
-	if y = 0 then
-		begin
-		sum := x
-		end
-	else
-		begin
-		xPlusOne := x + 1
-		yMinusOne := y - 1
-		add xPlusOne, yMinusOne, var newSum
-		sum := newSum
-		end
+    x:= 0
+    y:= 1
+if n < 0
+    begin
+        ans:= 0
+    end
+elsif n = 0 then
+    begin
+    ans := 0
+    end
+elsif n = 1 then
+    begin
+    ans := y
+    end
+else
+    begin
+    if counter < n
+    z = x + y
+    x = y
+    y = z
+    ans := y
+    end
 end
