@@ -387,6 +387,7 @@ public class Parser {
                 } else {
                     functions.add(new FunctionNode(namestr, params, vars, consta, body));
                 }
+                removeEndlines();
             }
             return functions;
         } catch (Exception e) {
