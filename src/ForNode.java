@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class ForNode extends StatementNode {
     // For (variableReference, start ASTNode, end astNode, collection of statementNodes)
-    private Node variableReference;
+    private VariableReferenceNode variableReference;
     private Node start;
     private Node end;
     private ArrayList<StatementNode> statementNodes;
@@ -18,7 +18,7 @@ public class ForNode extends StatementNode {
         return start;
     }
 
-    public Node getVariableReference() {
+    public VariableReferenceNode getVariableReference() {
         return variableReference;
     }
 

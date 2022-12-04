@@ -107,23 +107,22 @@ public class Interpreter {
                     // not in hashmap
                     throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
                 } // TODO: interpret different nodes
-            } else if (statement instanceof ForNode) {
+            } else if (statement instanceof ForNode forNode) {
                 // TODO: fix
                 // we have a fornode with an expression and a block
                 // we need to evaluate the expression
-                // if it is true, we need to interpret the block
-                // (if a = b+3)
-                // need to creat a fornode with an expression and a block
-                // need to evaluate the expression
-                // if it is true, we need to interpret the block
-                //if (((ForNode) statement).getVariableReference() != null) {
-                //    var ref = ((ForNode) statement).getVariableReference();
-                // VarRefNode has a name of var
-                // }
-
+                // Get the loop variable, starting value, ending value, and body of the loop.
+                VariableReferenceNode variable = forNode.getVariableReference();
+                Node start = forNode.getStart();
+                Node end = forNode.getEnd();
+                ArrayList<StatementNode> body = forNode.getStatementNodes();
+                // Loop over the range of values for the loop variable.
+                // Set the value of the loop variable in the interpreter's variable mapping.
+                // Interpret the body of the loop.
             } else if (statement instanceof WhileNode) {
                 BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
+
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
