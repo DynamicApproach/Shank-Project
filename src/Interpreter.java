@@ -107,23 +107,47 @@ public class Interpreter {
                     // funcNode
                     // not in hashmap
                     throw new RuntimeException("Error: Function " + functionCall.getName() + " is not defined");
-                } // TODO: interpret different nodes
+                }
             } else if (statement instanceof ForNode forNode) {
-                // TODO: fix
-                // we have a fornode with an expression and a block
-                // we need to evaluate the expression
-                // Get the loop variable, starting value, ending value, and body of the loop.
                 VariableReferenceNode variable = forNode.getVariableReference();
                 Node start = forNode.getStart();
-                Node end = forNode.getEnd();
                 ArrayList<StatementNode> body = forNode.getStatementNodes();
-                // Loop over the range of values for the loop variable.
-                // Set the value of the loop variable in the interpreter's variable mapping.
-                // Interpret the body of the loop.
+                Node end = forNode.getEnd();
+                if (!VariableHashMap.containsKey((variable.toString()))) {
+                    // if it's not in the hashmap throw an error
+                    throw new RuntimeException("Error: Cannot assign to constant " + statement);
+                } else {
+                    // get the value of the ref node
+                    // compare it to the end
+                    // if it's less than the end, execute the body
+                    // increment the value of the ref node
+                    // repeat
+                    // if it's greater than the end, stop
+                    var value = VariableHashMap.get(variable.toString());
+                    if (value instanceof IntDataType) {
+                        int startValue = Integer.parseInt(start.toString());
+                        int endValue = Integer.parseInt(end.toString());
+                        for (int i = startValue; i < endValue; i++) {
+                            VariableHashMap.put(variable.toString(), new IntDataType(i));
+                            InterpretBlock(body, VariableHashMap);
+                        }
+                    } else if (value instanceof FloatDataType) {
+                        float startValue = Float.parseFloat(start.toString());
+                        float endValue = Float.parseFloat(end.toString());
+                        for (float i = startValue; i < endValue; i++) {
+                            VariableHashMap.put(variable.toString(), new FloatDataType(i));
+                            InterpretBlock(body, VariableHashMap);
+                        }
+                    } else {
+                        throw new RuntimeException("Error: Cannot iterate over " + value);
+                    }
+                }
             } else if (statement instanceof WhileNode) {
                 BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
-
+                if (ResolveBoolean(express)) {
+                    InterpretBlock(block, VariableHashMap);
+                }
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
@@ -131,7 +155,11 @@ public class Interpreter {
                 // if false, we need to break out of the loop
                 BooleanExpressionNode express = (BooleanExpressionNode) ((RepeatNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((RepeatNode) statement).getBlock();
-
+                if (ResolveBoolean(express)) {
+                    InterpretBlock(block, VariableHashMap);
+                } else {
+                    break;
+                }
             } else if (statement instanceof IfNode) {
                 // we have an ifnode with an expression and a block
                 // we need to evaluate the expression
@@ -139,6 +167,9 @@ public class Interpreter {
                 // if false, we need to break out of the loop
                 BooleanExpressionNode express = ((IfNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((IfNode) statement).getStatementNodes();
+                if (ResolveBoolean(express)) {
+                    InterpretBlock(block, VariableHashMap);
+                }
             } else if (statement instanceof AssignmentNode curStatement) {
                 // cast to assignment node
                 if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
@@ -187,7 +218,47 @@ public class Interpreter {
     // if not throw exception
     // check for true false
 
-    public boolean resolveBoolean(BooleanExpressionNode boolNode) {
+    public static boolean ResolveBoolean(Node nodey) {
+        if (nodey instanceof BooleanExpressionNode) {
+            return resolveBoolean((BooleanExpressionNode) nodey);
+        } else if (nodey instanceof MathOpNode) {
+            // call resolvebool on left and right
+            try {
+                return ResolveBoolean(((MathOpNode) nodey).getLeft()) && ResolveBoolean(((MathOpNode) nodey).getRight());
+            } catch (Exception e) {
+                // call resolveint on left and right
+                try {
+                    return ResolveInt(((MathOpNode) nodey).getLeft()) == ResolveInt(((MathOpNode) nodey).getRight());
+                } catch (Exception ex) {
+                    // call resolvefloat
+                    try {
+                        return ResolveFloat(((MathOpNode) nodey).getLeft()) == ResolveFloat(((MathOpNode) nodey).getRight());
+                    } catch (Exception res) {
+                        // call resolve string
+                        try {
+                            return ResolveString(((MathOpNode) nodey).getLeft()).equals(ResolveString(((MathOpNode) nodey).getRight()));
+                        } catch (Exception re) {
+                            // call resolve char
+                            try {
+                                return ResolveChar(((MathOpNode) nodey).getLeft()) == ResolveChar(((MathOpNode) nodey).getRight());
+                            } catch (Exception r) {
+                                // call resolve bool
+                                try {
+                                    return ResolveBoolean(((MathOpNode) nodey).getLeft()) == ResolveBoolean(((MathOpNode) nodey).getRight());
+                                } catch (Exception e1) {
+                                    throw new RuntimeException("Error: Cannot resolve " + nodey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            throw new RuntimeException("Not a boolean");
+        }
+    }
+
+    public static boolean resolveBoolean(BooleanExpressionNode boolNode) {
         try {
             try {
                 int left = ResolveInt(boolNode.getLeft());
@@ -254,7 +325,7 @@ public class Interpreter {
         return false;
     }
 
-    public int ResolveInt(Node nodey) {
+    public static int ResolveInt(Node nodey) {
         if (nodey instanceof FloatNode) {
             return Integer.parseInt(nodey.toString());
         } else if (nodey instanceof MathOpNode) {
@@ -272,7 +343,7 @@ public class Interpreter {
         }
     }
 
-    public float ResolveFloat(Node nodey) {
+    public static float ResolveFloat(Node nodey) {
         if (nodey instanceof FloatNode) {
             return Float.parseFloat(nodey.toString());
         } else {
@@ -280,7 +351,7 @@ public class Interpreter {
         }
     }
 
-    public char ResolveChar(Node nodey) {
+    public static char ResolveChar(Node nodey) {
         if (nodey instanceof CharNode) {
             return nodey.toString().toCharArray()[0];
         } else {
@@ -288,39 +359,13 @@ public class Interpreter {
         }
     }
 
-    public String ResolveString(Node nodey) {
+    public static String ResolveString(Node nodey) {
         if (nodey instanceof StringNode) {
             return nodey.toString();
         } else {
             throw new RuntimeException("Not a string");
         }
     }
-
-    public boolean ResolveBoolean(Node nodey) {
-        if (nodey instanceof BooleanExpressionNode) {
-            return resolveBoolean((BooleanExpressionNode) nodey);
-        } else if (nodey instanceof MathOpNode) {
-            // call resolvebool on left and right
-            try {
-                return ResolveBoolean(((MathOpNode) nodey).getLeft()) && ResolveBoolean(((MathOpNode) nodey).getRight());
-            } catch (Exception e) {
-                // call resolveint on left and right
-                try {
-                    return ResolveInt(((MathOpNode) nodey).getLeft()) == ResolveInt(((MathOpNode) nodey).getRight());
-                } catch (Exception ex) {
-                    // call resolvefloat
-                    try {
-                        return ResolveFloat(((MathOpNode) nodey).getLeft()) == ResolveFloat(((MathOpNode) nodey).getRight());
-                    } catch (Exception resolve) {
-                        throw new RuntimeException("Error: Cannot resolve boolean expression " + nodey);
-                    }
-                }
-            }
-        } else {
-            throw new RuntimeException("Not a boolean");
-        }
-    }
-
 
     public void printTree(Node tre) {
         System.out.println("Tree: --------------------");
