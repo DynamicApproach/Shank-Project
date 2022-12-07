@@ -5,7 +5,7 @@ import java.util.HashMap;
 @SuppressWarnings("unused")
 public class Interpreter {
     static HashMap<String, CallableNode> hashmapfuncts;
-
+    static HashMap<String, InterpreterDataType> VariableHashMap = new HashMap<>();
 
     public Interpreter(HashMap<String, CallableNode> hashmapfuncts) {
         Interpreter.hashmapfuncts = hashmapfuncts;
@@ -131,13 +131,6 @@ public class Interpreter {
                             VariableHashMap.put(variable.toString(), new IntDataType(i));
                             InterpretBlock(body, VariableHashMap);
                         }
-                    } else if (value instanceof FloatDataType) {
-                        float startValue = Float.parseFloat(start.toString());
-                        float endValue = Float.parseFloat(end.toString());
-                        for (float i = startValue; i < endValue; i++) {
-                            VariableHashMap.put(variable.toString(), new FloatDataType(i));
-                            InterpretBlock(body, VariableHashMap);
-                        }
                     } else {
                         throw new RuntimeException("Error: Cannot iterate over " + value);
                     }
@@ -202,21 +195,156 @@ public class Interpreter {
     }
 
 
-    // a > b
-    // have to resolve both side
-    // try to resolve both to float or int
-    // resolve boolean ->
-    // resolve float
-    // resolve int
-    // resolve true or false
+    // (a> b) == (1<3)
+    // resolve boolean
+    // used same solver as mathopnode
+    // if it is a bool type, return true or false
 
-    // if not int or float, throw exception if not their type
-    // inside try catch
-    // resolve float on right left
-    // if not throw execption
-    // resolve int on right left
-    // if not throw exception
-    // check for true false
+
+    // resolve
+    // resolve checks the type, if its a math op node, it calls itself on the left and right
+    // if it's a variable ref node, it checks the hashmap
+    // if it's a float node, it returns a float
+    // if it's an int node, it returns an int
+    // if it's a char node, it returns a char
+    // if it's a string node, it returns a string
+    // if it's a boolean node, it returns a boolean
+    // if it's a function call node, it calls itself on the function call node
+    // if it's a function node, it calls itself on the function node
+    // if it's a built in function node, it calls itself on the built in function node
+
+    public static Node resolve(Node nodey) {
+        if (nodey instanceof MathOpNode node) {
+            Node left = node.getLeft();
+            Node right = node.getRight();
+            left= resolve(left);
+            right = resolve(right);
+            var op = node.getOp();
+            switch (op) { // operator has to be the same type
+                case ADD -> {
+                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
+                        return new IntegerNode(((IntegerNode) left).getValue() + ((IntegerNode) right).getValue());
+                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
+                        return new FloatNode(((FloatNode) left).getValue() + ((FloatNode) right).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot add " + left + " and " + right);
+                    }
+                }
+                case MINUS -> {
+                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
+                        return new IntegerNode(((IntegerNode) left).getValue() - ((IntegerNode) right).getValue());
+                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
+                        return new FloatNode(((FloatNode) left).getValue() - ((FloatNode) right).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot subtract " + left + " and " + right);
+                    }
+                }
+                case MULTIPLY -> {
+                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
+                        return new IntegerNode(((IntegerNode) left).getValue() * ((IntegerNode) right).getValue());
+                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
+                        return new FloatNode(((FloatNode) left).getValue() * ((FloatNode) right).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot multiply " + left + " and " + right);
+                    }
+                }
+                case DIVIDE -> {
+                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
+                        return new IntegerNode(((IntegerNode) left).getValue() / ((IntegerNode) right).getValue());
+                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
+                        return new FloatNode(((FloatNode) left).getValue() / ((FloatNode) right).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot divide " + left + " and " + right);
+                    }
+                }
+                case MOD -> {
+                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
+                        return new IntegerNode(((IntegerNode) left).getValue() % ((IntegerNode) right).getValue());
+                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
+                        return new FloatNode(((FloatNode) left).getValue() % ((FloatNode) right).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot mod " + left + " and " + right);
+                    }
+                }
+            }
+        } else if (nodey instanceof BooleanExpressionNode node) {
+            Node nodeBoolL = (((BooleanExpressionNode) nodey).getLeft());
+            Node nodeBoolR = (((BooleanExpressionNode) nodey).getRight());
+            nodeBoolL = resolve(nodeBoolL);
+            nodeBoolR = resolve(nodeBoolR);
+            var op = node.getOperator();
+            switch (op){
+                case GREATER -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() > ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() > ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+                case LESS -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() < ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() < ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+                case GREATER_EQUAL -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() >= ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() >= ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+                case LESS_EQUAL -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() <= ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() <= ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+                case EQUAL -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() == ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() == ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+                case NOT_EQUAL -> {
+                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() != ((IntegerNode) nodeBoolR).getValue());
+                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() != ((FloatNode) nodeBoolR).getValue());
+                    } else {
+                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+                    }
+                }
+            }
+
+        } else if (nodey instanceof IntegerNode) {
+            return nodey;
+        } else if (nodey instanceof FloatNode) {
+            return nodey;
+        } else if (nodey instanceof CharNode) {
+            return nodey;
+        } else if (nodey instanceof StringNode) {
+            return nodey;
+        }
+        return null;
+    }
+
+
+    // ====================================================================================================
+
 
     public static boolean ResolveBoolean(Node nodey) {
         if (nodey instanceof BooleanExpressionNode) {
@@ -326,22 +454,13 @@ public class Interpreter {
     }
 
     public static int ResolveInt(Node nodey) {
-        if (nodey instanceof FloatNode) {
+        if (nodey instanceof IntegerNode) {
             return Integer.parseInt(nodey.toString());
-        } else if (nodey instanceof MathOpNode) {
-            return switch (((MathOpNode) nodey).getOperator()) {
-                case "+" -> ResolveInt(((MathOpNode) nodey).getLeft()) + ResolveInt(((MathOpNode) nodey).getRight());
-                case "-" -> ResolveInt(((MathOpNode) nodey).getLeft()) - ResolveInt(((MathOpNode) nodey).getRight());
-                case "*" -> ResolveInt(((MathOpNode) nodey).getLeft()) * ResolveInt(((MathOpNode) nodey).getRight());
-                case "/" -> ResolveInt(((MathOpNode) nodey).getLeft()) / ResolveInt(((MathOpNode) nodey).getRight());
-                case "%" -> ResolveInt(((MathOpNode) nodey).getLeft()) % ResolveInt(((MathOpNode) nodey).getRight());
-                default -> throw new RuntimeException("Error: Invalid operator in math expression");
-            };
-
         } else {
             throw new RuntimeException("Not an int or float");
         }
     }
+
 
     public static float ResolveFloat(Node nodey) {
         if (nodey instanceof FloatNode) {
