@@ -32,7 +32,7 @@ public class ForNode extends StatementNode {
 
     @Override
     public String toString() {
-        return "For: " + variableReference.toString() + " From: " + start.toString() + " To: " + end.toString() + " Do: " + statementNodes.toString();
+        return "For: " + variableReference.toString() + "START: " + start.toString() + " END: " + end.toString() + " STATEMENT: " + statementNodes.toString();
     }
 
 }
