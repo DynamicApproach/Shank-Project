@@ -5,6 +5,8 @@
 [Previous Assignment](./ICSI%20311%20Assignment%202%20%20Parser.md)
 | [Next Assignment](./ICSI%20311%20Assignment%203%20%20FuctAdditions.md)
 
+#### All documents originally made by M. Phipps, updated and clarified by me
+
 **This assignment is extremely important – (nearly) every assignment after this one uses this one!**
 
 **If you have bugs or missing features in this, you will need to fix them before you can continue on
