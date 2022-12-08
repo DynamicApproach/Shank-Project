@@ -5,12 +5,7 @@ public class CharDataType extends InterpreterDataType {
         this.value = value;
     }
 
-
     public String toString() {
-        return Character.toString(value);
-    }
-
-    public String toString(String input) throws Exception {
         return Character.toString(value);
     }
 

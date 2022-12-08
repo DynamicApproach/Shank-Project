@@ -12,7 +12,6 @@ public class FloatDataType extends InterpreterDataType {
         this.value = val;
     }
 
-
     public String toString() {
         return (Float.toString(value));
     }

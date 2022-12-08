@@ -59,7 +59,6 @@ public class IfNode extends StatementNode {
                 System.err.println("Error in IfNode.java");
             }
         }
-
         return (booleanExpression != null ? booleanExpression.toString() : "") + " " + (sb);
     }
 

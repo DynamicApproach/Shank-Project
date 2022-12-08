@@ -20,8 +20,7 @@ public class Interpreter {
     // once we have that done, the env is set up
     // now we can call interp block -> Which will be reused
     public static void InterpretFunction(FunctionCallNode function, ArrayList<InterpreterDataType> parameters) throws Exception {
-        // function was just called and have to make the hash map for your local variables and parameters.
-
+        // function was just called and have to make the hash map for local variables and parameters.
         for (int i = 0; i < function.getParameters().size(); i++)
             VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
         if (hashmapfuncts.get(function.getName()) instanceof FunctionNode no) {
@@ -49,13 +48,10 @@ public class Interpreter {
         Interpreter.InterpretBlock(functionNode.getBody(), VariableHashMap);
     }
 
-    //For now, the only statement type that we will handle is function calls.
-    //If the statement is a function call, implement the process described in the background section,
-    // otherwise we will ignore the statement (for now).
-    // Functions body is a list of statements
+
     // InterpretBlock should take the collection of statements and a hashmap of variables.
     // We will loop over the collection of statements.
-    // type you’re dealing with his function calls. In interpret block you are preparing the list of IDT’s. That will go to interpret function.
+    // In interpret block you are preparing the list of IDT’s. That will go to interpret function.
     // Locate the function definition; this could be a built-in (like read or write) or it could be user-defined.
     // Make sure that the number of parameters matches OR that the function definition is variadic and built-in.
     // Make a collection of values (InterpreterDataType):
@@ -241,18 +237,14 @@ public class Interpreter {
                 } else if (VariableHashMap.get(nodey.toString()) instanceof StringDataType) {
                     return new StringNode((VariableHashMap.get(nodey.toString()).toString()));
                 }
-
-
-                // BREAKING HERE
                 InterpreterDataType vary = VariableHashMap.get(nodey.toString());
                 System.out.println(VariableHashMap);
                 System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
             } else {
-
                 System.out.println(VariableHashMap);
                 System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
                 throw new RuntimeException("Error: Variable " + nodey + " is not defined");
-            } //return new VariableNode(nodey.toString(), VariableHashMap.get(nodey.toString())); ?
+            }
         } else if (nodey instanceof MathOpNode node) {
             Node left = node.getLeft();
             Node right = node.getRight();

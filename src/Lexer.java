@@ -33,7 +33,6 @@ public class Lexer {
                 }
                 index++;
                 numState(c);
-
             }
             // add final token
             if (state == 0 || state == 2 || state == 3 || state == 4 && builder.length() > 0 && !" ".equals(builder.toString()) && !"\n".equals(builder.toString())) {
@@ -57,7 +56,6 @@ public class Lexer {
     public void setupReservedWords() {
         // Identifier, define, leftParen, rightParen, integer, real, begin, end, semicolon, colon, equal, comma, variables, constants
         // integer, real, begin, end, variables, constants, if, then, else, elsif, for, from, to, while, repeat, until, mod
-
         reservedWords.put("IDENTIFIER", Type.IDENTIFIER);
         reservedWords.put("DEFINE", Type.DEFINE);
         reservedWords.put("LEFTPAREN", Type.LPAREN);
@@ -87,7 +85,6 @@ public class Lexer {
         reservedWords.put("MOD", Type.MOD);
         reservedWords.put("VAR", Type.VAR);
         reservedWords.put("DO", Type.DO);
-
     }
 
     @SuppressWarnings("unused")
@@ -131,9 +128,7 @@ public class Lexer {
                             foundTok(Type.RPAREN, ")");
                         }
                     }
-                    case '\n' -> {
-                        foundTok(Type.ENDLINE, ")");
-                    }
+                    case '\n' -> foundTok(Type.ENDLINE, ")");
                     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                         state = 2;
                         builder.append(c);
