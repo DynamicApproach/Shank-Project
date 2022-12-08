@@ -348,7 +348,6 @@ public class Interpreter {
                 }
                 case EQUAL -> {
                     if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        System.err.println("IntegerNode EQUAL COMPARISON WORKS");
                         return new BooleanNode(((IntegerNode) nodeBoolL).getValue() == ((IntegerNode) nodeBoolR).getValue());
                     } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
                         return new BooleanNode(((FloatNode) nodeBoolL).getValue() == ((FloatNode) nodeBoolR).getValue());
