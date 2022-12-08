@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 
 @SuppressWarnings("unused")
@@ -11,6 +12,7 @@ public class Interpreter {
         Interpreter.hashmapfuncts = hashmapfuncts;
     }
 
+    // ======================================INTERPRET FUNCTION OR BODY ==================================================
     // gets handed a function node and a list of params
     // makes space for the local variables
     // match the parameters to names
@@ -20,7 +22,6 @@ public class Interpreter {
     public static void InterpretFunction(FunctionCallNode function, ArrayList<InterpreterDataType> parameters) throws Exception {
         // function was just called and have to make the hash map for your local variables and parameters.
 
-        HashMap<String, InterpreterDataType> VariableHashMap = new HashMap<>();
         for (int i = 0; i < function.getParameters().size(); i++)
             VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
         if (hashmapfuncts.get(function.getName()) instanceof FunctionNode no) {
@@ -127,20 +128,29 @@ public class Interpreter {
                     if (value instanceof IntDataType) {
                         int startValue = Integer.parseInt(start.toString());
                         int endValue = Integer.parseInt(end.toString());
-                        for (int i = startValue; i < endValue; i++) {
-                            VariableHashMap.put(variable.toString(), new IntDataType(i));
-                            InterpretBlock(body, VariableHashMap);
+                        if (startValue > endValue) {
+                            for (int i = startValue; i >= endValue; i--) {
+                                VariableHashMap.put(variable.toString(), new IntDataType(i));
+                                InterpretBlock(body, VariableHashMap);
+                            }
+                        } else {
+                            for (int i = startValue; i < endValue; i++) {
+                                VariableHashMap.put(variable.toString(), new IntDataType(i));
+                                InterpretBlock(body, VariableHashMap);
+                            }
                         }
                     } else {
                         throw new RuntimeException("Error: Cannot iterate over " + value);
                     }
                 }
             } else if (statement instanceof WhileNode) {
+                // same as for loop
                 BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
-                if (ResolveBoolean(express)) {
-                    InterpretBlock(block, VariableHashMap);
+                if ("true".equals(Objects.requireNonNull(resolve(express)).toString())) {
+                    return InterpretBlock(block, VariableHashMap);
                 }
+
             } else if (statement instanceof RepeatNode) {
                 // we have a repeat node with an expression and a block
                 // we need to evaluate the expression
@@ -148,24 +158,18 @@ public class Interpreter {
                 // if false, we need to break out of the loop
                 BooleanExpressionNode express = (BooleanExpressionNode) ((RepeatNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((RepeatNode) statement).getBlock();
-                if (ResolveBoolean(express)) {
-                    InterpretBlock(block, VariableHashMap);
-                } else {
-                    break;
-                }
+
             } else if (statement instanceof IfNode) {
                 // we have an ifnode with an expression and a block
                 // we need to evaluate the expression
                 // if true, we need to interpret the block
                 // if false, we need to break out of the loop
-                BooleanExpressionNode express = ((IfNode) statement).getBooleanExpression();
+                Node express = ((IfNode) statement).getBooleanExpression();
                 ArrayList<StatementNode> block = ((IfNode) statement).getStatementNodes();
-                if (ResolveBoolean(express)) {
-                    InterpretBlock(block, VariableHashMap);
-                }
+
             } else if (statement instanceof AssignmentNode curStatement) {
                 // cast to assignment node
-                if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
+                if (VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
                     // if it's not in the hashmap throw an error
                     throw new RuntimeException("Error: Cannot assign to constant " + statement);
                 } else {
@@ -194,6 +198,7 @@ public class Interpreter {
         exe.execute(parameters);
     }
 
+    // ====================================== MULTI RESOLVE ==================================================
 
     // (a> b) == (1<3)
     // resolve boolean
@@ -204,20 +209,51 @@ public class Interpreter {
     // resolve
     // resolve checks the type, if its a math op node, it calls itself on the left and right
     // if it's a variable ref node, it checks the hashmap
-    // if it's a float node, it returns a float
-    // if it's an int node, it returns an int
-    // if it's a char node, it returns a char
-    // if it's a string node, it returns a string
-    // if it's a boolean node, it returns a boolean
-    // if it's a function call node, it calls itself on the function call node
-    // if it's a function node, it calls itself on the function node
-    // if it's a built in function node, it calls itself on the built in function node
+    // if it's a float node, it returns a floatnode
+    // if it's an int node, it returns an intnode
+    // if it's a char node, it returns a charnode
+    // if it's a string node, it returns a stringnode
+    // if it's a boolean node, it returns a boolean LEFT and RIGHT
 
     public static Node resolve(Node nodey) {
-        if (nodey instanceof MathOpNode node) {
+        if (nodey instanceof IntegerNode) {
+            return nodey;
+        } else if (nodey instanceof FloatNode) {
+            return nodey;
+        } else if (nodey instanceof CharNode) {
+            return nodey;
+        } else if (nodey instanceof StringNode) {
+            return nodey;
+        } else if (nodey instanceof VariableReferenceNode) {
+            if (VariableHashMap.containsKey(nodey.toString())) {
+                // use the name to get the value from the hashmap
+                // return the current value of that var ref node
+                // get the value of the interpreter data type
+                if (VariableHashMap.get(nodey.toString()) instanceof IntDataType) {
+                    return new IntegerNode((Integer.parseInt(VariableHashMap.get(nodey.toString()).toString())));
+                } else if (VariableHashMap.get(nodey.toString()) instanceof FloatDataType) {
+                    return new FloatNode((Float.parseFloat(VariableHashMap.get(nodey.toString()).toString())));
+                } else if (VariableHashMap.get(nodey.toString()) instanceof CharDataType) {
+                    return new CharNode((VariableHashMap.get(nodey.toString()).toString().charAt(0)));
+                } else if (VariableHashMap.get(nodey.toString()) instanceof StringDataType) {
+                    return new StringNode((VariableHashMap.get(nodey.toString()).toString()));
+                }
+
+
+                // BREAKING HERE
+                InterpreterDataType vary = VariableHashMap.get(nodey.toString());
+                System.out.println(VariableHashMap);
+                System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
+            } else {
+
+                System.out.println(VariableHashMap);
+                System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
+                throw new RuntimeException("Error: Variable " + nodey + " is not defined");
+            } //return new VariableNode(nodey.toString(), VariableHashMap.get(nodey.toString())); ?
+        } else if (nodey instanceof MathOpNode node) {
             Node left = node.getLeft();
             Node right = node.getRight();
-            left= resolve(left);
+            left = resolve(left);
             right = resolve(right);
             var op = node.getOp();
             switch (op) { // operator has to be the same type
@@ -273,7 +309,7 @@ public class Interpreter {
             nodeBoolL = resolve(nodeBoolL);
             nodeBoolR = resolve(nodeBoolR);
             var op = node.getOperator();
-            switch (op){
+            switch (op) {
                 case GREATER -> {
                     if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
                         return new BooleanNode(((IntegerNode) nodeBoolL).getValue() > ((IntegerNode) nodeBoolR).getValue());
@@ -312,6 +348,7 @@ public class Interpreter {
                 }
                 case EQUAL -> {
                     if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+                        System.err.println("IntegerNode EQUAL COMPARISON WORKS");
                         return new BooleanNode(((IntegerNode) nodeBoolL).getValue() == ((IntegerNode) nodeBoolR).getValue());
                     } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
                         return new BooleanNode(((FloatNode) nodeBoolL).getValue() == ((FloatNode) nodeBoolR).getValue());
@@ -330,128 +367,12 @@ public class Interpreter {
                 }
             }
 
-        } else if (nodey instanceof IntegerNode) {
-            return nodey;
-        } else if (nodey instanceof FloatNode) {
-            return nodey;
-        } else if (nodey instanceof CharNode) {
-            return nodey;
-        } else if (nodey instanceof StringNode) {
-            return nodey;
         }
         return null;
     }
 
 
-    // ====================================================================================================
-
-
-    public static boolean ResolveBoolean(Node nodey) {
-        if (nodey instanceof BooleanExpressionNode) {
-            return resolveBoolean((BooleanExpressionNode) nodey);
-        } else if (nodey instanceof MathOpNode) {
-            // call resolvebool on left and right
-            try {
-                return ResolveBoolean(((MathOpNode) nodey).getLeft()) && ResolveBoolean(((MathOpNode) nodey).getRight());
-            } catch (Exception e) {
-                // call resolveint on left and right
-                try {
-                    return ResolveInt(((MathOpNode) nodey).getLeft()) == ResolveInt(((MathOpNode) nodey).getRight());
-                } catch (Exception ex) {
-                    // call resolvefloat
-                    try {
-                        return ResolveFloat(((MathOpNode) nodey).getLeft()) == ResolveFloat(((MathOpNode) nodey).getRight());
-                    } catch (Exception res) {
-                        // call resolve string
-                        try {
-                            return ResolveString(((MathOpNode) nodey).getLeft()).equals(ResolveString(((MathOpNode) nodey).getRight()));
-                        } catch (Exception re) {
-                            // call resolve char
-                            try {
-                                return ResolveChar(((MathOpNode) nodey).getLeft()) == ResolveChar(((MathOpNode) nodey).getRight());
-                            } catch (Exception r) {
-                                // call resolve bool
-                                try {
-                                    return ResolveBoolean(((MathOpNode) nodey).getLeft()) == ResolveBoolean(((MathOpNode) nodey).getRight());
-                                } catch (Exception e1) {
-                                    throw new RuntimeException("Error: Cannot resolve " + nodey);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            throw new RuntimeException("Not a boolean");
-        }
-    }
-
-    public static boolean resolveBoolean(BooleanExpressionNode boolNode) {
-        try {
-            try {
-                int left = ResolveInt(boolNode.getLeft());
-                int right = ResolveInt(boolNode.getRight());
-                if (boolNode.getOperator() == Type.GREATER) {
-                    return left > right;
-                } else if (boolNode.getOperator() == Type.LESS) {
-                    return left < right;
-                } else if (boolNode.getOperator() == Type.GREATER_EQUAL) {
-                    return left >= right;
-                } else if (boolNode.getOperator() == Type.LESS_EQUAL) {
-                    return left <= right;
-                } else if (boolNode.getOperator() == Type.EQUAL) {
-                    return left == right;
-                } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
-                    return left != right;
-                }
-            } catch (Exception e) {
-                try {
-                    float left = ResolveFloat(boolNode.getLeft());
-                    float right = ResolveFloat(boolNode.getRight());
-                    if (boolNode.getOperator() == null) {
-                        return false;
-                    } else if (boolNode.getOperator() == Type.LESS) {
-                        return left < right;
-                    } else if (boolNode.getOperator() == Type.GREATER_EQUAL) {
-                        return left >= right;
-                    } else if (boolNode.getOperator() == Type.LESS_EQUAL) {
-                        return left <= right;
-                    } else if (boolNode.getOperator() == Type.EQUAL) {
-                        return left == right;
-                    } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
-                        return left != right;
-                    } else if (boolNode.getOperator() == Type.GREATER) {
-                        return left > right;
-                    }
-                } catch (Exception f) {
-                    try {
-                        char left = ResolveChar(boolNode.getLeft());
-                        char right = ResolveChar(boolNode.getRight());
-                        if (boolNode.getOperator() == Type.EQUAL) {
-                            return left == right;
-                        } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
-                            return left != right;
-                        }
-                    } catch (Exception g) {
-                        try {
-                            String left = ResolveString(boolNode.getLeft());
-                            String right = ResolveString(boolNode.getRight());
-                            if (boolNode.getOperator() == Type.EQUAL) {
-                                return left.equals(right);
-                            } else if (boolNode.getOperator() == Type.NOT_EQUAL) {
-                                return !left.equals(right);
-                            }
-                        } catch (Exception h) {
-                            throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error: Cannot resolve boolean expression " + boolNode);
-        }
-        return false;
-    }
+    // ======================================SINGLE RESOLVE==================================================
 
     public static int ResolveInt(Node nodey) {
         if (nodey instanceof IntegerNode) {
@@ -485,6 +406,8 @@ public class Interpreter {
             throw new RuntimeException("Not a string");
         }
     }
+
+    // ====================================== PRINT ==================================================
 
     public void printTree(Node tre) {
         System.out.println("Tree: --------------------");

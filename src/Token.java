@@ -259,9 +259,9 @@ public class Token {
         if (value == null) {
             return type + "(" + ")";
         } else if (type == Type.ENDLINE) {
-            return type + "(" + value.replace("\n", "\\n") + ")";
+            return value.replace("\n", "\\n");
         } else {
-            return type + "(" + value + ")   ";
+            return value;
         }
     }
 }
