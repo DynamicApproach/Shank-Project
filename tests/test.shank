@@ -2,6 +2,7 @@ define f1(var num1: real ; var num2:integer)
 variables
 i:integer
 begin
+    i:= 0
     while i = 0
     begin
         if num1 < 10 then
