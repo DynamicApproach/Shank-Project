@@ -44,6 +44,8 @@ public class Interpreter {
             }
         }
         FunctionNode functionNode = (FunctionNode) hashmapfuncts.get(function.getName());
+        SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
+        analyzer.analyze(functionNode.getBody());
         Interpreter.InterpretBlock(functionNode.getBody(), VariableHashMap);
     }
 
@@ -171,6 +173,7 @@ public class Interpreter {
                 // cast to assignment node
                 if (VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
                     // if it's not in the hashmap throw an error
+                    System.out.println("Error: Cannot assign to constant " + statement);
                     throw new RuntimeException("Error: Cannot assign to constant " + statement);
                 } else {
                     var value = curStatement.getExpression();
