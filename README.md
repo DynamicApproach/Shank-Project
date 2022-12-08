@@ -4,7 +4,7 @@
 -------------------------------------------
 ---------------------------------------------------
 
-![](/images/diagram.png "Diagram of file outline")
+![](/images/SimpleDiagram.png "Diagram of file outline")
 
 -----------------------------------------------------------------
 
@@ -68,7 +68,7 @@
 
 ----------------------------------------------------------------
 
-- [➡️] 8 - Adding Other Statements
+- [x] 8 - Adding Other Statements
 
   - Attached Files:
     - File 8 - Adding Other Statements.docx 8 - Adding Other Statements.docx
