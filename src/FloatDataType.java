@@ -8,13 +8,12 @@ public class FloatDataType extends InterpreterDataType {
         this.value = Float.parseFloat(value);
     }
 
-    public FloatDataType(float val) {
-        this.value = value;
+    public FloatDataType(Float val) {
+        this.value = val;
     }
 
 
-    @Override
-    public String toString(String input) {
+    public String toString() {
         return (Float.toString(value));
     }
 

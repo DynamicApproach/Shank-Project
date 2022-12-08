@@ -13,8 +13,8 @@ public class IntDataType extends InterpreterDataType {
     }
 
     @Override
-    public String toString(String input) {
-        return (Integer.toString(value));
+    public String toString() {
+        return String.valueOf(value);
     }
 
     @Override

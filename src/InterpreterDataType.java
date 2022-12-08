@@ -1,6 +1,6 @@
 public abstract class InterpreterDataType {
 
-    public abstract String toString(String input) throws Exception;
+    public abstract String toString();
 
     public abstract void fromString(String input) throws Exception;
 

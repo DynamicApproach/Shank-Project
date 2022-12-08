@@ -5,15 +5,7 @@ public class StringDataType extends InterpreterDataType {
         this.value = value;
     }
 
-    public StringDataType() {
-        this.value = "";
-    }
-
     public String toString() {
-        return value;
-    }
-
-    public String toString(String input) throws Exception {
         return value;
     }
 
