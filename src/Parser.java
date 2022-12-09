@@ -602,6 +602,7 @@ public class Parser {
 
     public ArrayList<StatementNode> body() {
         StatementNode statement = null;
+        ArrayList<StatementNode> bod = new ArrayList<>();
         removeEndlines();
         if (matchAndRemove(Type.BEGIN) != null) {
             removeEndlines();

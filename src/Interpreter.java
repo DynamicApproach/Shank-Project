@@ -37,6 +37,7 @@ public class Interpreter {
                     } else if (var.getValue() instanceof BooleanNode) {
                         VariableHashMap.put(var.getName(), new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
                     } else {
+                        System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: " + var.getType() + "     Value: " + var.getValue());
                         throw new Exception("InterpretFunction: Variable type not found");
                     }
                 }
