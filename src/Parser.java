@@ -360,17 +360,19 @@ public class Parser {
                 ArrayList<VariableNode> params = parameters();
                 matchAndRemove(Type.RPAREN);
                 removeEndlines();
-                ArrayList<VariableNode> vars = null;
-                if (matchAndRemove(Type.VARIABLES) != null) {
-                    removeEndlines();
-                    vars = variables();
-                }
                 ArrayList<VariableNode> consta = null;
                 removeEndlines();
                 if (matchAndRemove(Type.CONSTANT) != null) {
                     removeEndlines();
                     consta = constants();
                 }
+                removeEndlines();
+                ArrayList<VariableNode> vars = null;
+                if (matchAndRemove(Type.VARIABLES) != null) {
+                    removeEndlines();
+                    vars = variables();
+                }
+
                 removeEndlines();
                 ArrayList<StatementNode> body = body();
                 if (body == null && consta == null && vars == null) {
@@ -464,7 +466,7 @@ public class Parser {
                         Token isInt = matchAndRemove(Type.INTEGER);
                         if (isInt != null) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), null, Type.INTEGER, !(isVar));
+                                VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(0), Type.INTEGER, !(isVar));
                                 paramets.add(var);
                             }
                             isVar = false;
@@ -475,7 +477,7 @@ public class Parser {
                             if (floaty != null) {
                                 // create a VariableNode for each identifier in the list
                                 for (Token token : idenList) {
-                                    VariableNode var = new VariableNode(token.getValue().trim(), null, Type.FLOAT, !(isVar));
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(0), Type.FLOAT, !(isVar));
                                     paramets.add(var);
                                     isVar = false;
                                 }
@@ -563,15 +565,25 @@ public class Parser {
                         number = matchAndRemove(Type.NUMBER);
                         if (isInteger(number)) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(Integer.parseInt(number.getValue())), Type.INTEGER, false);
-                                consties.add(var);
+                                if (number.getValue() != null) {
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(Integer.parseInt(number.getValue())), Type.INTEGER, false);
+                                    consties.add(var);
+                                } else {
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new IntegerNode(0), Type.INTEGER, false);
+                                    consties.add(var);
+                                }
                             }
                             idenList.clear();
                             state = 3;
                         } else if (isFloat(number)) {
                             for (Token token : idenList) {
-                                VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(Float.parseFloat(number.getValue())), Type.FLOAT, false);
-                                consties.add(var);
+                                if (number.getValue() != null) {
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(Float.parseFloat(number.getValue())), Type.FLOAT, false);
+                                    consties.add(var);
+                                } else {
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(0), Type.FLOAT, false);
+                                    consties.add(var);
+                                }
                             }
                             idenList.clear();
                             state = 0;
@@ -686,7 +698,7 @@ public class Parser {
                         x = matchAndRemove(Type.INTEGER);
                         if (x != null) {
                             for (Token t : tokens) {
-                                constants.add(new VariableNode(t.getValue(), null, Type.INTEGER, isVar));
+                                constants.add(new VariableNode(t.getValue(), new IntegerNode(0), Type.INTEGER, isVar));
                             }
                             tokens.clear();
                             curState = 1;
@@ -694,7 +706,7 @@ public class Parser {
                         x = matchAndRemove(Type.FLOAT);
                         if (x != null) {
                             for (Token t : tokens) {
-                                constants.add(new VariableNode(t.getValue(), null, Type.FLOAT, isVar));
+                                constants.add(new VariableNode(t.getValue(), new FloatNode(0), Type.FLOAT, isVar));
                             }
                             // CLEAR LIST
                             tokens.clear();
