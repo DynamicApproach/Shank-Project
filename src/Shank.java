@@ -19,15 +19,15 @@ public class Shank {
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
-        functionNames.put("Read", new Read("Read", new ArrayList<>(), false));
-        functionNames.put("Write", new Write("Write", new ArrayList<>(), false));
-        functionNames.put("Left", new Left("Left", new ArrayList<>(), false));
-        functionNames.put("Right", new Right("Right", new ArrayList<>(), false));
-        functionNames.put("Substring", new Substring("Substring", new ArrayList<>(), false));
-        functionNames.put("SquareRoot", new SquareRoot("SquareRoot", new ArrayList<>(), false));
-        functionNames.put("GetRandom", new GetRandom("GetRandom", new ArrayList<>(), false));
-        functionNames.put("InttoReal", new IntegerToReal("InttoReal", new ArrayList<>(), false));
-        functionNames.put("RealtoInt", new RealToInteger("RealtoInt", new ArrayList<>(), false));
+        functionNames.put("read", new Read("Read", new ArrayList<>(), false));
+        functionNames.put("write", new Write("Write", new ArrayList<>(), false));
+        functionNames.put("left", new Left("Left", new ArrayList<>(), false));
+        functionNames.put("right", new Right("Right", new ArrayList<>(), false));
+        functionNames.put("substring", new Substring("Substring", new ArrayList<>(), false));
+        functionNames.put("squareroot", new SquareRoot("SquareRoot", new ArrayList<>(), false));
+        functionNames.put("getrandom", new GetRandom("GetRandom", new ArrayList<>(), false));
+        functionNames.put("inttoteal", new IntegerToReal("InttoReal", new ArrayList<>(), false));
+        functionNames.put("realtoint", new RealToInteger("RealtoInt", new ArrayList<>(), false));
 
         ArrayList<Token> tokens = new ArrayList<>(10000);
         if (args.length == 1) {
@@ -79,7 +79,15 @@ public class Shank {
                     functionCallNodes.add(functionCallNode);
                 }
 
-                Interpreter.InterpretFunction(new FunctionCallNode("start", parameterNodes, false), dataTypes);
+                // find the start function node
+                FunctionCallNode startFunction = null;
+                for (FunctionCallNode functionCallNode : functionCallNodes) {
+                    if ("start".equalsIgnoreCase(functionCallNode.getName())) {
+                        startFunction = functionCallNode;
+                    }
+                }
+                assert startFunction != null;
+                Interpreter.InterpretFunction(startFunction, dataTypes);
 
                 // TODO: decide on this
                /* for (FunctionCallNode functionCallNode : functionCallNodes) {

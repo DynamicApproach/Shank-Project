@@ -191,6 +191,10 @@ public class Parser {
         return peek(0).getType();
     }
 
+    private Token quickPeekToken() {
+        return peek(0);
+    }
+
     private boolean isFloat(Token token) {
         try {
             Float.parseFloat(token.getValue());
@@ -228,9 +232,11 @@ public class Parser {
         removeEndlines();
         while (quickPeek() != Type.END) {
             statements.add(statement());
+            removeEndlines();
         }
         matchAndRemove(Type.END);
-        removeEndlines();
+        if(!tokens.isEmpty())
+            removeEndlines();
         return statements;
     }
 
@@ -244,7 +250,123 @@ public class Parser {
         ForNode forNode = forExpression();
         if (forNode != null)
             return forNode;
+        RepeatNode repeatNode = repeatExpression();
+        if (repeatNode != null)
+            return repeatNode;
+        IfNode ifNode = ifExpression();
+        if (ifNode != null)
+            return ifNode;
+        StatementNode functionCallNode = functionCall();
+        if (functionCallNode != null)
+            return functionCallNode;
+
         return ifExpression();
+    }
+    int curstate = 0;
+    private StatementNode functionCall() {
+        // f1 var inputnum, var res
+        // A function call has a name (of the function) and a list of parameters.
+        // A parameter needs to be its own ASTNode because a parameter can be a variable (VariableReferenceNode) or a constant value (an ASTNode).
+        // IDEN VAR PARAM COMMA VAR PARAM COMMA
+        // State 0 : var -> 1
+        // State 1 : Number -> State 3 , state 8
+        // State 1 : String -> State 3 , State 9
+        // State 2 : Comma -> 1/2/4 , 7
+        // State 3 : Variable -> State 4
+        // State 4 : Iden -> State 5
+        // State 5 : Comma -> State 1/2/4
+        // State 7 : EndLine -> Return
+        // State 8 : Error -> Return
+
+        String name = null;
+        ArrayList<ParameterNode> params = new ArrayList<>();
+        while (peek(0).getType() != Type.ENDLINE) {
+            if (quickPeek() == Type.IDENTIFIER)
+                name = matchAndRemove(Type.IDENTIFIER).getValue();
+            else return null;
+            switch (curstate) {
+                case 0 -> {
+                    while (peek(0).getType() != Type.ENDLINE) {
+                        if (peek(0).getType() == Type.VAR) {
+                            matchAndRemove(Type.VAR);// loop over identifiers after a var till EOL or comma
+                            if (peek(0).getType() == Type.IDENTIFIER) {
+
+                                params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), true));
+                                while (matchAndRemove(Type.COMMA) != null && quickPeek() != Type.VAR && quickPeek() != Type.ENDLINE) {
+                                    params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), true));
+                                }
+                                if (quickPeek() == Type.VAR)
+                                    curstate = 0;
+                                else if (quickPeek() == Type.ENDLINE)
+                                    return new FunctionCallNode(name, params, false);
+                            }
+
+                        } else {
+                            if (peek(0).getType() == Type.IDENTIFIER) {
+
+                                params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), false));
+                                while (matchAndRemove(Type.COMMA) != null && quickPeek() != Type.VAR && quickPeek() != Type.ENDLINE) {
+                                    params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), false));
+                                }
+                                if (quickPeek() == Type.VAR)
+                                    curstate = 0;
+                                else if (quickPeek() == Type.ENDLINE)
+                                    return new FunctionCallNode(name, params, false);
+                            }
+                            // no var check for string or number first, if not is an unmodifiable variable
+                        }
+                    }
+                }
+                case 1 -> {
+                    // check for  number or string
+                    // only if no var token
+                    // if number or string, add to params
+                    // check for comma, if comma go to 0 else go to 10 (make a new param node with the num or string)
+                    if (peek(0).getType() == Type.NUMBER) {
+                        // params.add(new IntegerNode(Integer.parseInt(matchAndRemove(Type.NUMBER).getValue())));
+                        curstate = 3;
+                    } else if (peek(0).getType() == Type.STRING) {
+                        // params.add(new ParameterNode( new StringNode(matchAndRemove(Type.STRING).toString())));
+                        curstate = 3;
+                    } else {
+                        // if no var and no number or string, then it is an unmodifiable variable
+                        curstate = 2;
+                    }
+                }
+                case 2 -> {
+                    // check for unmodifiable variable
+                    // if unmodifiable variable, add to params
+                    if (peek(0).getType() == Type.IDENTIFIER) {
+                        params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), false));
+                        curstate = 3;
+                    } else if (!params.isEmpty()) {
+                        curstate = 3;
+                    } else {
+                        curstate = 5; // error
+                    }
+                }
+                case 3 -> {
+                    // check for comma, if so then go to 0
+                    if (peek(0).getType() == Type.COMMA) {
+                        matchAndRemove(Type.COMMA);
+                        curstate = 0;
+                    } else {
+                        curstate = 4; // finish
+                    }
+                }
+                case 4 -> {
+                    // is good to go can return a function call node
+                    return new FunctionCallNode(name, params, false);
+                }
+                case 5 -> {
+                    // has an error
+                    System.err.println("Error in function call");
+                }
+
+            }
+            return new FunctionCallNode(name, params, false);
+        }
+        return null;
     }
 
     public AssignmentNode assignment() {
@@ -275,6 +397,20 @@ public class Parser {
             removeEndlines();
             ArrayList<StatementNode> statements = statements();
             return new WhileNode(condition, statements);
+        }
+        return null;
+    }
+
+    public RepeatNode repeatExpression() {
+        // while booleanExpression do statements end
+        if (matchAndRemove(Type.REPEAT) != null) {
+            removeEndlines();
+            BooleanExpressionNode condition = booleanExpression();
+            removeEndlines();
+            matchAndRemove(Type.BEGIN);
+            removeEndlines();
+            ArrayList<StatementNode> statements = statements();
+            return new RepeatNode(condition, statements);
         }
         return null;
     }
@@ -350,7 +486,7 @@ public class Parser {
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
             removeEndlines();
-            while (matchAndRemove(Type.DEFINE) != null) {
+            while (matchAndRemove(Type.DEFINE) != null && !tokens.isEmpty()) {
                 Token name = matchAndRemove(Type.IDENTIFIER);
                 String namestr = "";
                 if (name != null) {
@@ -620,13 +756,12 @@ public class Parser {
             removeEndlines();
             // while not at the end token, keep adding statements
             try {
-                while (matchAndRemove(Type.END) == null) {
+                while (  !tokens.isEmpty() &&matchAndRemove(Type.END) == null && quickPeek() != Type.DEFINE) {
                     removeEndlines();
                     if (quickPeek() == Type.BEGIN) {
                         bod.addAll(body());
                     } else {
-                        StatementNode node = statement();
-                        bod.add(node);
+                        bod.addAll(statements());
                     }
                 }
             } catch (Exception ep) {
@@ -651,6 +786,7 @@ public class Parser {
         For each variable, we make a VariableNode like we did for constants.*/
         // IDEN COMMA IDEN COMMA COLON TYPE ENDLINE
         // A,B,C:INT
+        // D:REAL
         //STATES:
         // 0 - IDEN
         // 1 - COMMA
@@ -666,7 +802,7 @@ public class Parser {
         boolean isVar = false;
         int curState = 0;
         try {
-            while (curState != 4) {
+            while (curState != 5) {
                 switch (curState) {
                     case 0 -> {
                         isVar = (matchAndRemove(Type.VAR) != null);
@@ -682,7 +818,15 @@ public class Parser {
                         x = matchAndRemove(Type.COMMA);
                         if (x != null) {
                             curState = 0;
-                        } else {
+                        }
+                        // else if(matchAndRemove(Type.ENDLINE)!=null){
+                        //     curState = 1;
+                        // } else if (this.tokens.get(0).getType().equals(Type.IDENTIFIER)) {
+                        //     curState = 0;
+                        // } else if (this.tokens.get(0).getType().equals(Type.BEGIN)) {
+                        //     curState = 3;
+                        // }
+                        else {
                             curState = 2;
                         }
                     }
@@ -701,26 +845,32 @@ public class Parser {
                                 constants.add(new VariableNode(t.getValue(), new IntegerNode(0), Type.INTEGER, isVar));
                             }
                             tokens.clear();
-                            curState = 1;
+                            curState = 4;
                         }
                         x = matchAndRemove(Type.FLOAT);
                         if (x != null) {
                             for (Token t : tokens) {
                                 constants.add(new VariableNode(t.getValue(), new FloatNode(0), Type.FLOAT, isVar));
                             }
-                            // CLEAR LIST
                             tokens.clear();
-                            curState = 1;
+                            curState = 4;
                         }
                     }
                     case 4 -> {
-                        x = matchAndRemove(Type.COMMA);
+                        x = matchAndRemove(Type.ENDLINE);
                         if (x != null) {
-                            curState = 1;
+                            if (quickPeek().equals(Type.BEGIN)) {
+                                return constants;
+                            } else if (quickPeek().equals(Type.IDENTIFIER)) {
+                                curState = 0;
+                            } else {
+                                break;
+                            }
                         }
                     }
-                    case 5 -> System.err.println("Error in processConstants - Invalid state");
-                    default -> curState = 4;
+                    case 5 -> {
+                        //do nothing
+                    }
                 }
             }
         } catch (Exception e) {
@@ -729,6 +879,4 @@ public class Parser {
         }
         return constants;
     }
-
-
 }

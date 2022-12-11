@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class WhileNode extends StatementNode {
     //While (booleanExpression and collection of statementNodes)
@@ -19,7 +20,10 @@ public class WhileNode extends StatementNode {
     }
 
     @Override
-    public String toString() {
-        return "While: " + booleanExpression.toString() + " Do: " + statementNodes.toString();
+    public String toString() {/*
+        for (StatementNode statementNode : statementNodes) {
+            System.out.println(statementNode);
+        }*/
+        return "While: " + booleanExpression.toString() + " Do: " + statementNodes.stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 }
