@@ -45,7 +45,7 @@ public class Interpreter {
         }
         FunctionNode functionNode = (FunctionNode) hashmapfuncts.get(function.getName().toLowerCase());
         SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
-        //analyzer.analyze(functionNode.getBody());
+        analyzer.analyze(functionNode.getBody());
         Interpreter.InterpretBlock(functionNode.getBody(), VariableHashMap);
     }
 

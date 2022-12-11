@@ -13,17 +13,20 @@ public class SemanticAnalysis {
         for (StatementNode stmt : statements) {
             if (stmt instanceof FunctionCallNode funcCall) {
                 CallableNode funcDef = functions.get(funcCall.getName());
-
+                if (funcDef == null) {
+                    throw new Exception("Function " + funcCall.getName() + " is not defined");
+                }
+                String name = funcCall.getName();
                 // check if the number of parameters matches
+
                 if (funcDef.getArguments().size() != funcCall.getParameters().size()) {
-                    throw new Exception("Incorrect number of parameters for function '" + funcCall.getName() + "'");
+                    throw new RuntimeException("\nError: Incorrect number of parameters for function\n " + funcCall.getName()  + " Expected: " + functions.get(name).getArguments().size() + " \nargs expected: " + functions.get(name).getArguments()  + " \nActual: " + funcCall.getParameters().size() + "\n Actual Params: " + funcCall.getParameters());
                 }
 
                 // check if the function is variadic
                 if (!funcDef.isVaradic() && funcCall.getParameters().size() > funcDef.getArguments().size()) {
                     throw new Exception("Too many parameters for non-variadic function '" + funcCall.getName() + "'");
                 }
-
                 // check for undefined variables
                 for (var param : funcCall.getParameters()) {
                     if (param != null) {
