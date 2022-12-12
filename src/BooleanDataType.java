@@ -9,6 +9,10 @@ public class BooleanDataType extends InterpreterDataType {
         this.value = false;
     }
 
+    public BooleanDataType(String readLine) {
+        this.value = Boolean.parseBoolean(readLine);
+    }
+
     public String toString() {
         return Boolean.toString(value);
     }
