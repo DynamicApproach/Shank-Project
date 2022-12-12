@@ -14,7 +14,7 @@ public class Substring extends BuiltInFunctionNode {
         try {
             int start = Integer.parseInt(arguments.get(1).toString());
             int length = Integer.parseInt(arguments.get(2).toString());
-            arguments.get(3).fromString(arguments.get(0).toString().substring(start, length));
+            arguments.get(3).fromString(arguments.get(3).toString().substring(start, length));
         } catch (Exception e) {
             throw new RuntimeException("Error: substring: " + e);
         }

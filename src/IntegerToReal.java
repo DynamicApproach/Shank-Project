@@ -12,7 +12,7 @@ public class IntegerToReal extends BuiltInFunctionNode {
         // try to convert string to real if it can return else exception
         try {
             return Float.toString(Float.parseFloat(input));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new Exception("Cannot convert to real from input: " + input + "\n " + e + "\n");
         }
     }
@@ -20,7 +20,7 @@ public class IntegerToReal extends BuiltInFunctionNode {
     public void fromString(String input) throws Exception {
         try {
             this.value = Float.parseFloat(input);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new Exception("Cannot convert to real from input: " + input + "\n " + e + "\n");
         }
     }

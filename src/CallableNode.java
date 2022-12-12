@@ -19,7 +19,6 @@ public class CallableNode extends Node {
     public boolean isVaradic() {
         return varadic;
     }
-
     public String getName() {
         return name;
     }
@@ -27,7 +26,6 @@ public class CallableNode extends Node {
     public ArrayList<VariableNode> getArguments() {
         return arguments;
     }
-
     public String toString() {
         return name + "(" + arguments + ")";
     }

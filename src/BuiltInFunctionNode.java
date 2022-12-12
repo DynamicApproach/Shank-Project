@@ -15,7 +15,6 @@ public abstract class BuiltInFunctionNode extends CallableNode {
         this.varadic = varadic;
     }
 
-
     //Execute will take a collection of InterpreterDataType objects. Why? Well, when the interpreter finds a call to “read”, for example,
     // it has to be able to call your Java code.
     public abstract void execute(ArrayList<InterpreterDataType> arguments) throws Exception;

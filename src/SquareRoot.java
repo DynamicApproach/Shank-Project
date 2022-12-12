@@ -11,7 +11,7 @@ public class SquareRoot extends BuiltInFunctionNode {
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         try {
             value = (float) Math.sqrt(Float.parseFloat(arguments.get(0).toString()));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println("Cannot get square root from input: " + value + "\n " + e + "\n");
         }
     }

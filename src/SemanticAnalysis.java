@@ -22,11 +22,6 @@ public class SemanticAnalysis {
                 {
                     CallableNode calledNode = functions.get(funcCall.getName());
                     String name = calledNode.getName();
-                    System.out.println(name);
-                    int size1 = ((FunctionNode) functions.get(funcCall.getName())).getParameters().size();
-                    int size2 = funcCall.getParameters().size();
-                    System.out.println(size1);
-                    System.out.println(size2);
                     if (!(((FunctionNode) functions.get(funcCall.getName())).getParameters().size() == funcCall.getParameters().size()))
                     {
                         throw new Exception("Unmatched Parameters.");

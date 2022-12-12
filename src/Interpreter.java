@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.stream.IntStream;
+
+import static java.util.stream.IntStream.*;
 
 
 @SuppressWarnings("unused")
@@ -23,38 +26,33 @@ public class Interpreter {
         // function was just called and have to make the hash map for local variables and parameters.
         for (int i = 0; i < function.getParameters().size(); i++)
             VariableHashMap.put(function.getParameters().get(i).getName(), parameters.get(i));
-        if (hashmapfuncts.get(function.getName()) instanceof FunctionNode no) {
-            if (((FunctionNode) hashmapfuncts.get(function.getName())).getVariablesAvalible()) {
-                for (VariableNode var : ((FunctionNode) hashmapfuncts.get(function.getName())).getVariables()) {
-                    if (var.getValue() instanceof IntegerNode) {
-                        VariableHashMap.put(var.getName(), new IntDataType(var.getValue().toString()));
-                    } else if (var.getValue() instanceof FloatNode) {
-                        VariableHashMap.put(var.getName(), new FloatDataType(var.getValue().toString()));
-                    } else if (var.getValue() instanceof CharNode) {
-                        VariableHashMap.put(var.getName(),
-                                new CharDataType(var.getValue().toString().toCharArray()[0]));
-                    } else if (var.getValue() instanceof StringNode) {
-                        VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
-                    } else if (var.getValue() instanceof BooleanNode) {
-                        VariableHashMap.put(var.getName(),
-                                new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
-                    } else {
-                        System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: "
-                                + var.getType() + "     Value: " + var.getValue());
-                        throw new Exception("InterpretFunction: Variable type not found");
-                    }
+        if (hashmapfuncts.get(function.getName()) instanceof FunctionNode no && ((FunctionNode) hashmapfuncts.get(function.getName())).getVariablesAvalible()) {
+            for (VariableNode var : ((FunctionNode) hashmapfuncts.get(function.getName())).getVariables()) {
+                if (var.getValue() instanceof IntegerNode) {
+                    VariableHashMap.put(var.getName(), new IntDataType(var.getValue().toString()));
+                } else if (var.getValue() instanceof FloatNode) {
+                    VariableHashMap.put(var.getName(), new FloatDataType(var.getValue().toString()));
+                } else if (var.getValue() instanceof CharNode) {
+                    VariableHashMap.put(var.getName(),
+                            new CharDataType(var.getValue().toString().toCharArray()[0]));
+                } else if (var.getValue() instanceof StringNode) {
+                    VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
+                } else if (var.getValue() instanceof BooleanNode) {
+                    VariableHashMap.put(var.getName(),
+                            new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
+                } else {
+                    System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: "
+                            + var.getType() + "     Value: " + var.getValue());
+                    throw new Exception("InterpretFunction: Variable type not found");
                 }
             }
         }
-        for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().size(); i++)
-        {
-            //Key is parameter of called function, value is whatever is being passed in's value.
-            VariableHashMap.put(((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().get(i).getName(),
-                    parameters.get(i));
-        }
+        //Key is parameter of called function, value is whatever is being passed in's value.
+        range(0, ((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().size()).forEach(i -> VariableHashMap.put(((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().get(i).getName(),
+                parameters.get(i)));
         FunctionNode functionNode = (FunctionNode) hashmapfuncts.get(function.getName().toLowerCase());
-        // SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
-        // analyzer.analyze(functionNode.getBody());
+        SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
+        analyzer.analyze(functionNode.getBody());
         Interpreter.InterpretBlock(functionNode.getBody(), VariableHashMap);
     }
 
@@ -84,35 +82,31 @@ public class Interpreter {
                         try {
                             ArrayList<InterpreterDataType> parameters = new ArrayList<>();
                             ArrayList<String> StringNames = new ArrayList<>();
-                            for (var param : functionCall.getParameters()) {
-                                // for each param in functioncallnode, check type and create a datatype with the value in the param
-                                if (VariableHashMap.containsKey(param.getName()))
-                                {
-                                    Type parType;
-                                    if (VariableHashMap.get(param.getName()) instanceof IntDataType){
-                                        parameters.add(VariableHashMap.get(param.getName()));
-                                        StringNames.add((String) param.getName());
-                                    } else if (VariableHashMap.get(param.getName()) instanceof FloatDataType) {
-                                        parameters.add(VariableHashMap.get(param.getName()));
-                                        StringNames.add((String) param.getName());
-                                    } else if (VariableHashMap.get(param.getName()) instanceof CharDataType) {
-                                        parameters.add(VariableHashMap.get(param.getName()));
-                                        StringNames.add((String) param.getName());
-                                    } else if (VariableHashMap.get(param.getName()) instanceof StringDataType) {
-                                        parameters.add(new StringDataType(param.toString()));
-                                        StringNames.add((String) param.getName());
-                                    }
+                            // for each param in functioncallnode, check type and create a datatype with the value in the param
+                            functionCall.getParameters().stream().filter(param -> VariableHashMap.containsKey(param.getName())).forEach(param -> {
+                                Type parType;
+                                if (VariableHashMap.get(param.getName()) instanceof IntDataType) {
+                                    parameters.add(VariableHashMap.get(param.getName()));
+                                    StringNames.add(param.getName());
+                                } else if (VariableHashMap.get(param.getName()) instanceof FloatDataType) {
+                                    parameters.add(VariableHashMap.get(param.getName()));
+                                    StringNames.add(param.getName());
+                                } else if (VariableHashMap.get(param.getName()) instanceof CharDataType) {
+                                    parameters.add(VariableHashMap.get(param.getName()));
+                                    StringNames.add(param.getName());
+                                } else if (VariableHashMap.get(param.getName()) instanceof StringDataType) {
+                                    parameters.add(new StringDataType(param.toString()));
+                                    StringNames.add(param.getName());
                                 }
-                            }
+                            });
                             try {
                                 // if in hashmap, call execute
                                 if (hashmapfuncts.containsKey(name.toLowerCase()) && hashmapfuncts.get(name.toLowerCase()) instanceof BuiltInFunctionNode) {
                                     executeFunction(hashmapfuncts.get(name.toLowerCase()), parameters);
-                                    for (int i = 0; i<parameters.size(); i++) {
+                                    for (int i = 0; i < parameters.size(); i++) {
                                         InterpreterDataType interpreterDataType = parameters.get(i);
                                         String NameOfVar = StringNames.get(i);
-                                        if(VariableHashMap.containsKey(NameOfVar))
-                                        {
+                                        if (VariableHashMap.containsKey(NameOfVar)) {
                                             if (VariableHashMap.get(NameOfVar) instanceof IntDataType) {
                                                 if (parameters.get(i) instanceof IntDataType) {
                                                     VariableHashMap.put(NameOfVar, interpreterDataType);
@@ -120,27 +114,21 @@ public class Interpreter {
                                                     throw new Exception(
                                                             "Unmatching Variable Type Input.  No implicit type casting allowed!");
                                                 }
-                                            }
-                                            else if(VariableHashMap.get(NameOfVar) instanceof FloatDataType)
-                                            {
-                                                if(parameters.get(i) instanceof FloatDataType)
-                                                {
+                                            } else if (VariableHashMap.get(NameOfVar) instanceof FloatDataType) {
+                                                if (parameters.get(i) instanceof FloatDataType) {
                                                     VariableHashMap.put(NameOfVar, interpreterDataType);
                                                 } else {
                                                     throw new Exception(
                                                             "Unmatching Variable Type Input. No implicit type casting allowed!");
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             // This variable does not exist! It should never reach here.
                                         }
                                     }
                                 } else {
                                     InterpretFunction(functionCall, parameters);
-                                    for(int i = 0; i< ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().size(); i++)
-                                    {
+                                    range(0, ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().size()).forEach(i -> {
                                         InterpreterDataType dataType = VariableHashMap
                                                 .get(((FunctionNode) hashmapfuncts.get(functionCall.getName()))
                                                         .getParameters().get(i).getName());
@@ -151,8 +139,7 @@ public class Interpreter {
                                                         functionCall.getParameters().get(i).getName(),
                                                         dataType);
                                             }
-                                        }
-                                        else if (dataType instanceof FloatDataType) {
+                                        } else if (dataType instanceof FloatDataType) {
                                             if (VariableHashMap.get(functionCall.getParameters().get(i)
                                                     .getName()) instanceof FloatDataType) {
                                                 VariableHashMap.replace(
@@ -174,18 +161,9 @@ public class Interpreter {
                                                         dataType);
                                             }
                                         }
-                                    }
-                                    for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().size(); i++)
-                                    {
-                                        VariableHashMap.remove(
-                                                ((FunctionNode) hashmapfuncts.get(functionCall.getName()))
-                                                        .getParameters().get(i).getName());
-                                    }
-                                    for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getVariables().size(); i++)
-                                    {
-                                        VariableHashMap.remove(((FunctionNode) hashmapfuncts.get(functionCall.getName()))
-                                                .getVariables().get(i).getName());
-                                    }
+                                    });
+                                    ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().stream().map(VariableNode::getName).forEach(VariableHashMap::remove);
+                                    ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getVariables().stream().map(VariableNode::getName).forEach(VariableHashMap::remove);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -242,12 +220,8 @@ public class Interpreter {
                     BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
                     String str;
-                    if ((str = resolve(express).toString()) != null)
-                    {
-                        if("true".equals(str))
-                        {
-                            return InterpretBlock(block, VariableHashMap);
-                        }
+                    if ((str = resolve(express).toString()) != null) if ("true".equals(str)) {
+                        return InterpretBlock(block, VariableHashMap);
                     }
                 } else if (statement instanceof RepeatNode) {
                     // we have a repeat node with an expression and a block
@@ -257,12 +231,8 @@ public class Interpreter {
                     BooleanExpressionNode express = (BooleanExpressionNode) ((RepeatNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((RepeatNode) statement).getBlock();
                     String str;
-                    if ((str = resolve(express).toString()) != null)
-                    {
-                        if("true".equals(str))
-                        {
-                            return InterpretBlock(block, VariableHashMap);
-                        }
+                    if ((str = resolve(express).toString()) != null && "true".equals(str)) {
+                        return InterpretBlock(block, VariableHashMap);
                     }
                 } else if (statement instanceof IfNode) {
                     // we have an ifnode with an expression and a block
@@ -272,12 +242,8 @@ public class Interpreter {
                     Node express = ((IfNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((IfNode) statement).getStatementNodes();
                     String str;
-                    if ((str = resolve(express).toString()) != null)
-                    {
-                        if("true".equals(str))
-                        {
-                            return InterpretBlock(block, VariableHashMap);
-                        }
+                    if ((str = resolve(express).toString()) != null && "true".equals(str)) {
+                        return InterpretBlock(block, VariableHashMap);
                     }
 
                 } else if (statement instanceof AssignmentNode curStatement) {
@@ -305,7 +271,6 @@ public class Interpreter {
                 }
             }
         } catch (RuntimeException e) {
-
             throw new RuntimeException(e + "Error: Error interpreting -- FunctionDef ");
         }
         return null;
@@ -335,13 +300,8 @@ public class Interpreter {
     // if it's a boolean node, it returns a boolean LEFT and RIGHT
 
     public static Node resolve(Node nodey) {
-        if (nodey instanceof IntegerNode) {
-            return nodey;
-        } else if (nodey instanceof FloatNode) {
-            return nodey;
-        } else if (nodey instanceof CharNode) {
-            return nodey;
-        } else if (nodey instanceof StringNode) {
+        if (nodey instanceof IntegerNode || nodey instanceof FloatNode ||
+                nodey instanceof CharNode || nodey instanceof StringNode) {
             return nodey;
         } else if (nodey instanceof VariableReferenceNode) {
             if (VariableHashMap.containsKey(nodey.toString())) {
@@ -361,8 +321,8 @@ public class Interpreter {
                 System.out.println(VariableHashMap);
                 System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
             } else {
-                System.out.println(VariableHashMap);
-                System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
+                System.err.println(VariableHashMap);
+                System.err.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
                 throw new RuntimeException("Error: Variable " + nodey + " is not defined");
             }
         } else if (nodey instanceof MathOpNode node) {
@@ -371,118 +331,100 @@ public class Interpreter {
             left = resolve(left);
             right = resolve(right);
             var op = node.getOp();
-            switch (op) { // operator has to be the same type
-                case ADD -> {
-                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
-                        return new IntegerNode(((IntegerNode) left).getValue() + ((IntegerNode) right).getValue());
-                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
-                        return new FloatNode(((FloatNode) left).getValue() + ((FloatNode) right).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot add " + left + " and " + right);
-                    }
-                }
-                case MINUS -> {
-                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
-                        return new IntegerNode(((IntegerNode) left).getValue() - ((IntegerNode) right).getValue());
-                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
-                        return new FloatNode(((FloatNode) left).getValue() - ((FloatNode) right).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot subtract " + left + " and " + right);
-                    }
-                }
-                case MULTIPLY -> {
-                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
-                        return new IntegerNode(((IntegerNode) left).getValue() * ((IntegerNode) right).getValue());
-                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
-                        return new FloatNode(((FloatNode) left).getValue() * ((FloatNode) right).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot multiply " + left + " and " + right);
-                    }
-                }
-                case DIVIDE -> {
-                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
-                        return new IntegerNode(((IntegerNode) left).getValue() / ((IntegerNode) right).getValue());
-                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
-                        return new FloatNode(((FloatNode) left).getValue() / ((FloatNode) right).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot divide " + left + " and " + right);
-                    }
-                }
-                case MOD -> {
-                    if (left instanceof IntegerNode && right instanceof IntegerNode) {
-                        return new IntegerNode(((IntegerNode) left).getValue() % ((IntegerNode) right).getValue());
-                    } else if (left instanceof FloatNode && right instanceof FloatNode) {
-                        return new FloatNode(((FloatNode) left).getValue() % ((FloatNode) right).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot mod " + left + " and " + right);
-                    }
-                }
-            }
+            return performOperation(left, right, op);
         } else if (nodey instanceof BooleanExpressionNode node) {
             Node nodeBoolL = (((BooleanExpressionNode) nodey).getLeft());
             Node nodeBoolR = (((BooleanExpressionNode) nodey).getRight());
             nodeBoolL = resolve(nodeBoolL);
             nodeBoolR = resolve(nodeBoolR);
-            var op = node.getOperator();
-            switch (op) {
-                case GREATER -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() > ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() > ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-                case LESS -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() < ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() < ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-                case GREATER_EQUAL -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() >= ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() >= ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-                case LESS_EQUAL -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() <= ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() <= ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-                case EQUAL -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() == ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() == ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-                case NOT_EQUAL -> {
-                    if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
-                        return new BooleanNode(((IntegerNode) nodeBoolL).getValue() != ((IntegerNode) nodeBoolR).getValue());
-                    } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
-                        return new BooleanNode(((FloatNode) nodeBoolL).getValue() != ((FloatNode) nodeBoolR).getValue());
-                    } else {
-                        throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
-                    }
-                }
-            }
-
+            return getBooleanNode(node, nodeBoolL, nodeBoolR);
         }
         return null;
+    }
+    static Node performOperation(Node left, Node right, Type op) {
+        left = resolve(left);
+        right = resolve(right);
+        if (left instanceof IntegerNode && right instanceof IntegerNode) {
+            switch (op) {
+                case ADD -> {
+                    return new IntegerNode(((IntegerNode) left).getValue() + ((IntegerNode) right).getValue());
+                }
+                case MINUS -> {
+                    return new IntegerNode(((IntegerNode) left).getValue() - ((IntegerNode) right).getValue());
+                }
+                case MULTIPLY -> {
+                    return new IntegerNode(((IntegerNode) left).getValue() * ((IntegerNode) right).getValue());
+                }
+                case DIVIDE -> {
+                    return new IntegerNode(((IntegerNode) left).getValue() / ((IntegerNode) right).getValue());
+                }
+                case MOD -> {
+                    return new IntegerNode(((IntegerNode) left).getValue() % ((IntegerNode) right).getValue());
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + op);
+            }
+        } else if (left instanceof FloatNode && right instanceof FloatNode) {
+            switch (op) {
+                case ADD -> {
+                    return new FloatNode(((FloatNode) left).getValue() + ((FloatNode) right).getValue());
+                }
+                case MINUS -> {
+                    return new FloatNode(((FloatNode) left).getValue() - ((FloatNode) right).getValue());
+                }
+                case MULTIPLY -> {
+                    return new FloatNode(((FloatNode) left).getValue() * ((FloatNode) right).getValue());
+                }
+                case DIVIDE -> {
+                    return new FloatNode(((FloatNode) left).getValue() / ((FloatNode) right).getValue());
+                }
+                case MOD -> {
+                    return new FloatNode(((FloatNode) left).getValue() % ((FloatNode) right).getValue());
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + op);
+            }
+        }
+        throw new RuntimeException("Error: Cannot perform operation " + op + " on " + left + " and " + right);
+    }
+
+    private static BooleanNode getBooleanNode(BooleanExpressionNode node, Node nodeBoolL, Node nodeBoolR) {
+        var op = node.getOperator();
+        if (nodeBoolL instanceof IntegerNode && nodeBoolR instanceof IntegerNode) {
+            int valL = ((IntegerNode) nodeBoolL).getValue();
+            int valR = ((IntegerNode) nodeBoolR).getValue();
+            if (Objects.requireNonNull(op) == Type.GREATER) {
+                return new BooleanNode(valL > valR);
+            } else if (op == Type.LESS) {
+                return new BooleanNode(valL < valR);
+            } else if (op == Type.GREATER_EQUAL) {
+                return new BooleanNode(valL >= valR);
+            } else if (op == Type.LESS_EQUAL) {
+                return new BooleanNode(valL <= valR);
+            } else if (op == Type.EQUAL) {
+                return new BooleanNode(valL == valR);
+            } else if (op == Type.NOT_EQUAL) {
+                return new BooleanNode(valL != valR);
+            }
+            return null;
+        } else if (nodeBoolL instanceof FloatNode && nodeBoolR instanceof FloatNode) {
+            float valL = ((FloatNode) nodeBoolL).getValue();
+            float valR = ((FloatNode) nodeBoolR).getValue();
+            if (Objects.requireNonNull(op) == Type.GREATER) {
+                return new BooleanNode(valL > valR);
+            } else if (op == Type.LESS) {
+                return new BooleanNode(valL < valR);
+            } else if (op == Type.GREATER_EQUAL) {
+                return new BooleanNode(valL >= valR);
+            } else if (op == Type.LESS_EQUAL) {
+                return new BooleanNode(valL <= valR);
+            } else if (op == Type.EQUAL) {
+                return new BooleanNode(valL == valR);
+            } else if (op == Type.NOT_EQUAL) {
+                return new BooleanNode(valL != valR);
+            }
+            return null;
+        } else {
+            throw new RuntimeException("Error: Cannot compare " + nodeBoolL + " and " + nodeBoolR);
+        }
     }
 
 

@@ -11,7 +11,7 @@ public class Left extends BuiltInFunctionNode {
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         try {
             int start = Integer.parseInt(arguments.get(1).toString());
-            arguments.get(2).fromString(arguments.get(0).toString().substring(start));
+            arguments.get(2).fromString(arguments.get(2).toString().substring(start));
         } catch (Exception e) {
             throw new RuntimeException("Error: left: " + e);
         }

@@ -39,14 +39,14 @@ public class Lexer {
                 builder.setLength(0);
                 state = 0;
             } else {
-                System.err.println("Error: Invalid character6 " + builder.toString());
+                System.err.println("Error: Invalid character6 " + builder);
                 System.err.println("\ninput: " + input + "\n");
                 reportErrorAndClear("Invalid character6");
             }
             this.index = 0;
             return tokens;
         } catch (Exception e) {
-            System.err.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder.toString());
+            System.err.println("Error: Invalid character: " + e + " CAUGHT AT  " + builder);
         }
         state = 0;
         builder.setLength(0);
@@ -91,9 +91,7 @@ public class Lexer {
     private void wordState(char c) {
         state = 0;
         builder.setLength(0);
-        if (Character.isLetter(c)) {
-            builder.append(c);
-        } else if (Character.isDigit(c)) {
+        if (Character.isLetter(c) || Character.isDigit(c)) {
             builder.append(c);
         } else if (c == ' ') {
             if (reservedWords.containsKey(builder.toString())) {
@@ -553,8 +551,8 @@ public class Lexer {
     }
 
     // found a token, so add it to the list and reset builder
-    protected void foundTok(Type ttype, String c) {
-        tokens.add(new Token(ttype, c.trim()));
+    protected void foundTok(Type ttype, String str) {
+        tokens.add(new Token(ttype, str.trim()));
         builder.setLength(0);
     }
 

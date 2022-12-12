@@ -21,7 +21,6 @@ public class BooleanDataType extends InterpreterDataType {
         return Boolean.toString(value);
     }
 
-
     public void fromString(String input) {
         this.value = Boolean.parseBoolean(input);
     }

@@ -12,7 +12,7 @@ public class GetRandom extends BuiltInFunctionNode {
         for (InterpreterDataType idt : arguments) {
             try {
                 value = (float) (Math.random() * Float.parseFloat(idt.toString()));
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 throw new Exception("Cannot get random from input: " + value + "\n " + e + "\n");
             }
         }
@@ -22,7 +22,7 @@ public class GetRandom extends BuiltInFunctionNode {
         // if cant parse then throw exception
         try {
             return Integer.toString((int) (Math.random() * Integer.parseInt(input)));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new Exception("Cannot get random number from input:" + input + "\n " + e + "\n");
         }
     }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Parser {
     ArrayList<StatementNode> statements = new ArrayList<>();
     ArrayList<StatementNode> bod = new ArrayList<>();
+    int curstate = 0;
     private ArrayList<Token> tokens;
 
     public Parser(ArrayList<Token> tokens) {
@@ -42,6 +43,21 @@ public class Parser {
             tokens.remove(0);
         }
     }
+    // if a = 5+3
+    // a = b>3
+    // < > = <= >= == <>
+    // lower prio then + - * /
+    // all the same prio
+    // eval left to right with prio
+    // don't have to chain like w +/-
+    //BooleanExpressionNode node = null;
+    //        try {
+    //            Type token = peek(1).getType();
+    //            node = new BooleanExpressionNode(expression(), token, expression());
+    //        } catch (Exception e) {
+    //            System.out.println("Not an expression");
+    //            throw new RuntimeException(e); // less, greater, ect lowest priority
+    //        }
 
     public BooleanExpressionNode booleanExpression() {
         // check for expression operator expression and make a new booleanExpressionNode
@@ -61,21 +77,6 @@ public class Parser {
             throw new RuntimeException(e); // less, greater, ect lowest priority
         }
     }
-    // if a = 5+3
-    // a = b>3
-    // < > = <= >= == <>
-    // lower prio then + - * /
-    // all the same prio
-    // eval left to right with prio
-    // don't have to chain like w +/-
-    //BooleanExpressionNode node = null;
-    //        try {
-    //            Type token = peek(1).getType();
-    //            node = new BooleanExpressionNode(expression(), token, expression());
-    //        } catch (Exception e) {
-    //            System.out.println("Not an expression");
-    //            throw new RuntimeException(e); // less, greater, ect lowest priority
-    //        }
 
     // expression, term, factor methods
     // Expression is the highest level of the grammar
@@ -235,7 +236,7 @@ public class Parser {
             removeEndlines();
         }
         matchAndRemove(Type.END);
-        if(!tokens.isEmpty())
+        if (!tokens.isEmpty())
             removeEndlines();
         return statements;
     }
@@ -262,7 +263,7 @@ public class Parser {
 
         return ifExpression();
     }
-    int curstate = 0;
+
     private StatementNode functionCall() {
         // f1 var inputnum, var res
         // A function call has a name (of the function) and a list of parameters.
@@ -338,8 +339,6 @@ public class Parser {
                     // if unmodifiable variable, add to params
                     if (peek(0).getType() == Type.IDENTIFIER) {
                         params.add(new ParameterNode(matchAndRemove(Type.IDENTIFIER).getValue(), false));
-                        curstate = 3;
-                    } else if (!params.isEmpty()) {
                         curstate = 3;
                     } else {
                         curstate = 5; // error
@@ -747,7 +746,7 @@ public class Parser {
             removeEndlines();
             // while not at the end token, keep adding statements
             try {
-                while (  !tokens.isEmpty() &&matchAndRemove(Type.END) == null && quickPeek() != Type.DEFINE) {
+                while (!tokens.isEmpty() && matchAndRemove(Type.END) == null && quickPeek() != Type.DEFINE) {
                     removeEndlines();
                     if (quickPeek() == Type.BEGIN) {
                         bod.addAll(body());
@@ -855,7 +854,6 @@ public class Parser {
                             } else if (quickPeek().equals(Type.IDENTIFIER)) {
                                 curState = 0;
                             } else {
-                                break;
                             }
                         }
                     }

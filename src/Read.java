@@ -14,10 +14,9 @@ public class Read extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
 
-        for(int i = 0; i< arguments.size(); i++)
-        {
+        for (InterpreterDataType argument : arguments) {
             System.out.println("Enter a value to read in: ");
-            arguments.get(i).fromString(scanner.nextLine());
+            argument.fromString(scanner.nextLine());
         }
         scanner.close();
     }

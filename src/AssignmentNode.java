@@ -3,7 +3,6 @@
 // is to use “lhs” and “rhs” (left-hand side and right-hand side) for these members.
 // This is not a good tradition. I used “target” and “expression”.
 public class AssignmentNode extends StatementNode {
-
     private VariableReferenceNode target;
     private Node expression;
 
@@ -21,7 +20,6 @@ public class AssignmentNode extends StatementNode {
         return expression;
     }
 
-    //tostring
     public String toString() {
         return (target != null ? target : "") + " = " + (expression != null ? expression : "") + "   ";
     }

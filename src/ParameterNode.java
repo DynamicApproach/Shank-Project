@@ -29,12 +29,7 @@ public class ParameterNode extends Node {
     }
 
     public String toString() {
-        // if is var print var first
-        if (isVariable) {
-            return "var: " + name + " : " + type;
-        } else {
-            return "const: " + name + " : " + type;
-        }
+        return isVariable ? "var: " + name + " : " + type : "const: " + name + " : " + type;
     }
 
     public String getValue() {
