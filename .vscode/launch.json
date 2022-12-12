@@ -9,7 +9,7 @@
       "name": "Launch Shank",
       "request": "launch",
       "mainClass": "Shank",
-      "projectName": "311_4b91e6bb",
+      "projectName": "Shank",
       "args": "tests/test.shank"
     },
     {
