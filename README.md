@@ -1,8 +1,6 @@
 # Thomas Lloyd-Jones - 311
 
-#Shank Project:
--------------------------------------------
----------------------------------------------------
+## Shank Project:
 
 ![](/images/SimpleDiagram.png "Diagram of file outline")
 
@@ -75,7 +73,7 @@
 
 ----------------------------------------------------------------
 
-- [➡️] 9 – Adding more data types
+- [x] 9 – Adding more data types
 
   - Attached Files:
     - File 9 – Adding more data types.docx 9 – Adding more data types.docx 
