@@ -16,6 +16,7 @@ public class Read extends BuiltInFunctionNode {
 
         for(int i = 0; i< arguments.size(); i++)
         {
+            System.out.println("Enter a value to read in: ");
             arguments.get(i).fromString(scanner.nextLine());
         }
         scanner.close();
