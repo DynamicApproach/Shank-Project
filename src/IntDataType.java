@@ -22,4 +22,7 @@ public class IntDataType extends InterpreterDataType {
         value = Integer.parseInt(input);
     }
 
+    public int getValue() {
+        return value;
+    }
 }
