@@ -21,7 +21,7 @@ public class Shank {
         long startTime = System.currentTimeMillis();
         // read can accept one argument
         functionNames.put("read", new Read("read", new ArrayList<VariableNode>(), true));
-        functionNames.put("write", new Write("write", new ArrayList<VariableNode>(), false));
+        functionNames.put("write", new Write("write", new ArrayList<VariableNode>(), true));
         functionNames.put("left", new Left("left",new ArrayList<VariableNode>(), false));
         functionNames.put("right", new Right("right", new ArrayList<VariableNode>(), false));
         functionNames.put("substring", new Substring("substring", new ArrayList<VariableNode>(), false));
@@ -55,7 +55,6 @@ public class Shank {
 
                 //create new parser and parse tokens
                 Parser parsed = new Parser(tokens);
-
                 // for each line of tokens, parse it
                 ArrayList<FunctionNode> node = parsed.functionDefinition();
                 // add function node to hashmap
@@ -63,8 +62,6 @@ public class Shank {
                     functionNames.put(functionNode.getName(), functionNode);
                     System.out.println(functionNode);
                 }
-
-
                 // print out the function
                 System.out.println("Parsing complete");
                 // print the tree
@@ -79,7 +76,6 @@ public class Shank {
                     FunctionCallNode functionCallNode = new FunctionCallNode(functionNode.getName(), parameterNodes, false);
                     functionCallNodes.add(functionCallNode);
                 }
-
                 // find the start function node
                 FunctionCallNode startFunction = null;
                 for (FunctionCallNode functionCallNode : functionCallNodes) {
@@ -89,21 +85,7 @@ public class Shank {
                 }
                 assert startFunction != null;
                 Interpreter.InterpretFunction(startFunction, dataTypes);
-
-                // TODO: decide on this
-               /* for (FunctionCallNode functionCallNode : functionCallNodes) {
-                    if (!"start".equals(functionCallNode.getName())) {
-                        Interpreter.InterpretFunction(functionCallNode, dataTypes);
-                    }
-                }*/
-
-                //float fintree = interpreter.Resolve(tree);
                 System.out.println("Interpreting complete");
-
-                //System.out.println("Result: " + fintree);
-                //functiondef parse
-
-
             } catch (Exception e) {
                 System.err.println("Error: " + e);
             }

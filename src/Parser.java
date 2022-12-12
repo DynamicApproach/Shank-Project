@@ -474,15 +474,6 @@ public class Parser {
     }
 
     public ArrayList<FunctionNode> functionDefinition() {
-        /*
-            It looks for “define”.
-            If it finds that token, it starts building a functionAST node .
-            It populates the name from the identifier, then looks for the left parenthesis.
-            It then looks for variable declarations (see below).
-            We then call the Constants, then Variables, then Body function from below.
-            name, (, params, ), constants, variables, body
-        */
-        // TODO: Make sure multiple functions can be added, not just first
         ArrayList<FunctionNode> functions = new ArrayList<>();
         try {
             removeEndlines();
@@ -717,7 +708,7 @@ public class Parser {
                                     VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(Float.parseFloat(number.getValue())), Type.FLOAT, false);
                                     consties.add(var);
                                 } else {
-                                    VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(0), Type.FLOAT, false);
+                                    VariableNode var = new VariableNode(token.getValue().trim(), new FloatNode(0.0f), Type.FLOAT, false);
                                     consties.add(var);
                                 }
                             }

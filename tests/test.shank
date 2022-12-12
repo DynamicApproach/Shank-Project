@@ -5,22 +5,21 @@ begin
     i:= 0
     while i = 0
     begin
-        if num1 < 10 then
+        if num1 < 10.0 then
         begin
 
-            if num1 > 5 then
+            if num1 > 5.0 then
             begin
             num2 := num2 + 7
             i:=i+1
             end
 
-            elsif num1 < 5 then
+            elsif num1 < 5.0 then
             begin
             num2 := num2 + 2
             i:=i+1
             end
         end
-
         else
         begin
         num2 := num2 +20
@@ -48,7 +47,6 @@ pi = 3.14
 variables
 inputnum,result:real
 res:integer
-
 begin
     read var inputnum
     f1 var inputnum, var res

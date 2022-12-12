@@ -31,21 +31,30 @@ public class Interpreter {
                     } else if (var.getValue() instanceof FloatNode) {
                         VariableHashMap.put(var.getName(), new FloatDataType(var.getValue().toString()));
                     } else if (var.getValue() instanceof CharNode) {
-                        VariableHashMap.put(var.getName(), new CharDataType(var.getValue().toString().toCharArray()[0]));
+                        VariableHashMap.put(var.getName(),
+                                new CharDataType(var.getValue().toString().toCharArray()[0]));
                     } else if (var.getValue() instanceof StringNode) {
                         VariableHashMap.put(var.getName(), new StringDataType(var.getValue().toString()));
                     } else if (var.getValue() instanceof BooleanNode) {
-                        VariableHashMap.put(var.getName(), new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
+                        VariableHashMap.put(var.getName(),
+                                new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
                     } else {
-                        System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: " + var.getType() + "     Value: " + var.getValue());
+                        System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: "
+                                + var.getType() + "     Value: " + var.getValue());
                         throw new Exception("InterpretFunction: Variable type not found");
                     }
                 }
             }
         }
+        for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().size(); i++)
+        {
+            //Key is parameter of called function, value is whatever is being passed in's value.
+            VariableHashMap.put(((FunctionNode) hashmapfuncts.get(function.getName())).getParameters().get(i).getName(),
+                    parameters.get(i));
+        }
         FunctionNode functionNode = (FunctionNode) hashmapfuncts.get(function.getName().toLowerCase());
-        SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
-        analyzer.analyze(functionNode.getBody());
+        // SemanticAnalysis analyzer = new SemanticAnalysis(hashmapfuncts);
+        // analyzer.analyze(functionNode.getBody());
         Interpreter.InterpretBlock(functionNode.getBody(), VariableHashMap);
     }
 
@@ -73,35 +82,115 @@ public class Interpreter {
                         //just pushing all params
                         // check param size of FunctionCall and FunctionNode
                         try {
-                            if(hashmapfuncts.get(name).getArguments() != null && functionCall.getParameters() != null){
-                            if (hashmapfuncts.get(name).getArguments().size() == functionCall.getParameters().size()) {
-                                ArrayList<InterpreterDataType> parameters = new ArrayList<>();
-                                for (var param : functionCall.getParameters()) {
-                                    // for each param in functioncallnode, check type and create a datatype with the value in the param
-                                    Type parType = param.getType();
-                                    if (parType == Type.INTEGER) {
-                                        parameters.add(new IntDataType(param.toString()));
-                                    } else if (parType == Type.FLOAT) {
-                                        parameters.add(new FloatDataType(param.toString()));
-                                    } else if (parType == Type.CHAR) {
-                                        parameters.add(new CharDataType(param.toString().toCharArray()[0]));
-                                    } else if (parType == Type.STRING) {
+                            ArrayList<InterpreterDataType> parameters = new ArrayList<>();
+                            ArrayList<String> StringNames = new ArrayList<>();
+                            for (var param : functionCall.getParameters()) {
+                                // for each param in functioncallnode, check type and create a datatype with the value in the param
+                                if (VariableHashMap.containsKey(param.getName()))
+                                {
+                                    Type parType;
+                                    if (VariableHashMap.get(param.getName()) instanceof IntDataType){
+                                        parameters.add(VariableHashMap.get(param.getName()));
+                                        StringNames.add((String) param.getName());
+                                    } else if (VariableHashMap.get(param.getName()) instanceof FloatDataType) {
+                                        parameters.add(VariableHashMap.get(param.getName()));
+                                        StringNames.add((String) param.getName());
+                                    } else if (VariableHashMap.get(param.getName()) instanceof CharDataType) {
+                                        parameters.add(VariableHashMap.get(param.getName()));
+                                        StringNames.add((String) param.getName());
+                                    } else if (VariableHashMap.get(param.getName()) instanceof StringDataType) {
                                         parameters.add(new StringDataType(param.toString()));
+                                        StringNames.add((String) param.getName());
                                     }
                                 }
-                                try {
-                                    // if in hashmap, call execute
-                                    if (hashmapfuncts.containsKey(name.toLowerCase())) {
-                                        executeFunction(hashmapfuncts.get(name.toLowerCase()), parameters);
-                                    } else {
-                                        InterpretFunction(functionCall, parameters);
+                            }
+                            try {
+                                // if in hashmap, call execute
+                                if (hashmapfuncts.containsKey(name.toLowerCase()) && hashmapfuncts.get(name.toLowerCase()) instanceof BuiltInFunctionNode) {
+                                    executeFunction(hashmapfuncts.get(name.toLowerCase()), parameters);
+                                    for (int i = 0; i<parameters.size(); i++) {
+                                        InterpreterDataType interpreterDataType = parameters.get(i);
+                                        String NameOfVar = StringNames.get(i);
+                                        if(VariableHashMap.containsKey(NameOfVar))
+                                        {
+                                            if (VariableHashMap.get(NameOfVar) instanceof IntDataType) {
+                                                if (parameters.get(i) instanceof IntDataType) {
+                                                    VariableHashMap.put(NameOfVar, interpreterDataType);
+                                                } else {
+                                                    throw new Exception(
+                                                            "Unmatching Variable Type Input.  No implicit type casting allowed!");
+                                                }
+                                            }
+                                            else if(VariableHashMap.get(NameOfVar) instanceof FloatDataType)
+                                            {
+                                                if(parameters.get(i) instanceof FloatDataType)
+                                                {
+                                                    VariableHashMap.put(NameOfVar, interpreterDataType);
+                                                } else {
+                                                    throw new Exception(
+                                                            "Unmatching Variable Type Input. No implicit type casting allowed!");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // This variable does not exist! It should never reach here.
+                                        }
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                } else {
+                                    InterpretFunction(functionCall, parameters);
+                                    for(int i = 0; i< ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().size(); i++)
+                                    {
+                                        InterpreterDataType dataType = VariableHashMap
+                                                .get(((FunctionNode) hashmapfuncts.get(functionCall.getName()))
+                                                        .getParameters().get(i).getName());
+                                        if (dataType instanceof IntDataType) {
+                                            if (VariableHashMap.get(functionCall.getParameters().get(i)
+                                                    .getName()) instanceof IntDataType) {
+                                                VariableHashMap.replace(
+                                                        functionCall.getParameters().get(i).getName(),
+                                                        dataType);
+                                            }
+                                        }
+                                        else if (dataType instanceof FloatDataType) {
+                                            if (VariableHashMap.get(functionCall.getParameters().get(i)
+                                                    .getName()) instanceof FloatDataType) {
+                                                VariableHashMap.replace(
+                                                        functionCall.getParameters().get(i).getName(),
+                                                        dataType);
+                                            }
+                                        } else if (dataType instanceof CharDataType) {
+                                            if (VariableHashMap.get(functionCall.getParameters().get(i)
+                                                    .getName()) instanceof CharDataType) {
+                                                VariableHashMap.replace(
+                                                        functionCall.getParameters().get(i).getName(),
+                                                        dataType);
+                                            }
+                                        } else if (dataType instanceof StringDataType) {
+                                            if (VariableHashMap.get(functionCall.getParameters().get(i)
+                                                    .getName()) instanceof StringDataType) {
+                                                VariableHashMap.replace(
+                                                        functionCall.getParameters().get(i).getName(),
+                                                        dataType);
+                                            }
+                                        }
+                                    }
+                                    for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getParameters().size(); i++)
+                                    {
+                                        VariableHashMap.remove(
+                                                ((FunctionNode) hashmapfuncts.get(functionCall.getName()))
+                                                        .getParameters().get(i).getName());
+                                    }
+                                    for(int i = 0; i < ((FunctionNode) hashmapfuncts.get(functionCall.getName())).getVariables().size(); i++)
+                                    {
+                                        VariableHashMap.remove(((FunctionNode) hashmapfuncts.get(functionCall.getName()))
+                                                .getVariables().get(i).getName());
+                                    }
                                 }
-                            } else {
-                                throw new RuntimeException("\nError: Incorrect number of parameters for function\n " + functionCall.getName()  + " Expected: " + hashmapfuncts.get(name).getArguments().size() + " \nargs expected: " + hashmapfuncts.get(name).getArguments()  + " \nActual: " + functionCall.getParameters().size() + "\n Actual Params: " + functionCall.getParameters());
-                            }}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                         } catch (RuntimeException e) {
                             throw new RuntimeException(e + "\n\nError: Incorrect number of parameters for function " + functionCall.getName());
                         }
@@ -152,10 +241,14 @@ public class Interpreter {
                     // same as for loop
                     BooleanExpressionNode express = ((WhileNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((WhileNode) statement).getBlock();
-                    if ("true".equals(Objects.requireNonNull(resolve(express)).toString())) {
-                        return InterpretBlock(block, VariableHashMap);
+                    String str;
+                    if ((str = resolve(express).toString()) != null)
+                    {
+                        if("true".equals(str))
+                        {
+                            return InterpretBlock(block, VariableHashMap);
+                        }
                     }
-
                 } else if (statement instanceof RepeatNode) {
                     // we have a repeat node with an expression and a block
                     // we need to evaluate the expression
@@ -163,7 +256,14 @@ public class Interpreter {
                     // if false, we need to break out of the loop
                     BooleanExpressionNode express = (BooleanExpressionNode) ((RepeatNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((RepeatNode) statement).getBlock();
-
+                    String str;
+                    if ((str = resolve(express).toString()) != null)
+                    {
+                        if("true".equals(str))
+                        {
+                            return InterpretBlock(block, VariableHashMap);
+                        }
+                    }
                 } else if (statement instanceof IfNode) {
                     // we have an ifnode with an expression and a block
                     // we need to evaluate the expression
@@ -171,15 +271,23 @@ public class Interpreter {
                     // if false, we need to break out of the loop
                     Node express = ((IfNode) statement).getBooleanExpression();
                     ArrayList<StatementNode> block = ((IfNode) statement).getStatementNodes();
+                    String str;
+                    if ((str = resolve(express).toString()) != null)
+                    {
+                        if("true".equals(str))
+                        {
+                            return InterpretBlock(block, VariableHashMap);
+                        }
+                    }
 
                 } else if (statement instanceof AssignmentNode curStatement) {
                     // cast to assignment node
-                    if (VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
+                    if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
                         // if it's not in the hashmap throw an error
                         System.out.println("Error: Cannot assign to constant " + statement);
                         throw new RuntimeException("Error: Cannot assign to constant " + statement);
                     } else {
-                        var value = curStatement.getExpression();
+                        var value = resolve(curStatement.getExpression());
                         if (value instanceof IntegerNode) {
                             int val = ((IntegerNode) value).getValue();
                             VariableHashMap.put((curStatement).getTarget().toString(), new IntDataType(val));
@@ -198,7 +306,7 @@ public class Interpreter {
             }
         } catch (RuntimeException e) {
 
-            throw new RuntimeException(e + "Error: Error interpreting -- FunctionDef " );
+            throw new RuntimeException(e + "Error: Error interpreting -- FunctionDef ");
         }
         return null;
     }
@@ -206,6 +314,7 @@ public class Interpreter {
     public static void executeFunction(CallableNode functionName, ArrayList<InterpreterDataType> parameters) throws Exception {
         BuiltInFunctionNode exe = (BuiltInFunctionNode) functionName;
         exe.execute(parameters);
+
     }
 
     // ====================================== MULTI RESOLVE ==================================================

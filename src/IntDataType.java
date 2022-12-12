@@ -26,3 +26,5 @@ public class IntDataType extends InterpreterDataType {
         return value;
     }
 }
+
+// go to   function hashmap and cast as a function node - get its name and parameters and if the amount of parameters in the functioncall match the function def then its okay
