@@ -2,7 +2,7 @@
 
 ## Shank Project:
 
-![](/images/SimpleDiagram.png "Diagram of file outline")
+![](/images/diagram.png "Diagram of file outline")
 
 -----------------------------------------------------------------
 
