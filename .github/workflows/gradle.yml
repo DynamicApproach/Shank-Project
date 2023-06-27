@@ -16,9 +16,12 @@ jobs:
       with:
         java-version: '20'
         distribution: 'temurin'
+    - name: Set execute permissions for Gradle Wrapper
+      run: chmod +x ./gradlew
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
     - name: Test with Gradle
-      run: ./gradlew test --tests shank.project.ShankTest.testWithFile6
+      run: ./gradlew test
