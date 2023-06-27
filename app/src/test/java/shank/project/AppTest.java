@@ -13,7 +13,7 @@ class AppTest {
 
     @Test
     void testWithFileFail() {
-        String expectedOutput = "FunctionAST{name='add\n, parameters=[\nx: = 0\n of type: INTEGER\n is constant: true\n, \ny: = 0\n of type: INTEGER\n is constant: true\n, \nsum: = 0\n of type: INTEGER\n is constant: false\n]\n, variables=[\nyMinusOne: = 0\n of type: INTEGER\n is constant: false\n, \nxPlusOne: = 0\n of type: INTEGER\n is constant: false\n, \nnewSum: = 0\n of type: INTEGER\n is constant: false\n]\n, body=[y EQUAL 0 ASSIGN: xPlusOne Then: (x ADD 1)ASSIGN: yMinusOne Then: (y MINUS 1)FUNCTIONCALL: add Then: [const: xPlusOne : null, const: yMinusOne : null, var: newSum : null]ASSIGN: sum Then: newSum]\n}";
+        String expectedOutput = "FunctionAST{name='addTwo";
 
         Path filePath = Paths.get("src", "test", "resources", "test4.shank");
         String actualOutput = runShankProgram(filePath.toString(), "4\n10\n");

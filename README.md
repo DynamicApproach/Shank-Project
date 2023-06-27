@@ -6,16 +6,22 @@
 
 ## Running Tests:
 
-Should pass:
+### Should pass:
+
 `./gradlew test --tests shank.project.ShankTest.testWithFile6`
 
-Force fail:
-`./gradlew test --tests shank.project.AppTest.testWithFile2 `
+### Force fail:
+
+`./gradlew test --tests shank.project.AppTest.testWithFileFail2 `
+
 `./gradlew test --tests shank.project.AppTest.testWithFileFail`
 
----
+### 1/3 should pass
 
-Other useful commands:
+`./gradlew test`
+
+## Other useful commands:
+
 ` ./gradlew test --tests shank.project.ShankTest.testWithFile6 --info`
 
 `./gradlew run --args='D:\Projects\Personal\Shank-Project-311\app\src\test\resources\test6.shank`

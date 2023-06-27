@@ -11,10 +11,10 @@ import java.nio.file.Path;
 
 class ShankTest {
     @Test
-    void testWithFilePass() {
-        String expectedOutput = "3";
-        Path filePath = Paths.get("src", "test", "resources", "test5.shank");
-        String actualOutput = runShankProgram(filePath.toString(), "");
+    void testWithFileFail2() {
+        String expectedOutput = "";
+        Path filePath = Paths.get("src", "test", "resources", "test.shank");
+        String actualOutput = runShankProgram(filePath.toString(), "1\n1\n");
         assertEquals(expectedOutput, actualOutput);
     }
 
