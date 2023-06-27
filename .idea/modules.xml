@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LexerProject.iml" filepath="$PROJECT_DIR$/LexerProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Shank-Project-311.iml" filepath="$PROJECT_DIR$/.idea/modules/Shank-Project-311.iml" />
     </modules>
   </component>
 </project>
