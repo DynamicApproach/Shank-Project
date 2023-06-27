@@ -28,7 +28,15 @@ hs_err_pid*
 /tests/test.txt
 /debug/
 # Ignore Gradle project-specific cache directory
-.gradle
+/.gradle
 
 # Ignore Gradle build output directory
 build
+# Default ignored files IntelliJ
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
