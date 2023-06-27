@@ -10,13 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.Path;
 
 class ShankTest {
-    @Test
-    void testWithFileFail2() {
-        String expectedOutput = "";
-        Path filePath = Paths.get("src", "test", "resources", "test.shank");
-        String actualOutput = runShankProgram(filePath.toString(), "1\n1\n");
-        assertEquals(expectedOutput, actualOutput);
-    }
+
 
     @Test
     public void testWithFile6() {

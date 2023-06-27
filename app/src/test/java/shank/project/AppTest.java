@@ -10,17 +10,23 @@ import java.nio.file.Paths;
 import java.nio.file.Path;
 
 class AppTest {
-
     @Test
-    void testWithFileFail() {
-        String expectedOutput = "FunctionAST{name='addTwo";
+    void testWithFilePass1() {
+        String expectedOutput = "5";
+        Path filePath = Paths.get("src", "test", "resources", "test8.shank");
+        String actualOutput = runShankProgram(filePath.toString(), "1\n4\n");
+        assertEquals(expectedOutput, actualOutput);
+    }
+    @Test
+    void testWithFilePass2() {
+        String expectedOutput = "11";
 
-        Path filePath = Paths.get("src", "test", "resources", "test4.shank");
-        String actualOutput = runShankProgram(filePath.toString(), "4\n10\n");
+        Path filePath = Paths.get("src", "test", "resources", "test7.shank");
+        String actualOutput = runShankProgram(filePath.toString(), "5\n6\n");
         assertEquals(expectedOutput, actualOutput);
     }
 
-    // A helper method that runs your programming language application and captures the output.
+
     private String runShankProgram(String filePath, String input) {
     // Setup streams to capture output and provide input
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

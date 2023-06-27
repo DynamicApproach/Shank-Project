@@ -46,11 +46,6 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
-task printWorkingDir {
-    doLast {
-        println project.getProjectDir()
-    }
-}
 
 task test6(type: Test) {
     include 'shank/project/**'
@@ -64,3 +59,9 @@ task test6(type: Test) {
     }
 }
 
+
+task printWorkingDir {
+    doLast {
+        println project.getProjectDir()
+    }
+}
