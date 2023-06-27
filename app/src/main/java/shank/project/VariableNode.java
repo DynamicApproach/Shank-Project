@@ -1,3 +1,4 @@
+package shank.project;
 //implement 'VariableNode' - is constant class, enum for int, real and ast node for the init value of real/intnode
 public class VariableNode extends Node {
     private boolean isConstant;

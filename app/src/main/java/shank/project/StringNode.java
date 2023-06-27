@@ -1,3 +1,4 @@
+package shank.project;
 public class StringNode extends Node {
     private String value;
 

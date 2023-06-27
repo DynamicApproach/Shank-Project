@@ -1,3 +1,4 @@
+package shank.project;
 public class IntegerNode extends Node {
     private int value;
 

@@ -1,4 +1,6 @@
+package shank.project;
 import java.util.ArrayList;
+
 
 // A function call has a name (of the function) and a list of parameters.
 // A parameter needs to be its own ASTNode because a parameter can be a variable (VariableReferenceNode) or a constant value (an ASTNode).

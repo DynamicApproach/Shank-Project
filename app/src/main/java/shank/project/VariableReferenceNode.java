@@ -1,4 +1,5 @@
 // VariableReferenceNode should contain the name of the variable being referenced.
+package shank.project;
 public class VariableReferenceNode extends Node {
     private String name;
 

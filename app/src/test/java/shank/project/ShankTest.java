@@ -9,16 +9,23 @@ import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
-class AppTest {
-
+class ShankTest {
     @Test
-    void testWithFileFail() {
-        String expectedOutput = "FunctionAST{name='add\n, parameters=[\nx: = 0\n of type: INTEGER\n is constant: true\n, \ny: = 0\n of type: INTEGER\n is constant: true\n, \nsum: = 0\n of type: INTEGER\n is constant: false\n]\n, variables=[\nyMinusOne: = 0\n of type: INTEGER\n is constant: false\n, \nxPlusOne: = 0\n of type: INTEGER\n is constant: false\n, \nnewSum: = 0\n of type: INTEGER\n is constant: false\n]\n, body=[y EQUAL 0 ASSIGN: xPlusOne Then: (x ADD 1)ASSIGN: yMinusOne Then: (y MINUS 1)FUNCTIONCALL: add Then: [const: xPlusOne : null, const: yMinusOne : null, var: newSum : null]ASSIGN: sum Then: newSum]\n}";
-
-        Path filePath = Paths.get("src", "test", "resources", "test4.shank");
-        String actualOutput = runShankProgram(filePath.toString(), "4\n10\n");
+    void testWithFilePass() {
+        String expectedOutput = "3";
+        Path filePath = Paths.get("src", "test", "resources", "test5.shank");
+        String actualOutput = runShankProgram(filePath.toString(), "");
         assertEquals(expectedOutput, actualOutput);
     }
+
+    @Test
+    public void testWithFile6() {
+        String expectedOutput = "2"; // update this with the expected output 
+        Path filePath = Paths.get("src", "test", "resources", "test6.shank");
+        String actualOutput = runShankProgram(filePath.toString(), "1\n1\n");
+        assertEquals(expectedOutput, actualOutput);
+    }
+
 
     // A helper method that runs your programming language application and captures the output.
     private String runShankProgram(String filePath, String input) {

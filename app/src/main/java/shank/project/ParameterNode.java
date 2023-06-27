@@ -1,3 +1,5 @@
+package shank.project;
+
 public class ParameterNode extends Node {
     private boolean isVariable = false;
     private String name;

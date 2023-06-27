@@ -1,6 +1,6 @@
+package shank.project;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-
 public class WhileNode extends StatementNode {
     //While (booleanExpression and collection of statementNodes)
     private Node booleanExpression;
@@ -20,10 +20,7 @@ public class WhileNode extends StatementNode {
     }
 
     @Override
-    public String toString() {/*
-        for (StatementNode statementNode : statementNodes) {
-            System.out.println(statementNode);
-        }*/
+    public String toString() {
         return "While: " + booleanExpression.toString() + " Do: " + statementNodes.stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 }

@@ -1,4 +1,6 @@
+package shank.project;
 import java.util.ArrayList;
+
 
 public class SquareRoot extends BuiltInFunctionNode {
     private Float value;
@@ -12,7 +14,7 @@ public class SquareRoot extends BuiltInFunctionNode {
         try {
             value = (float) Math.sqrt(Float.parseFloat(arguments.get(0).toString()));
         } catch (NumberFormatException e) {
-            System.out.println("Cannot get square root from input: " + value + "\n " + e + "\n");
+            System.err.println("Cannot get square root from input: " + value + "\n " + e + "\n");
         }
     }
 

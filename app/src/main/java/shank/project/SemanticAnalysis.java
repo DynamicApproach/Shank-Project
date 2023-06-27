@@ -1,5 +1,7 @@
+package shank.project;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class SemanticAnalysis {
     private HashMap<String, CallableNode> functions;

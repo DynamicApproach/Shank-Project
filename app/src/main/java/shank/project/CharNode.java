@@ -1,3 +1,4 @@
+package shank.project;
 public class CharNode extends Node {
     private char value;
 

@@ -1,3 +1,4 @@
+package shank.project;
 import java.util.ArrayList;
 
 public class IntegerToReal extends BuiltInFunctionNode {
@@ -31,7 +32,7 @@ public class IntegerToReal extends BuiltInFunctionNode {
             try {
                 value = Float.parseFloat(idt.toString());
             } catch (Exception e) {
-                System.out.println("Cannot convert to real from input: " + value + "\n " + e + "\n");
+                System.err.println("Cannot convert to real from input: " + value + "\n " + e + "\n");
             }
         }
 

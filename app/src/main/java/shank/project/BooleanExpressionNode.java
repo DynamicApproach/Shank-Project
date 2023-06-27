@@ -1,3 +1,4 @@
+package shank.project;
 public class BooleanExpressionNode extends Node {
     // BooleanExpression (has a left expression and a right expression and a condition)
     private Node left;

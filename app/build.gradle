@@ -33,7 +33,8 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'Shank'
+
+    mainClassName = 'shank.project.Shank'
 }
 
 run {
@@ -45,3 +46,21 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+task printWorkingDir {
+    doLast {
+        println project.getProjectDir()
+    }
+}
+
+task test6(type: Test) {
+    include 'shank/project/**'
+    test6.dependsOn 'build'
+
+    filter {
+        includeTestsMatching "shank.project.ShankTest.testWithFile6"
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+

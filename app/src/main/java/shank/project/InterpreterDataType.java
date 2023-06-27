@@ -1,3 +1,4 @@
+package shank.project;
 public abstract class InterpreterDataType {
 
     public abstract String toString();

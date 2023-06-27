@@ -1,4 +1,6 @@
+package shank.project;
 import java.util.ArrayList;
+
 
 // return substring of s from start to end of given int and string
 public class Left extends BuiltInFunctionNode {

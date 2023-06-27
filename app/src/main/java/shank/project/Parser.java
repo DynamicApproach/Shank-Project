@@ -1,4 +1,6 @@
+package shank.project;
 import java.util.ArrayList;
+
 
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -55,7 +57,7 @@ public class Parser {
     //            Type token = peek(1).getType();
     //            node = new BooleanExpressionNode(expression(), token, expression());
     //        } catch (Exception e) {
-    //            System.out.println("Not an expression");
+    //            System.err.println("Not an expression");
     //            throw new RuntimeException(e); // less, greater, ect lowest priority
     //        }
 
@@ -73,7 +75,7 @@ public class Parser {
                 return (BooleanExpressionNode) express;
             }
         } catch (Exception e) {
-            System.out.println("Not an expression");
+            System.err.println("Not an expression");
             throw new RuntimeException(e); // less, greater, ect lowest priority
         }
     }
@@ -637,7 +639,7 @@ public class Parser {
 
     private ArrayList<VariableNode> constants() {
         //looks for the constants token.
-        // If it finds it, it calls a “processConstants” function that looks for token
+        // If it finds it, it calls a processConstants function that looks for token
         try {
             return processConstants();
 

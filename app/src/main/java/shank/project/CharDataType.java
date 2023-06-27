@@ -1,3 +1,4 @@
+package shank.project;
 public class CharDataType extends InterpreterDataType {
     private char value;
 

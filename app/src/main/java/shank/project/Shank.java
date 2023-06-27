@@ -1,3 +1,5 @@
+
+package shank.project;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class Shank {
     public static Scanner scanner;
     public static void main(String[] args) {
         // start time stamp
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
         // read can accept one argument
         functionNames.put("read", new Read("read", new ArrayList<VariableNode>(), true));
         functionNames.put("write", new Write("write", new ArrayList<VariableNode>(), true));
@@ -40,7 +42,7 @@ public class Shank {
                 List<String> text = Files.readAllLines(Paths.get(args[0]));
                 text.replaceAll(s -> s + "\n");
                 for (String line : text) {
-                    // System.out.println(line); // FOR DEBUG OF INPUTS
+                    // System.err.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
                 }
                 //create new parser and parse tokens
@@ -50,7 +52,7 @@ public class Shank {
                 // add function node to hashmap
                 for (FunctionNode functionNode : node) {
                     functionNames.put(functionNode.getName(), functionNode);
-                    System.out.println(functionNode);
+                    System.err.println(functionNode);
                 }
                 //functiondef interpret
                 Interpreter interpreter = new Interpreter(functionNames);
@@ -71,20 +73,20 @@ public class Shank {
                 }
                 assert startFunction != null;
                 Interpreter.InterpretFunction(startFunction, dataTypes);
-                System.out.println("Interpreting complete");
+                System.err.println("Interpreting complete");
             } catch (Exception e) {
                 System.err.println("Error: " + e);
             }
         } else {
             // print args
-            System.out.println(Arrays.toString(args));
-            System.out.println("Usage: java Shank <filename>");
+            System.err.println(Arrays.toString(args));
+            System.err.println("Usage: java Shank <filename>");
             System.exit(1);
         }
         // end time stamp
-        long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime);
-        System.out.println("Time: " + duration + " milliseconds");
+        //long endTime = System.currentTimeMillis();
+        //long duration = (endTime - startTime);
+        //System.err.println("Time: " + duration + " milliseconds");
         scanner.close();
     }
 }

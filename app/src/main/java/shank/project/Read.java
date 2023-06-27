@@ -1,5 +1,7 @@
+package shank.project;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Read extends BuiltInFunctionNode {
     String name;
@@ -15,8 +17,9 @@ public class Read extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
         for (InterpreterDataType argument : arguments) {
-            System.out.println("Enter a value to read in: ");
+            System.err.println("Enter a value to read in: ");
             argument.fromString(scanner.nextLine());
+            System.err.println("Read in: " + argument.toString());
         }
     }
 }

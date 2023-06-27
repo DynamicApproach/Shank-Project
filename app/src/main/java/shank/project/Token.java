@@ -1,3 +1,4 @@
+package shank.project;
 enum Type { // Token symbol types
     ADD {
         public String toString() {
@@ -234,7 +235,7 @@ enum Type { // Token symbol types
 /* This file must contain a Token class. The token class is made up of an instance of an enum and a value string. There must be a public accessor
  * for both the enum and the value string; the underlying variables must be private. You may create whatever constructors you choose.
  * The enum must be defined as containing values appropriate to what we will be processing. The definition of the enum should be public, but the instance
- *  inside Token must be private. We will add to this enum in the next several assignments.  You will find it helpful to create an appropriate “ToString” overload. */
+ *  inside Token must be private. We will add to this enum in the next several assignments.  You will find it helpful to create an appropriate ToString overload. */
 public class Token {
     private Type type;
     private String value;

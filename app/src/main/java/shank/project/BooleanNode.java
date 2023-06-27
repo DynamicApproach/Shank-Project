@@ -1,3 +1,4 @@
+package shank.project;
 public class BooleanNode extends Node {
     private boolean value;
 

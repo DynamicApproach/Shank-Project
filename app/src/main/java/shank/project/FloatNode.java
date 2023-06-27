@@ -1,3 +1,4 @@
+package shank.project;
 public class FloatNode extends Node {
     private float value;
 

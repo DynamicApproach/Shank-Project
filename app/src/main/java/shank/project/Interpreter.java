@@ -1,7 +1,9 @@
+package shank.project;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.IntStream;
+
 
 import static java.util.stream.IntStream.*;
 
@@ -41,7 +43,7 @@ public class Interpreter {
                     VariableHashMap.put(var.getName(),
                             new BooleanDataType(((BooleanNode) var.getValue()).getValue()));
                 } else {
-                    System.out.println("Error: Variable type not found      Name:" + var.getName() + "    Type: "
+                    System.err.println("Error: Variable type not found      Name:" + var.getName() + "    Type: "
                             + var.getType() + "     Value: " + var.getValue());
                     throw new Exception("InterpretFunction: Variable type not found");
                 }
@@ -250,7 +252,7 @@ public class Interpreter {
                     // cast to assignment node
                     if (!VariableHashMap.containsKey((curStatement.getTarget().toString()))) {
                         // if it's not in the hashmap throw an error
-                        System.out.println("Error: Cannot assign to constant " + statement);
+                        System.err.println("Error: Cannot assign to constant " + statement);
                         throw new RuntimeException("Error: Cannot assign to constant " + statement);
                     } else {
                         var value = resolve(curStatement.getExpression());
@@ -318,8 +320,8 @@ public class Interpreter {
                     return new StringNode((VariableHashMap.get(nodey.toString()).toString()));
                 }
                 InterpreterDataType vary = VariableHashMap.get(nodey.toString());
-                System.out.println(VariableHashMap);
-                System.out.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
+                System.err.println(VariableHashMap);
+                System.err.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
             } else {
                 System.err.println(VariableHashMap);
                 System.err.println("VariableHashMap.get(nodey.toString()) = " + VariableHashMap.get(nodey.toString()));
@@ -466,28 +468,28 @@ public class Interpreter {
     // ====================================== PRINT ==================================================
 
     public void printTree(Node tre) {
-        System.out.println("Tree: --------------------");
+        System.err.println("Tree: --------------------");
         // if int or float print
         if (tre.toString() == null) {
-            System.out.println("null");
+            System.err.println("null");
         }
         if (tre instanceof IntegerNode || tre instanceof FloatNode) {
-            System.out.print(tre);
+            System.err.print(tre);
         } else if (tre instanceof MathOpNode mathOpNode) {
             // if mathopnode print
-            System.out.print(mathOpNode);
+            System.err.print(mathOpNode);
             // print left
-            System.out.print("(");
-            printTree(mathOpNode.getLeft());
+            System.err.print("(");
+            //printTree(mathOpNode.getLeft());
             // print right
-            System.out.print(",");
-            printTree(mathOpNode.getRight());
-            System.out.println(")");
+            System.err.print(",");
+            //printTree(mathOpNode.getRight());
+            System.err.println(")");
         } else {
-            System.out.println("End Tree---------------------");
+            System.err.println("End Tree---------------------");
             throw new RuntimeException("Unknown node type: " + tre.getClass().getName());
         }
 
-        System.out.println("End Tree---------------------");
+        System.err.println("End Tree---------------------");
     }
 }

@@ -1,3 +1,4 @@
+package shank.project;
 public class BooleanDataType extends InterpreterDataType {
     private boolean value;
 

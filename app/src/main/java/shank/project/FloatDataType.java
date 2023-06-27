@@ -1,3 +1,4 @@
+package shank.project;
 //IntDataType
 //This class is used to create a data type for integers
 public class FloatDataType extends InterpreterDataType {

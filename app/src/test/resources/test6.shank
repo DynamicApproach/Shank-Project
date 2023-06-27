@@ -1,0 +1,11 @@
+define start()
+variables
+y:integer
+x:integer
+sum:integer
+begin
+read var x
+read var y
+sum := x + y
+write sum
+end

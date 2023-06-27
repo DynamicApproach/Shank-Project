@@ -1,3 +1,4 @@
+package shank.project;
 public class StringDataType extends InterpreterDataType {
     private String value;
 
