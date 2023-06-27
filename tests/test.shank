@@ -49,6 +49,7 @@ inputnum,result:real
 res:integer
 begin
     read var inputnum
+    read var res
     f1 var inputnum, var res
     write inputnum
     write res

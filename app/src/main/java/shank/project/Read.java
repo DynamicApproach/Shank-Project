@@ -8,16 +8,15 @@ public class Read extends BuiltInFunctionNode {
 
     public Read(String name, ArrayList<VariableNode> arguments, boolean varadic) {
         super(name, arguments, varadic);
-        scanner = new Scanner(System.in);
+        if(scanner == null)
+            scanner = new Scanner(System.in);
     }
 
     @Override
     public void execute(ArrayList<InterpreterDataType> arguments) throws Exception {
-
         for (InterpreterDataType argument : arguments) {
             System.out.println("Enter a value to read in: ");
             argument.fromString(scanner.nextLine());
         }
-        scanner.close();
     }
 }

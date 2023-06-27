@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.Scanner;
 /*
  * must ensure that there is one and only one argument (args). If there are none or more than 1,
  *  it must print an appropriate error message and exit. That one argument will be considered as a filename. Your main must then use File.ReadAllLines
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class Shank {
     public static HashMap<String, CallableNode> functionNames = new HashMap<>();
-
+    public static Scanner scanner;
     public static void main(String[] args) {
         // start time stamp
         long startTime = System.currentTimeMillis();
@@ -29,7 +30,8 @@ public class Shank {
         functionNames.put("getrandom", new GetRandom("getrandom", new ArrayList<VariableNode>(), false));
         functionNames.put("inttoreal", new IntegerToReal("inttoreal", new ArrayList<VariableNode>(), false));
         functionNames.put("realtoint", new RealToInteger("realtoint", new ArrayList<VariableNode>(), false));
-
+        if(scanner == null)
+            scanner = new Scanner(System.in);
         ArrayList<Token> tokens = new ArrayList<>(10000);
         if (args.length == 1) {
             try {
@@ -41,18 +43,6 @@ public class Shank {
                     // System.out.println(line); // FOR DEBUG OF INPUTS
                     tokens = (lexer.Lex(line));
                 }
-                for (Token token : tokens) {
-                    if (token != null) {
-                        System.out.print(token);
-                        if (token.getType() == Type.ENDLINE) {
-                            System.out.println("\n");
-                        }
-                    } else {
-                        System.err.println("null token");
-                    }
-                }
-                System.out.println("\n \n \n Parsing:\n ");
-
                 //create new parser and parse tokens
                 Parser parsed = new Parser(tokens);
                 // for each line of tokens, parse it
@@ -62,11 +52,7 @@ public class Shank {
                     functionNames.put(functionNode.getName(), functionNode);
                     System.out.println(functionNode);
                 }
-                // print out the function
-                System.out.println("Parsing complete");
-                // print the tree
                 //functiondef interpret
-                System.out.println("Interpreting: ");
                 Interpreter interpreter = new Interpreter(functionNames);
                 ArrayList<InterpreterDataType> dataTypes = new ArrayList<>();
                 ArrayList<ParameterNode> parameterNodes = new ArrayList<>();
@@ -99,5 +85,6 @@ public class Shank {
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         System.out.println("Time: " + duration + " milliseconds");
+        scanner.close();
     }
 }

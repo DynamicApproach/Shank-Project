@@ -27,3 +27,8 @@ hs_err_pid*
 /out/
 /tests/test.txt
 /debug/
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
